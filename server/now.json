@@ -1,0 +1,17 @@
+{
+  "name": "hbcc",
+  "version": 2,
+  "scope": "hbcc",
+  "regions": ["syd1"],
+  "env": {
+    "ALGOLIA_APP_ID": "@algolia_app_id",
+    "ALGOLIA_API_KEY": "@algolia_api_key",
+    "APPLICATION_ID": "@application_id",
+    "API_KEY": "@api_key",
+    "KNACK_API_URL": "@knack_api_url",
+    "KNACK_BIN_DAYS_OBJECT_ID": "@knack_bin_days_object_id",
+    "KNACK_PROPERTY_OBJECT_ID": "@knack_property_object_id",
+    "KNACK_ITEM_OBJECT_ID": "@knack_item_object_id",
+    "KNACK_USER_CONFIGS_OBJECT_ID": "@knack_user_configs_object_id"
+  }
+}

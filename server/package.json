@@ -1,0 +1,20 @@
+{
+  "name": "hbcc",
+  "version": "1.0.0",
+  "description": "Hobsons Bay City Council",
+  "author": "Krishna Ali (Code For Australia)",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "lint": "semistandard"
+  },
+  "dependencies": {
+    "algoliasearch": "^4.2.0",
+    "date-fns": "^2.12.0",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "semistandard": "^14.2.0"
+  }
+}
