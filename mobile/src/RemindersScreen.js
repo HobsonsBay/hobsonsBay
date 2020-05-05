@@ -14,7 +14,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Platform
+  Platform,
+    Alert
 } from 'react-native';
 import images from './utils/images';
 import { openUrl, formatTime } from './utils';
@@ -29,9 +30,27 @@ export default (props) => {
   const [show, setShow] = useState(false);
   const handlePolicyClick = openUrl(POLICY_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
+  const goToBinSchedule = useCallback(() => {
+    navigation.reset({ index: 0, routes: [{ name: 'Bin Schedule' }] });
+  }, []);
 
-  const onPress = () => {
-    console.log('Pressed');
+  const promptAddress = () => {
+    Alert.alert(
+        "Address Required",
+        "Add an Address in Bin Schedule to receive reminders",
+        [
+          { text: "Cancel", onPress: () => {}, style: "cancel"},
+          { text: "Go to Bin Schedule", onPress: goToBinSchedule}
+        ],
+        {cancelable: false}
+    );
+  };
+
+  const handlePressToggle = () => {
+    if (disabled)
+      promptAddress();
+    else
+      console.log('Pressed');
   };
 
   const handleChangeToggle = (value) => {
@@ -45,8 +64,11 @@ export default (props) => {
     setDate(currentDate);
   };
 
-  const showMode = () => {
-    setShow(true);
+  const showPicker = () => {
+    if (disabled)
+      promptAddress();
+    else
+      setShow(true);
   };
 
   useEffect(() => {
@@ -55,6 +77,11 @@ export default (props) => {
       address && setDisabled(false);
     }).catch(console.error);
   }, []);
+
+  const remindersPickerTimeStyle = [
+    styles.reminders_picker_time,
+    { color: disabled ? '#e0e0e0' : '#616161' }
+  ];
 
   return (
     <SafeAreaView style={styles.view}>
@@ -69,16 +96,16 @@ export default (props) => {
           <Text style={styles.reminders_title}>Collection Reminders</Text>
           <View style={styles.reminders_toggle}>
             <Text style={styles.reminders_toggle_label}>Remind Me</Text>
-            <Toggle style={styles.reminders_toggle_cb} value={status} disabled={disabled} onPress={onPress} onChange={handleChangeToggle} />
+            <Toggle style={styles.reminders_toggle_cb} value={status} disabled={disabled} onPress={handlePressToggle} onChange={handleChangeToggle} />
           </View>
           <Text style={styles.reminders_description}>
             Receive a push notification <Text style={styles.reminders_description_duration}>the day before</Text> your collection day.
           </Text>
           <View style={styles.reminders_picker}>
             <Text style={styles.reminders_picker_label}>Set Reminder Time</Text>
-            <TouchableOpacity style={styles.reminders_picker_selector} onPress={showMode}>
-              <Text style={styles.reminders_picker_time}>{formatTime(date)}</Text>
-              <Text><Icon name='chevron-down' size={16} color='#616161' /></Text>
+            <TouchableOpacity style={styles.reminders_picker_selector} onPress={showPicker} activeOpacity={0.8}>
+              <Text style={remindersPickerTimeStyle}>{formatTime(date)}</Text>
+              <Text><Icon name='chevron-down' size={16} color={disabled ? '#e0e0e0' : '#616161'} /></Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -172,8 +199,7 @@ const styles = StyleSheet.create({
   reminders_picker_time: {
     marginRight: 10,
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#616161'
+    fontWeight: 'bold'
   },
   reminders_policy: {
     flexDirection: 'row',
