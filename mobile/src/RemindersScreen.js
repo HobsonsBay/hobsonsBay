@@ -14,20 +14,18 @@ import {
   Text,
   TouchableOpacity,
   Image,
-    Platform
+  Platform
 } from 'react-native';
 import images from './utils/images';
 import { openUrl, formatTime } from './utils';
 import { POLICY_URL } from './utils/constants';
 import Toggle from './components/reminders/Toggle';
 
-
 export default (props) => {
   const { navigation } = props;
   const [disabled, setDisabled] = useState(true);
   const [status, setStatus] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('time');
   const [show, setShow] = useState(false);
   const handlePolicyClick = openUrl(POLICY_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
@@ -88,17 +86,16 @@ export default (props) => {
           <Text style={styles.reminders_policy_text}>Privacy Policy</Text>
           <Text><MIcon name='launch' size={22} color='#1051a4' /></Text>
         </TouchableOpacity>
-
         {show &&
           <DateTimePicker
-              timeZoneOffsetInMinutes={0}
-              minuteInterval={30}
-              value={date}
-              mode={mode}
-              is24Hour={false}
-              display="spinner"
-              onChange={handleChangeTime} />
-        }
+            timeZoneOffsetInMinutes={0}
+            minuteInterval={30}
+            value={date}
+            mode='time'
+            is24Hour={false}
+            display='spinner'
+            onChange={handleChangeTime}
+          />}
       </View>
     </SafeAreaView>
   );
@@ -170,7 +167,7 @@ const styles = StyleSheet.create({
   },
   reminders_picker_selector: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   reminders_picker_time: {
     marginRight: 10,
