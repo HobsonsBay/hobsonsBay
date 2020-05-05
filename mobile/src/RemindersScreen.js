@@ -15,7 +15,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-    Alert
+  Alert
 } from 'react-native';
 import images from './utils/images';
 import { openUrl, formatTime } from './utils';
@@ -36,21 +36,18 @@ export default (props) => {
 
   const promptAddress = () => {
     Alert.alert(
-        "Address Required",
-        "Add an Address in Bin Schedule to receive reminders",
-        [
-          { text: "Cancel", onPress: () => {}, style: "cancel"},
-          { text: "Go to Bin Schedule", onPress: goToBinSchedule}
-        ],
-        {cancelable: false}
+      'Address Required',
+      'Add an Address in Bin Schedule to receive reminders',
+      [
+        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+        { text: 'Go to Bin Schedule', onPress: goToBinSchedule }
+      ],
+      { cancelable: false }
     );
   };
 
   const handlePressToggle = () => {
-    if (disabled)
-      promptAddress();
-    else
-      console.log('Pressed');
+    if (disabled) { promptAddress(); } else { console.log('Pressed'); }
   };
 
   const handleChangeToggle = (value) => {
@@ -65,10 +62,7 @@ export default (props) => {
   };
 
   const showPicker = () => {
-    if (disabled)
-      promptAddress();
-    else
-      setShow(true);
+    if (disabled) { promptAddress(); } else { setShow(true); }
   };
 
   useEffect(() => {
