@@ -33,6 +33,10 @@ export const formatDay = (date) => {
   return format(d, 'EEEE');
 };
 
+export const formatTime = (date = new Date()) => {
+  return format(date, 'hh:mm b');
+};
+
 export const formatBinName = (type) => {
   switch (type) {
     case FOGO:
