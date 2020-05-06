@@ -37,6 +37,10 @@ export const formatTime = (date = new Date()) => {
   return format(date, 'hh:mm b');
 };
 
+export const getReminderDate = (time) => {
+  return parse(`${time}`, 'HHmm', new Date());
+};
+
 export const formatBinName = (type) => {
   switch (type) {
     case FOGO:

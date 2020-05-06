@@ -2,6 +2,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import messaging from '@react-native-firebase/messaging';
+import format from 'date-fns/format';
+import startOfHour from 'date-fns/startOfHour';
 import React, {
   useEffect,
   useState,
@@ -18,15 +21,21 @@ import {
   Alert
 } from 'react-native';
 import images from './utils/images';
-import { openUrl, formatTime } from './utils';
+import { openUrl, formatTime, getReminderDate } from './utils';
 import { POLICY_URL } from './utils/constants';
 import Toggle from './components/reminders/Toggle';
+import postConfig from './api/postConfig';
+import deleteConfig from './api/deleteConfig';
+import putConfig from './api/putConfig';
+import useFullAddress from './hooks/useFullAddress';
 
 export default (props) => {
   const { navigation } = props;
+  const [fullAddress] = useFullAddress();
   const [disabled, setDisabled] = useState(true);
+  const [config, setConfig] = useState(null);
   const [status, setStatus] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(startOfHour(new Date()));
   const [show, setShow] = useState(false);
   const handlePolicyClick = openUrl(POLICY_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
@@ -47,18 +56,56 @@ export default (props) => {
   };
 
   const handlePressToggle = () => {
-    if (disabled) { promptAddress(); } else { console.log('Pressed'); }
+    if (disabled) promptAddress();
   };
 
   const handleChangeToggle = (value) => {
-    console.log('Changed');
-    setStatus(value);
+    if (value) {
+      if (fullAddress) {
+        const {day, area} = fullAddress;
+        const time = format(date, 'HHmm');
+        const zone = ` ${day} Area ${area}`;
+        messaging().getToken()
+          .then(token => {
+            const body = { token, zone, time };
+            return postConfig(body);
+          }).then((config) => {
+            return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
+          }).then(([config]) => {
+            setStatus(value);
+            setConfig(config);
+          }).catch(console.error);
+      }
+    } else {
+      if (config) {
+        const {id} = config;
+        deleteConfig(id)
+            .then(() => {
+              return AsyncStorage.removeItem('config');
+            }).then(() => {
+          setStatus(value);
+          setConfig(null);
+        }).catch(console.error);
+      }
+    }
   };
 
   const handleChangeTime = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    const currentDate = startOfHour(selectedDate || date);
     setShow(Platform.OS === 'ios');
-    setDate(currentDate);
+
+    if (config) {
+      const { id } = config;
+      const time = format(currentDate, 'HHmm');
+      const body = { ...config, time };
+      putConfig(id, body)
+          .then((config) => {
+            return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
+          }).then(([config]) => {
+            setDate(currentDate);
+            setConfig(config);
+          }).catch(console.error);
+    }
   };
 
   const showPicker = () => {
@@ -66,15 +113,25 @@ export default (props) => {
   };
 
   useEffect(() => {
-    AsyncStorage.getItem('address').then((value) => {
-      const address = JSON.parse(value);
-      address && setDisabled(false);
+    fullAddress && setDisabled(false);
+  }, [fullAddress]);
+
+  useEffect(() => {
+    AsyncStorage.getItem('config').then((value) => {
+      const config = JSON.parse(value);
+      if(config){
+        const { time } = config;
+        const currentDate = getReminderDate(time);
+        setStatus(true);
+        setDate(currentDate);
+      }
+      setConfig(config);
     }).catch(console.error);
   }, []);
 
   const remindersPickerTimeStyle = [
     styles.reminders_picker_time,
-    { color: disabled ? '#e0e0e0' : '#616161' }
+    { color: (disabled || !status) ? '#e0e0e0' : '#616161' }
   ];
 
   return (
@@ -99,7 +156,7 @@ export default (props) => {
             <Text style={styles.reminders_picker_label}>Set Reminder Time</Text>
             <TouchableOpacity style={styles.reminders_picker_selector} onPress={showPicker} activeOpacity={0.8}>
               <Text style={remindersPickerTimeStyle}>{formatTime(date)}</Text>
-              <Text><Icon name='chevron-down' size={16} color={disabled ? '#e0e0e0' : '#616161'} /></Text>
+              <Text><Icon name='chevron-down' size={16} color={(disabled || !status) ? '#e0e0e0' : '#616161'} /></Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -107,7 +164,7 @@ export default (props) => {
           <Text style={styles.reminders_policy_text}>Privacy Policy</Text>
           <Text><MIcon name='launch' size={22} color='#1051a4' /></Text>
         </TouchableOpacity>
-        {show &&
+        {show && status &&
           <DateTimePicker
             timeZoneOffsetInMinutes={0}
             minuteInterval={30}
