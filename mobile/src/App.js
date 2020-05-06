@@ -21,7 +21,7 @@ export default function App () {
           <Drawer.Screen name='Bin Schedule' component={ScheduleStack} />
           <Drawer.Screen name='Which bin does this go in?' component={FindStack} />
           <Drawer.Screen name='Feedback' component={FeedbackScreen} />
-          <Drawer.Screen name='Collection Reminder' component={RemindersScreen} />
+          <Drawer.Screen name='Collection Reminder' component={RemindersScreen} options={{ unmountOnBlur:true }} />
           <Drawer.Screen name='About' component={AboutScreen} />
         </Drawer.Navigator>
       </NavigationContainer>

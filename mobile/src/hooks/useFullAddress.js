@@ -2,14 +2,13 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   useState,
-  useEffect,
-  useCallback
+  useEffect
 } from 'react';
 const { API_URL } = require('../config/api');
 
 export default () => {
   const [data, setData] = useState(null);
-  const getAddress = useCallback(() => {
+  const getAddress = () => {
     return AsyncStorage.getItem('address')
       .then((value) => {
         const address = JSON.parse(value);
@@ -18,12 +17,12 @@ export default () => {
       })
       .then((res) => res.json())
       .then(({ rows }) => rows[0]);
-  }, []);
+  };
 
   useEffect(() => {
     getAddress()
       .then((fullAddress) => setData(fullAddress))
-      .catch((e) => console.error('Error getting address', e));
+      .catch(() => setData(null));
   }, []);
 
   return [data];
