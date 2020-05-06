@@ -9,7 +9,7 @@ export default (id, body) => {
       headers: {
         'Content-type': 'application/json'
       },
-        body: JSON.stringify(body)
+      body: JSON.stringify(body)
     })
     .then((res) => res.json());
 };

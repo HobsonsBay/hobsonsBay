@@ -62,7 +62,7 @@ export default (props) => {
   const handleChangeToggle = (value) => {
     if (value) {
       if (fullAddress) {
-        const {day, area} = fullAddress;
+        const { day, area } = fullAddress;
         const time = format(date, 'HHmm');
         const zone = ` ${day} Area ${area}`;
         messaging().getToken()
@@ -78,14 +78,14 @@ export default (props) => {
       }
     } else {
       if (config) {
-        const {id} = config;
+        const { id } = config;
         deleteConfig(id)
-            .then(() => {
-              return AsyncStorage.removeItem('config');
-            }).then(() => {
-          setStatus(value);
-          setConfig(null);
-        }).catch(console.error);
+          .then(() => {
+            return AsyncStorage.removeItem('config');
+          }).then(() => {
+            setStatus(value);
+            setConfig(null);
+          }).catch(console.error);
       }
     }
   };
@@ -99,12 +99,12 @@ export default (props) => {
       const time = format(currentDate, 'HHmm');
       const body = { ...config, time };
       putConfig(id, body)
-          .then((config) => {
-            return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
-          }).then(([config]) => {
-            setDate(currentDate);
-            setConfig(config);
-          }).catch(console.error);
+        .then((config) => {
+          return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
+        }).then(([config]) => {
+          setDate(currentDate);
+          setConfig(config);
+        }).catch(console.error);
     }
   };
 
@@ -119,7 +119,7 @@ export default (props) => {
   useEffect(() => {
     AsyncStorage.getItem('config').then((value) => {
       const config = JSON.parse(value);
-      if(config){
+      if (config) {
         const { time } = config;
         const currentDate = getReminderDate(time);
         setStatus(true);
