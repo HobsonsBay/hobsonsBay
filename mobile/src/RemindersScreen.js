@@ -109,25 +109,24 @@ export default (props) => {
   };
 
   const showPicker = () => {
-    if (disabled) { promptAddress(); } else { setShow(true); }
+    if (disabled) { promptAddress(); } else { setShow(status); }
   };
 
   useEffect(() => {
-    fullAddress && setDisabled(false);
+    if (fullAddress) {
+      AsyncStorage.getItem('config').then((value) => {
+        const config = JSON.parse(value);
+        if (config) {
+          const { time } = config;
+          const currentDate = getReminderDate(time);
+          setStatus(true);
+          setDate(currentDate);
+        }
+        setConfig(config);
+      }).catch(console.error);
+    }
+    setDisabled(!fullAddress);
   }, [fullAddress]);
-
-  useEffect(() => {
-    AsyncStorage.getItem('config').then((value) => {
-      const config = JSON.parse(value);
-      if (config) {
-        const { time } = config;
-        const currentDate = getReminderDate(time);
-        setStatus(true);
-        setDate(currentDate);
-      }
-      setConfig(config);
-    }).catch(console.error);
-  }, []);
 
   const remindersPickerTimeStyle = [
     styles.reminders_picker_time,
