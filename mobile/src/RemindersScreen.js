@@ -185,16 +185,16 @@ export default (props) => {
             onChange={handleChangeTime}
           />}
         {Platform.OS === 'ios' && show && status &&
-          <Modal animationType='fade' transparent={true} visible={modal}>
+          <Modal animationType='fade' transparent visible={modal}>
             <View style={styles.reminders_modal}>
               <View style={styles.reminders_modal_body}>
                 <DateTimePicker
-                    minuteInterval={30}
-                    value={date}
-                    mode='time'
-                    is24Hour={false}
-                    display='spinner'
-                    onChange={handleChangeTime}
+                  minuteInterval={30}
+                  value={date}
+                  mode='time'
+                  is24Hour={false}
+                  display='spinner'
+                  onChange={handleChangeTime}
                 />
               </View>
               <TouchableOpacity style={styles.reminders_modal_button} onPress={handleButtonClose}>
