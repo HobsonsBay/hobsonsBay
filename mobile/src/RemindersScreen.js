@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  Modal,
   Alert
 } from 'react-native';
 import images from './utils/images';
@@ -37,6 +38,7 @@ export default (props) => {
   const [status, setStatus] = useState(false);
   const [date, setDate] = useState(startOfHour(new Date()));
   const [show, setShow] = useState(false);
+  const [modal, setModal] = useState(true);
   const handlePolicyClick = openUrl(POLICY_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
   const goToBinSchedule = useCallback(() => {
@@ -55,6 +57,10 @@ export default (props) => {
     );
   };
 
+  const handleButtonClose = () => {
+    setModal(false);
+  };
+
   const handlePressToggle = () => {
     if (disabled) promptAddress();
   };
@@ -65,7 +71,8 @@ export default (props) => {
         const { day, area } = fullAddress;
         const time = format(date, 'HHmm');
         const zone = ` ${day} Area ${area}`;
-        messaging().getToken()
+        messaging().requestPermission()
+          .then(() => messaging().getToken())
           .then(token => {
             const body = { token, zone, time };
             return postConfig(body);
@@ -109,7 +116,12 @@ export default (props) => {
   };
 
   const showPicker = () => {
-    if (disabled) { promptAddress(); } else { setShow(status); }
+    if (disabled) {
+      promptAddress();
+    } else {
+      setShow(status);
+      setModal(true);
+    }
   };
 
   useEffect(() => {
@@ -163,9 +175,8 @@ export default (props) => {
           <Text style={styles.reminders_policy_text}>Privacy Policy</Text>
           <Text><MIcon name='launch' size={22} color='#1051a4' /></Text>
         </TouchableOpacity>
-        {show && status &&
+        {Platform.OS === 'android' && show && status &&
           <DateTimePicker
-            timeZoneOffsetInMinutes={0}
             minuteInterval={30}
             value={date}
             mode='time'
@@ -173,6 +184,24 @@ export default (props) => {
             display='spinner'
             onChange={handleChangeTime}
           />}
+        {Platform.OS === 'ios' && show && status &&
+          <Modal animationType='fade' transparent={true} visible={modal}>
+            <View style={styles.reminders_modal}>
+              <View style={styles.reminders_modal_body}>
+                <DateTimePicker
+                    minuteInterval={30}
+                    value={date}
+                    mode='time'
+                    is24Hour={false}
+                    display='spinner'
+                    onChange={handleChangeTime}
+                />
+              </View>
+              <TouchableOpacity style={styles.reminders_modal_button} onPress={handleButtonClose}>
+                <Text style={styles.reminders_modal_button_label}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>}
       </View>
     </SafeAreaView>
   );
@@ -263,5 +292,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#1051a4'
+  },
+  reminders_modal: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.4)'
+  },
+  reminders_modal_body: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10
+  },
+  reminders_modal_button: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    backgroundColor: '#fff'
+  },
+  reminders_modal_button_label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2196F3'
   }
 });
