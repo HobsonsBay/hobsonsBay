@@ -103,7 +103,7 @@ export default (props) => {
 
     if (config) {
       const { id } = config;
-      const time = format(currentDate, 'HHmm');
+      const time = format(currentDate, 'HHmm', { timeZone: 'Australia/Melbourne' });
       const body = { ...config, time };
       putConfig(id, body)
         .then((config) => {

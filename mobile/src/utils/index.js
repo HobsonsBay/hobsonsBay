@@ -34,7 +34,7 @@ export const formatDay = (date) => {
 };
 
 export const formatTime = (date = new Date()) => {
-  return format(date, 'hh:mm b');
+  return format(date, 'hh:mm b', { timeZone: 'Australia/Melbourne' });
 };
 
 export const getReminderDate = (time) => {
