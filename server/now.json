@@ -12,6 +12,7 @@
     "KNACK_BIN_DAYS_OBJECT_ID": "@knack_bin_days_object_id",
     "KNACK_PROPERTY_OBJECT_ID": "@knack_property_object_id",
     "KNACK_ITEM_OBJECT_ID": "@knack_item_object_id",
-    "KNACK_USER_CONFIGS_OBJECT_ID": "@knack_user_configs_object_id"
+    "KNACK_USER_CONFIGS_OBJECT_ID": "@knack_user_configs_object_id",
+    "FIREBASE_ADMIN": "@firebase_admin"
   }
 }

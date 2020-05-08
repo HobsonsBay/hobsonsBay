@@ -8,17 +8,23 @@ const join = require('lodash/join');
 const get = require('lodash/get');
 const keys = require('lodash/keys');
 const { formatBinName } = require('../_utils');
+const admin = require('firebase-admin');
 
 const {
   APPLICATION_ID,
   API_KEY,
   KNACK_API_URL,
   KNACK_BIN_DAYS_OBJECT_ID,
-  KNACK_USER_CONFIGS_OBJECT_ID
+  KNACK_USER_CONFIGS_OBJECT_ID,
+  FIREBASE_ADMIN
 } = process.env;
 
 const BIN_DAYS_OBJECT_URL = `${KNACK_API_URL}${KNACK_BIN_DAYS_OBJECT_ID}`;
 const USER_CONFIGS_OBJECT_URL = `${KNACK_API_URL}${KNACK_USER_CONFIGS_OBJECT_ID}`;
+
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(FIREBASE_ADMIN))
+});
 
 const sendReminders = async () => {
   const nowDate = new Date();
@@ -36,31 +42,35 @@ const sendReminders = async () => {
       const zone = zones[i];
       const bins = groupedZones[zone];
       const message = binMessage(zone, bins);
-      const { rows } = await getConfigs(zone, hour);
 
-      for (let j = 0; j < rows.length; j++) {
-        const config = rows[i];
-        await dispatchMessage(config, message);
+      let page = 1;
+      let results = [];
+      do {
+        const { rows } = await getConfigs(zone, hour, page);
+        results = rows;
+        const tokens = map(rows, (row) => row.token);
+        await admin.messaging().sendToDevice(tokens,
+          { notification: { ...message } }
+        );
+        ++page;
       }
+      while (results.length >= 1000);
     }
   }
   console.log('cron ', hour);
   return hour;
 };
 
-const dispatchMessage = async (config, message) => {
-  const { id, token } = config;
-  console.log(`${id} ${token} ${message}`);
-  return { id, token, message };
-};
-
 const binMessage = (zone, bins) => {
   const binNames = map(bins, bin => formatBinName(bin.bin_type));
   const day = zone.split(' ')[0];
-  return `Your bin collection day is tomorrow, ${day} \n ${binNames.join(', ')}`;
+  return {
+    title: `Your bin collection day is tomorrow, ${day}`,
+    body: `Please have your ${binNames.join(', ')} bins out on the nature strip by 5am.`
+  };
 };
 
-const getConfigs = async (zone, hour) => {
+const getConfigs = async (zone, hour, page) => {
   const RECORDS_URL = `${USER_CONFIGS_OBJECT_URL}/records`;
   const options = {
     method: 'GET',
@@ -86,7 +96,7 @@ const getConfigs = async (zone, hour) => {
     ]
   };
   const query = {
-    page: 1,
+    page: page,
     rows_per_page: 1000,
     format: 'raw',
     filters: encodeURIComponent(JSON.stringify(filters))
