@@ -1,4 +1,4 @@
-const format = require('date-fns/format');
+const { utcToZonedTime, format } = require('date-fns-tz');
 const differenceInMinutes = require('date-fns/differenceInMinutes');
 const startOfHour = require('date-fns/startOfHour');
 const fetch = require('isomorphic-fetch');
@@ -27,10 +27,11 @@ admin.initializeApp({
 });
 
 const sendReminders = async () => {
-  const nowDate = new Date();
+  const timeZone = 'Australia/Melbourne';
+  const nowDate = utcToZonedTime(new Date(), timeZone);
   const hourStart = startOfHour(nowDate);
   const difference = differenceInMinutes(nowDate, hourStart);
-  let hour = format(nowDate, 'HHmm');
+  let hour = format(nowDate, 'HHmm', { timeZone });
 
   if (difference < 1) {
     const { rows } = await getZones();
