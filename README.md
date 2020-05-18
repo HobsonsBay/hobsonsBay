@@ -175,7 +175,7 @@ react native development.
 `Follow the creation prompts in the dashboard Release Management / App releases`
 
 
-## IOS Development
+## IOS Development (mobile directory)
 
 You need to follow the [react native docs](https://reactnative.dev/docs/environment-setup) to setup your machine with the necessary dependencies 
 react native development.
