@@ -26,7 +26,7 @@ export default function App () {
       <StatusBar />
       <Notifications/>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName='Collection Reminder'>
+        <Drawer.Navigator initialRouteName='Bin Schedule'>
           <Drawer.Screen name='Bin Schedule' component={ScheduleStack} />
           <Drawer.Screen name='Which bin does this go in?' component={FindStack} />
           <Drawer.Screen name='Collection Reminder' component={RemindersScreen} options={{ unmountOnBlur: true }} />

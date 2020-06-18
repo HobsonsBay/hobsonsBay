@@ -28,7 +28,8 @@ export default (props) => {
   const address = get(route, 'params.address', {});
   const propertyAddress = address['Property Address'];
   const asn = address['Assessment Number'];
-  const [{ note, area, day, days }] = useDays(asn);
+  let [{ note, area, day, days }] = useDays(asn);
+  //note = "hello world";
   const loading = !day;
   const handleCalendarClick = openUrl(CALENDAR_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
@@ -37,11 +38,16 @@ export default (props) => {
       navigation.goBack();
     }).catch(console.error);
   }, []);
+  const handleNotification = useCallback(() => navigation.navigate('Collection Reminder'));
 
   const scheduleDayLabelStyle = [
     styles.schedule_day_label,
-    { backgroundColor: getAreaBackgroundColor(area), color: getAreaColor(area) },
+    { backgroundColor: getAreaBackgroundColor(area) },
     !isEmpty(note) ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } : {}
+  ];
+  const scheduleDayLabelTextStyle = [
+    styles.schedule_day_label_text,
+    { color: getAreaColor(area) },
   ];
   const scheduleDayNoteStyle = [
     styles.schedule_day_note,
@@ -73,14 +79,18 @@ export default (props) => {
           {loading && <ActivityIndicator size='large' color='#f0b41c' />}
           {!loading &&
             <>
-              <Text style={styles.schedule_title}>Your next collection days</Text>
-              <Text style={scheduleDayLabelStyle}>
-                Area {area} - {day}
-              </Text>
+              <View style={styles.schedule_title_wrapper}>
+                <Text style={styles.schedule_title} numberOfLines={1}>Your next collection days</Text>
+                <Text style={styles.schedule_title_bell} onPress={handleNotification}><Icon name='bell-o' size={20} color='#757575' /></Text>
+              </View>
+              <View style={scheduleDayLabelStyle}>
+                <Text style={scheduleDayLabelTextStyle}>Area {area} - {day}</Text>
+              </View>
               {!isEmpty(note) &&
                 <Text style={scheduleDayNoteStyle}>
                   {note}
-                </Text>}
+                </Text>
+              }
               <Text style={styles.schedule_note}>
                 Please ensure your bins are out on the nature strip for
                 collection by <Text style={styles.schedule_note_time}>5am</Text>
@@ -166,29 +176,49 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 15
   },
+  schedule_title_wrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   schedule_title: {
     marginTop: 20,
+    fontSize: 19,
+    letterSpacing: .1,
+    color: "#333333"
+  },
+  schedule_title_bell: {
+    marginTop: 24,
     fontSize: 20
   },
   schedule_day_label: {
     marginTop: 10,
     paddingVertical: 5,
     paddingHorizontal: 10,
+    backgroundColor: '#f5f5f5',
+    color: '#212121',
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    // borderRadius: 5,
+    borderColor: '#333333',
+    borderWidth: 0.5,
+  },
+  schedule_day_label_text: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#212121',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 5
   },
   schedule_day_note: {
     padding: 10,
     fontSize: 15,
     opacity: 0.7,
+    color: "#333333",
     backgroundColor: '#f5f5f5',
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    //borderBottomLeftRadius: 5,
+    //borderBottomRightRadius: 5,
     lineHeight: 20,
     letterSpacing: 0.8
+  },
+  schedule_day_note_text: {
+    color: "#333333",
   },
   schedule_note: {
     marginTop: 5,
