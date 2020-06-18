@@ -9,6 +9,14 @@ import FeedbackScreen from './FeedbackScreen';
 import RemindersScreen from './RemindersScreen';
 import FindStack from './FindStack';
 import Onboarding from './components/app/Onboarding';
+import Notifications from './utils/Notifications.js';
+import messaging from '@react-native-firebase/messaging';
+
+
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 const Drawer = createDrawerNavigator();
 
@@ -16,6 +24,7 @@ export default function App () {
   return (
     <>
       <StatusBar />
+      <Notifications/>
       <NavigationContainer>
         <Drawer.Navigator initialRouteName='Collection Reminder'>
           <Drawer.Screen name='Bin Schedule' component={ScheduleStack} />
