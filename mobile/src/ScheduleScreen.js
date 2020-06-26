@@ -5,7 +5,9 @@ import get from 'lodash/get';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
 import React, {
-  useCallback
+  useCallback,
+  useState,
+  useEffect
 } from 'react';
 import {
   SafeAreaView,
@@ -15,13 +17,16 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import images from './utils/images';
 import useDays from './hooks/useDays';
 import Day from './components/schedule/Day';
+import deleteConfig from './api/deleteConfig';
 import { openUrl, getAreaBackgroundColor, getAreaColor } from './utils';
 import { CALENDAR_URL } from './utils/constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default (props) => {
   const { navigation, route } = props;
@@ -29,15 +34,82 @@ export default (props) => {
   const propertyAddress = address['Property Address'];
   const asn = address['Assessment Number'];
   let [{ note, area, day, days }] = useDays(asn);
-  //note = "hello world";
   const loading = !day;
   const handleCalendarClick = openUrl(CALENDAR_URL);
+  const [config, setConfig] = useState(null);
+  
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
-  const handleButton = useCallback(() => {
-    AsyncStorage.removeItem('address').then(() => {
-      navigation.goBack();
-    }).catch(console.error);
-  }, []);
+
+  /*
+  useEffect(() => {
+    console.log('reminders effect called: ')
+    console.log(reminders)
+  }, [reminders]);
+
+  useEffect(() => {
+    console.log('config effect called');
+    console.log(config);
+  }, [config]);
+  */
+
+
+  // on focus, set config and reminders
+  useFocusEffect(
+    React.useCallback(() => {
+      //console.log('focus effect called');
+      AsyncStorage.getItem('config').then((value) => {
+        const config = JSON.parse(value);
+        if (config) {
+          //console.log('set config vals')
+          setConfig(config);
+        }else{
+          //console.log('set config null')
+          setConfig(null);
+        }
+      }).catch(console.error);
+    }, [])
+  );
+  
+  const handleAddressWarning = useCallback(() => {
+    Alert.alert(
+      'Clear Reminders?',
+      'Changing your address will clear any reminders that you have set',
+      [
+        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+        { text: 'Change Address', onPress: handleAddressChange }
+      ],
+      { cancelable: false }
+    );
+  }, [config])
+
+  const handleAddressChange = useCallback(() => {  
+
+    console.log("address change called");
+
+    // delete config code for reminders
+    if (config) {
+      const { id } = config;
+      deleteConfig(id)
+        .then(() => {
+          console.log("config deleted");
+          AsyncStorage.removeItem('config');
+        }).then(() => {
+          console.log("async config deleted");
+          setConfig(null);
+        }).then(() => {
+          AsyncStorage.removeItem('address').then(() => {
+            navigation.goBack();
+          }).catch(console.error);
+        }).catch(console.error);
+    }else{
+      // if reminders aren't set
+      AsyncStorage.removeItem('address').then(() => {
+        navigation.goBack();
+      }).catch(console.error);
+    }
+
+  }, [config]);
+
   const handleNotification = useCallback(() => navigation.navigate('Collection Reminder'));
 
   const scheduleDayLabelStyle = [
@@ -55,7 +127,7 @@ export default (props) => {
   ];
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView dummy="test" style={styles.view}>
       <View style={styles.schedule}>
         <View style={styles.schedule_head}>
           <TouchableOpacity style={styles.schedule_button} onPress={handleBurger}>
@@ -69,7 +141,7 @@ export default (props) => {
               <Text><Icon name='map-marker' size={24} color='#757575' /></Text>
               <Text style={styles.schedule_address_label} numberOfLines={1}>{propertyAddress}</Text>
             </View>
-            <TouchableOpacity style={styles.schedule_edit} onPress={handleButton}>
+            <TouchableOpacity style={styles.schedule_edit} onPress={handleAddressWarning}>
               <Text style={styles.schedule_edit_label}>change address</Text>
             </TouchableOpacity>
           </View>
@@ -81,7 +153,17 @@ export default (props) => {
             <>
               <View style={styles.schedule_title_wrapper}>
                 <Text style={styles.schedule_title} numberOfLines={1}>Your next collection days</Text>
-                <Text style={styles.schedule_title_bell} onPress={handleNotification}><Icon name='bell-o' size={20} color='#757575' /></Text>
+                <View style={styles.schedule_title_bell_container}>
+                  <TouchableOpacity style={styles.schedule_title_bell} onPress={handleNotification}>
+                    <View style={styles.schedule_title_bell_icon}>
+                      { config ?
+                        <Icon name='bell-o' size={20} color='#757575' />
+                        :
+                        <Icon name='bell-slash-o' size={20} color='#bbbbbb' />
+                      }
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View style={scheduleDayLabelStyle}>
                 <Text style={scheduleDayLabelTextStyle}>Area {area} - {day}</Text>
@@ -102,7 +184,7 @@ export default (props) => {
                 <Text style={styles.schedule_calendar_text}>View Calendar on Website</Text>
                 <Text><MIcon name='launch' size={18} color='#1051a4' /></Text>
               </TouchableOpacity>
-            </>}
+            </> }
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -142,9 +224,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   schedule_address_card: {
+    maxWidth: 340,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+    paddingRight: 15,
     borderColor: '#616161',
     borderWidth: 2,
     borderRadius: 10
@@ -187,8 +271,20 @@ const styles = StyleSheet.create({
     color: "#333333"
   },
   schedule_title_bell: {
-    marginTop: 24,
-    fontSize: 20
+    fontSize: 20,
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
+  schedule_title_bell_icon: {
+    //backgroundColor: "rgba(128,128,128,0.5)",
+  },
+  schedule_title_bell_container: {
+    marginTop: 10,
+    width: 50
   },
   schedule_day_label: {
     marginTop: 10,

@@ -11,7 +11,8 @@ import {
   TextInput,
   FlatList,
   Keyboard,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking
 } from 'react-native';
 import {
   connectSearchBox,
@@ -77,7 +78,10 @@ const SuggestionsHits = connectHits(({ hits, handlePressItem }) => {
       <View style={styles.suggestions_notFound}>
         <Text style={styles.suggestions_notFound_title}>We're not able to find that address</Text>
         <Text>
-            Check that the address is within the <Text style={styles.suggestions_notFound_bold}>Hobsons Bay Area</Text> or Contact Us.
+            Check that the address is within the <Text style={styles.suggestions_notFound_bold}>Hobsons Bay Area</Text> or <Text style={{textDecorationLine: 'underline'}}
+                  onPress={() => Linking.openURL('https://www.hobsonsbay.vic.gov.au/Council/Contact-us')}>
+              Contact Us
+            </Text>
         </Text>
       </View>
     );

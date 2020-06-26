@@ -20,14 +20,20 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 
 const Drawer = createDrawerNavigator();
 
+const textStyle = {
+          labelStyle: { 
+            fontSize: 20,
+          },
+        };
+
 export default function App () {
   return (
     <>
       <StatusBar />
       <Notifications/>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName='Bin Schedule'>
-          <Drawer.Screen name='Bin Schedule' component={ScheduleStack} />
+        <Drawer.Navigator drawerContentOptions={textStyle} initialRouteName='Bin Schedule'>
+          <Drawer.Screen name='Bin Schedule' component={ScheduleStack}/>
           <Drawer.Screen name='Which bin does this go in?' component={FindStack} />
           <Drawer.Screen name='Collection Reminder' component={RemindersScreen} options={{ unmountOnBlur: true }} />
           <Drawer.Screen name='Feedback' component={FeedbackScreen} />

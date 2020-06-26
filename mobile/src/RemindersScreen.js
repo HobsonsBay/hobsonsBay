@@ -40,6 +40,11 @@ export default (props) => {
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(true);
   const handlePolicyClick = openUrl(POLICY_URL);
+
+
+  //console.log(config);
+
+
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
   const goToBinSchedule = useCallback(() => {
     navigation.reset({ index: 0, routes: [{ name: 'Bin Schedule' }] });
@@ -70,7 +75,7 @@ export default (props) => {
       if (fullAddress) {
         const { day, area } = fullAddress;
         const time = format(date, 'HHmm');
-        const zone = ` ${day} Area ${area}`;
+        const zone = `${day} Area ${area}`;
         messaging().requestPermission()
           .then(() => messaging().getToken())
           .then(token => {
