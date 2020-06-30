@@ -127,7 +127,7 @@ export default (props) => {
   ];
 
   return (
-    <SafeAreaView dummy="test" style={styles.view}>
+    <SafeAreaView style={styles.view}>
       <View style={styles.schedule}>
         <View style={styles.schedule_head}>
           <TouchableOpacity style={styles.schedule_button} onPress={handleBurger}>

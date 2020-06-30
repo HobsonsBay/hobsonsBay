@@ -11,7 +11,8 @@ import {
   TextInput,
   FlatList,
   Keyboard,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking
 } from 'react-native';
 import {
   connectSearchBox,
@@ -77,8 +78,11 @@ const SuggestionsHits = connectHits(({ hits, handlePressItem }) => {
       <View style={styles.suggestions_notFound}>
         <Text style={styles.suggestions_notFound_title}>We're not able to find that item</Text>
         <Text>
-            Try a different word. For example instead of <Text style={styles.suggestions_notFound_bold}>apple</Text> type <Text style={styles.suggestions_notFound_bold}>fruit</Text>
-        </Text>
+            Try a different word. For example instead of <Text style={styles.suggestions_notFound_bold}>apple</Text> type <Text style={styles.suggestions_notFound_bold}>fruit,</Text> or <Text style={{textDecorationLine: 'underline'}}
+                  onPress={() => Linking.openURL('https://www.hobsonsbay.vic.gov.au/Council/Contact-us')}>
+              Contact Us
+            </Text> to suggest an item.</Text>
+        
       </View>
     );
   }

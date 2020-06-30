@@ -11,11 +11,25 @@ import FindStack from './FindStack';
 import Onboarding from './components/app/Onboarding';
 import Notifications from './utils/Notifications.js';
 import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
+const setNotification = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('notification', jsonValue)
+  } catch(e) {
+    // save error
+  }
+  console.log('Done.')
+}
+
 
 
 // Register background handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
+  setNotification(remoteMessage)
 });
 
 const Drawer = createDrawerNavigator();
