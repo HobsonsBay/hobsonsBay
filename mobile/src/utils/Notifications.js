@@ -20,20 +20,23 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// if (
+//   Platform.OS === "android" &&
+//   UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 export default (props) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [expandedFull, setExpandedFull] = useState(false);
+  //const [modalVisible, setModalVisible] = useState(false);
+  const [expandedNotif, setExpandedNotif] = useState(false);
+  const [expandedFullNotif, setExpandedFullNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [rawMessageData, setRawMessageData] = useState(null);
-  const [messageData, setMessageData] = useState(null);
+  const [messageData, setMessageData] = useState({ 
+      message: { title: "", body: ""},
+      type: ""
+    });
   const [bgColor, setBgColor] = useState("#F7CCC9");
 
   /*
@@ -50,6 +53,8 @@ export default (props) => {
     type (reminder,service)
   and store in message
   */
+
+
   // let slideState = {
   //   height: new Animated.Value(0)
   // };
@@ -71,7 +76,7 @@ export default (props) => {
       //   remoteMessage.notification,
       // );
       setRawMessageData(remoteMessage);
-      setExpandedFull(true);
+      //setExpandedFullNotif(true);
 
       //navigation.navigate(remoteMessage.data.type);
     });
@@ -86,21 +91,21 @@ export default (props) => {
           //   remoteMessage.notification,
           // );
           setRawMessageData(remoteMessage);
-          setExpandedFull(true);
+          //setExpandedFullNotif(true);
         }
       });
   }, []);
 
 
   const showNotificationBar = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded(true);
-    setExpandedFull(false);
+    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpandedNotif(true);
+    setExpandedFullNotif(false);
   }
 
   const showNotificationFull = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpandedFull(!expandedFull);
+    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpandedFullNotif(!expandedFullNotif);
   }
 
   const getNotification = async () => {
@@ -148,8 +153,8 @@ export default (props) => {
   }, []);
 
   const handleNotificationDelete = useCallback(() => {    
-    setExpanded(false);
-    setExpandedFull(false);
+    setExpandedNotif(false);
+    setExpandedFullNotif(false);
     setRawMessageData(null);
     let msg = removeNotification();
     msg.then((response) => {
@@ -157,7 +162,7 @@ export default (props) => {
     },(error) => {
       //console.log(error)
     })
-  },[messageData, expanded, expandedFull]);
+  },[messageData, expandedNotif, expandedFullNotif]);
 
 
   const handleNotificationOpen = useCallback(() => {
@@ -183,25 +188,24 @@ export default (props) => {
     }else{
       pushContent.type = null;
     }
-    setMessageData({ 
+    return { 
       message: { title: pushContent.title, body: pushContent.body},
       type: pushContent.type
-    });
-    handleMessage(pushContent)
-
-    //console.log('message data:')
-    //console.log(messageData)
+    }
   }
 
   useEffect(() => {
     //console.log('raw message data effect:')
     //console.log(rawMessageData)
     if(rawMessageData){
-      handleRawMessageData(rawMessageData);
+      setMessageData(handleRawMessageData(rawMessageData));
       showNotificationBar();
     }else{
       setMessage("")
-      setMessageData(null)
+      setMessageData({ 
+        message: { title: "", body: ""},
+        type: ""
+      })
     }
   }, [rawMessageData]);
 
@@ -216,9 +220,10 @@ export default (props) => {
 
   useEffect(() => {
     const binReminder = messaging().onMessage(async remoteMessage => {
-      setExpandedFull(false);
-      setExpanded(false);
+      setExpandedFullNotif(false);
+      setExpandedNotif(false);
       let pushContent;
+
       if (remoteMessage.notification){
         //console.log('android')
         pushContent = remoteMessage.notification;
@@ -230,63 +235,37 @@ export default (props) => {
       setRawMessageData(remoteMessage);
 
       //setModalVisible(true);
+
     });
 
     return binReminder;
   }, []);
 
-
  return (
-  <>
-      { expanded &&
-        <SafeAreaView>
-          <View style={{...styles.notificationHolder, backgroundColor: bgColor }}>
-            <TouchableOpacity onPress={showNotificationFull} style={styles.notificationMessage}>
-              <Text style={styles.notificationTitle}>{messageData.message.title}</Text>
-              { expandedFull &&
-                <Text style={styles.notificationBody}>{messageData.message.body}</Text>
-              }
-              <View>
-                <Icon style={{ alignSelf : 'center'}} name={ expandedFull ? 'caret-up' : 'caret-down' } size={18} color='#757575' />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={{justifyContent: 'center'}} onPress={handleNotificationDelete}>
-              { expandedFull &&
-                <View style={styles.notificationClose}>
-                  <Icon name='close' size={12} color='#ffffff' />
+      <View>
+        { expandedNotif &&
+          <SafeAreaView>
+            <View style={{...styles.notificationHolder, backgroundColor: bgColor }}>
+              <TouchableOpacity onPress={showNotificationFull} style={styles.notificationMessage}>
+                <Text style={styles.notificationTitle}>{messageData.message.title}</Text>
+                { expandedFullNotif &&
+                  <Text style={styles.notificationBody}>{messageData.message.body}</Text>
+                }
+                <View>
+                  <Icon style={{ alignSelf : 'center'}} name={ expandedFullNotif ? 'caret-up' : 'caret-down' } size={18} color='#757575' />
                 </View>
-              }
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      }
-      
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        message={message}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{message}</Text>
-
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      </Modal>
-      
-  </>
+              </TouchableOpacity>
+              <TouchableOpacity style={{justifyContent: 'center'}} onPress={handleNotificationDelete}>
+                { expandedFullNotif &&
+                  <View style={styles.notificationClose}>
+                    <Icon name='close' size={12} color='#ffffff' />
+                  </View>
+                }
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+       }
+      </View>  
  ) 
 };
 
@@ -351,7 +330,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#cc0000",
     width: 20,
     height: 20,
-    margin: 5,
+    margin: 10,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",

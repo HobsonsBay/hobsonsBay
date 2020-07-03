@@ -25,12 +25,13 @@ const setNotification = async (value) => {
 }
 
 
-
-// Register background handler
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-  setNotification(remoteMessage)
-});
+if (Platform.OS === "android"){
+  // Register background handler
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+    setNotification(remoteMessage)
+  });
+}
 
 const Drawer = createDrawerNavigator();
 
@@ -41,6 +42,7 @@ const textStyle = {
         };
 
 export default function App () {
+
   return (
     <>
       <StatusBar />
