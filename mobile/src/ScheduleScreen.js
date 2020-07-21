@@ -27,6 +27,7 @@ import deleteConfig from './api/deleteConfig';
 import { openUrl, getAreaBackgroundColor, getAreaColor } from './utils';
 import { CALENDAR_URL } from './utils/constants';
 import { useFocusEffect } from '@react-navigation/native';
+import analytics from '@react-native-firebase/analytics';
 
 export default (props) => {
   const { navigation, route } = props;
@@ -40,6 +41,10 @@ export default (props) => {
   
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
+  console.log(route);
+
+  // Text.defaultProps.allowFontScaling=false;
+
   /*
   useEffect(() => {
     console.log('reminders effect called: ')
@@ -51,6 +56,14 @@ export default (props) => {
     console.log(config);
   }, [config]);
   */
+
+  //ADD GA TRACKING FOR ZONE AND REMINDERS
+  useEffect(() => {
+    analytics().logEvent('recycle_app_config', {
+            zone: area ? `Area ${area} - ${day}` : "not_set",
+            notifications: config ? "on" : "off"
+          })
+  }, [config, day]);
 
 
   // on focus, set config and reminders
@@ -159,7 +172,7 @@ export default (props) => {
                       { config ?
                         <Icon name='bell-o' size={20} color='#757575' />
                         :
-                        <Icon name='bell-slash-o' size={20} color='#bbbbbb' />
+                        <Icon name='bell-slash-o' size={20} color='#999999' />
                       }
                     </View>
                   </TouchableOpacity>

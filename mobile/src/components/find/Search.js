@@ -40,6 +40,7 @@ class SearchBox extends Component {
           spellCheck={false}
           autoCorrect={false}
           autoCapitalize='none'
+          maxFontSizeMultiplier={1.2}
           onChangeText={(text) => {
             if (text === '') {
               this.props.displaySuggestions(false);

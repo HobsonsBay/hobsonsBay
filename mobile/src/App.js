@@ -1,8 +1,16 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, 
+  DrawerContentScrollView, 
+  DrawerItemList,
+  DrawerItem 
+} from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'react-native';
+import { StatusBar, 
+  Text, 
+  Image,
+  View 
+} from 'react-native';
 import ScheduleStack from './ScheduleStack';
 import AboutScreen from './AboutScreen';
 import FeedbackScreen from './FeedbackScreen';
@@ -11,8 +19,9 @@ import FindStack from './FindStack';
 import Onboarding from './components/app/Onboarding';
 import Notifications from './utils/Notifications.js';
 import messaging from '@react-native-firebase/messaging';
+import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import images from './utils/images';
 
 const setNotification = async (value) => {
   try {
@@ -35,25 +44,64 @@ if (Platform.OS === "android"){
 
 const Drawer = createDrawerNavigator();
 
-const textStyle = {
-          labelStyle: { 
-            fontSize: 20,
-          },
-        };
 
-export default function App () {
+function CustomDrawerContent(props) {
+  //props.label = CustomText();
+  //console.log(props);
+  return (
+    <DrawerContentScrollView {...props}>
+      <View style={{
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"space-between",
+        paddingHorizontal:20,
+        paddingTop:10,
+      }}>
+        <Text style={{fontSize:24,fontWeight:"bold"}}>Menu</Text>
+        <Image style={{
+          height: 60,
+          width: 75
+          // 895 x 719
+        }} source={images.recyclingLogo} />
+      </View>
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+  );
+}
+
+const navComp = (name, options) => {return ({
+  drawerLabel:({ focused, color }) => {
+    return <Text numberOfLines={2} style={{ color: color, fontSize: 20 }}>{name}</Text>
+  },
+  ...options
+})}
+
+
+export default function App (props) {
+  
+  const routeNameRef = React.useRef();
+  const navigationRef = React.useRef();
 
   return (
     <>
       <StatusBar />
       <Notifications/>
-      <NavigationContainer>
-        <Drawer.Navigator drawerContentOptions={textStyle} initialRouteName='Bin Schedule'>
-          <Drawer.Screen name='Bin Schedule' component={ScheduleStack}/>
-          <Drawer.Screen name='Which bin does this go in?' component={FindStack} />
-          <Drawer.Screen name='Collection Reminder' component={RemindersScreen} options={{ unmountOnBlur: true }} />
-          <Drawer.Screen name='Feedback' component={FeedbackScreen} />
-          <Drawer.Screen name='About' component={AboutScreen} />
+      <NavigationContainer 
+        ref={navigationRef}
+        onReady={() => routeNameRef.current = navigationRef.current.getCurrentRoute().name}
+        onStateChange={state => {
+          const previousRouteName = routeNameRef.current;
+          const currentRouteName = navigationRef.current.getCurrentRoute().name;
+          if (previousRouteName !== currentRouteName) {
+            analytics().setCurrentScreen(currentRouteName, currentRouteName);
+          }
+        }} >
+        <Drawer.Navigator drawerContent={CustomDrawerContent} initialRouteName='Bin Schedule'>
+          <Drawer.Screen options={navComp('Bin Schedule')} name='Bin Schedule' component={ScheduleStack}/>
+          <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin does this go in?' component={FindStack} />
+          <Drawer.Screen options={navComp('Reminder',{unmountOnBlur: true})} name='Collection Reminder' component={RemindersScreen}/>
+          <Drawer.Screen options={navComp('Feedback')} name='Feedback' component={FeedbackScreen} />
+          <Drawer.Screen options={navComp('About')} name='About' component={AboutScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
       <Onboarding />

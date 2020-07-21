@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import {
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   View,
   Text,
@@ -28,24 +29,26 @@ export default (props) => {
           </TouchableOpacity>
           <Image style={styles.feedback_logo} source={images.hbccLogo} />
         </View>
-        <View style={styles.feedback_body}>
-          <Text style={styles.feedback_welcome}>Feedback</Text>
-          <Text style={styles.feedback_description}>
-                        Thank you for using the Recycling 2.0 app.
-            {'\n\n'}
-                        This app is developed with community feedback to support
-                        your usage of the Recycling 2.0 service. We are continually
-                        improving and welcome your feedback.
-            {'\n\n'}
-                        Complete the feedback form below if you would like to report
-                        a problem, have a suggestion or a question feedback the app.
-          </Text>
-        </View>
-        <View style={styles.feedback_links}>
-          <TouchableOpacity style={styles.feedback_link_button} onPress={handleFeedbackClick}>
-            <Text style={styles.feedback_link_label}>Provide your feedback</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView>
+          <View style={styles.feedback_body}>
+            <Text style={styles.feedback_welcome}>Feedback</Text>
+            <Text style={styles.feedback_description}>
+                          Thank you for using the Recycling 2.0 app.
+              {'\n\n'}
+                          This app is developed with community feedback to support
+                          your usage of the Recycling 2.0 service. We are continually
+                          improving and welcome your feedback.
+              {'\n\n'}
+                          Complete the feedback form below if you would like to report
+                          a problem, have a suggestion or a question feedback the app.
+            </Text>
+          </View>
+          <View style={styles.feedback_links}>
+            <TouchableOpacity style={styles.feedback_link_button} onPress={handleFeedbackClick}>
+              <Text style={styles.feedback_link_label}>Provide your feedback</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );

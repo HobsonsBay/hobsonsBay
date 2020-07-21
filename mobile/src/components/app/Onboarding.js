@@ -18,7 +18,8 @@ import images from '../../utils/images';
 export default () => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleButton = useCallback(() => {
-    AsyncStorage.setItem('onboarded', JSON.stringify(true)).then(() => {
+    // set onboarded to version
+    AsyncStorage.setItem('onboarded', JSON.stringify({version:"107e"})).then(() => {
       setModalVisible(false);
     }).catch(console.error);
   }, []);
@@ -26,7 +27,8 @@ export default () => {
   useEffect(() => {
     AsyncStorage.getItem('onboarded').then((value) => {
       const onboarded = JSON.parse(value);
-      !onboarded && setModalVisible(true);
+      // check for version rather than boolean
+      if(!onboarded || onboarded.version != "107e") setModalVisible(true);
     }).catch(console.error);
   }, []);
 
@@ -40,21 +42,39 @@ export default () => {
           <View style={styles.onboarding_body}>
             <Text style={styles.onboarding_welcome}>Welcome to the Recycling 2.0 app</Text>
             <Text style={styles.onboarding_description}>
-            Hobsons Bay City Council’s kerbside waste and recycling service
-            redirects household waste from landfill into local recycling streams.
-              {'\n\n'}
+            This app supports your usage of the Recycling 2.0 service, redirecting household waste from landfill into local recycling streams.
+            </Text>
+            <View style={styles.onboarding_list}>
+              <Text style={styles.onboarding_list_item}>{'\u2022'}</Text>
+              <Text style={styles.onboarding_description}><Text style={{fontWeight: "bold"}}>Bin Schedule:</Text> Enter your address to find your 
+     next bin day</Text>
+            </View>
+            <View style={styles.onboarding_list}>
+              <Text style={styles.onboarding_list_item}>{'\u2022'}</Text>
+              <Text style={styles.onboarding_description}><Text style={{fontWeight: "bold"}}>Which bin does this go in?: </Text> Search and find    
+      out how to dispose of household items{'\n'}</Text>
+            </View>
+            <Text style={styles.onboarding_welcome}>What’s New</Text>
+            <Text style={styles.onboarding_description}>Collection Reminder</Text>
+            <View style={styles.onboarding_list}>
+              <Text style={styles.onboarding_list_item}>{'\u2022'}</Text>
+              <Text style={styles.onboarding_description}>Schedule a reminder notification for the day 
+               before your bin collection day</Text>
+            </View>
+            <Text style={styles.onboarding_description}>
             This app is an early release and more features will be added in the
             coming months to support your usage of the Recycling 2.0 service.
               {'\n\n'}
             We are continually improving the app and welcome your feedback.
+            
             </Text>
           </View>
+        </ScrollView>
           <View style={styles.onboarding_close}>
             <TouchableOpacity style={styles.onboarding_close_button} onPress={handleButton}>
-              <Text style={styles.onboarding_close_label}>Find your bin day</Text>
+              <Text style={styles.onboarding_close_label}>Get Started</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
       </View>
     </Modal>
   );
@@ -98,10 +118,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 25
   },
+  onboarding_list: {
+    flexDirection:"row",
+    alignItems:"flex-start",
+    width: "90%",
+  },
+  onboarding_list_item: {
+    marginTop: 10,
+    marginHorizontal: 10,
+    fontSize: 16,
+    lineHeight: 25
+  },
   onboarding_close: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingVertical: 30,
+    paddingTop: 25,
+    paddingBottom: 30,
     paddingHorizontal: 20
   },
   onboarding_close_button: {
