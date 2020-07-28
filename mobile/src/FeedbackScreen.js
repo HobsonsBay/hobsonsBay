@@ -1,6 +1,7 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React, {
-  useCallback
+  useCallback,
+  createRef
 } from 'react';
 import {
   SafeAreaView,
@@ -14,12 +15,15 @@ import {
 import images from './utils/images';
 import { openUrl } from './utils';
 import { FEEDBACK_URL } from './utils/constants';
+import SurveyMonkey from 'react-native-survey-monkey';
 
 export default (props) => {
   const { navigation } = props;
   const handleFeedbackClick = openUrl(FEEDBACK_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
-
+  
+  const surveyMonkeyRef = createRef();
+  const handleSurveyClick = () => surveyMonkeyRef.current.showSurveyMonkey('FMNNPFY');
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.feedback}>
@@ -44,10 +48,11 @@ export default (props) => {
             </Text>
           </View>
           <View style={styles.feedback_links}>
-            <TouchableOpacity style={styles.feedback_link_button} onPress={handleFeedbackClick}>
+            <TouchableOpacity style={styles.feedback_link_button} onPress={handleSurveyClick}>
               <Text style={styles.feedback_link_label}>Provide your feedback</Text>
             </TouchableOpacity>
           </View>
+          <SurveyMonkey ref={ surveyMonkeyRef } />
         </ScrollView>
       </View>
     </SafeAreaView>

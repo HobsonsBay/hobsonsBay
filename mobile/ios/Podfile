@@ -34,6 +34,7 @@ target 'HobsonsBay' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'RNFBAnalytics', :path => '../node_modules/@react-native-firebase/analytics'
+  pod 'react-native-survey-monkey', path: '../node_modules/react-native-survey-monkey'
   
   target 'HobsonsBayTests' do
     inherit! :search_paths
