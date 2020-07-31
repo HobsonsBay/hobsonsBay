@@ -12,6 +12,7 @@ import { StatusBar,
   View 
 } from 'react-native';
 import ScheduleStack from './ScheduleStack';
+import Homepage from './Homepage';
 import AboutScreen from './AboutScreen';
 import FeedbackScreen from './FeedbackScreen';
 import RemindersScreen from './RemindersScreen';
@@ -96,7 +97,8 @@ export default function App (props) {
             analytics().setCurrentScreen(currentRouteName, currentRouteName);
           }
         }} >
-        <Drawer.Navigator drawerContent={CustomDrawerContent} initialRouteName='Bin Schedule'>
+        <Drawer.Navigator drawerContent={CustomDrawerContent} initialRouteName='Home'>
+          <Drawer.Screen options={navComp('Home')} name='Home' component={Homepage}/>
           <Drawer.Screen options={navComp('Bin Schedule')} name='Bin Schedule' component={ScheduleStack}/>
           <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin does this go in?' component={FindStack} />
           <Drawer.Screen options={navComp('Reminder',{unmountOnBlur: true})} name='Collection Reminder' component={RemindersScreen}/>
