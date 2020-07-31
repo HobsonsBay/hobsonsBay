@@ -16,6 +16,8 @@ import images from './utils/images';
 import { openUrl } from './utils';
 import { FEEDBACK_URL } from './utils/constants';
 import SurveyMonkey from 'react-native-survey-monkey';
+import { style } from "./utils/styles";
+import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 
 export default (props) => {
   const { navigation } = props;
@@ -35,17 +37,17 @@ export default (props) => {
         </View>
         <ScrollView>
           <View style={styles.feedback_body}>
-            <Text style={styles.feedback_welcome}>Feedback</Text>
-            <Text style={styles.feedback_description}>
+            <Head style={styles.feedback_welcome}>Feedback</Head>
+            <Para style={styles.feedback_description}>
                           Thank you for using the Recycling 2.0 app.
-              {'\n\n'}
+                          <Br/><Br/>
                           This app is developed with community feedback to support
                           your usage of the Recycling 2.0 service. We are continually
                           improving and welcome your feedback.
-              {'\n\n'}
+                          <Br/><Br/>
                           Complete the feedback form below if you would like to report
                           a problem, have a suggestion or a question feedback the app.
-            </Text>
+            </Para>
           </View>
           <View style={styles.feedback_links}>
             <TouchableOpacity style={styles.feedback_link_button} onPress={handleSurveyClick}>
@@ -86,13 +88,11 @@ const styles = StyleSheet.create({
     padding: 20
   },
   feedback_welcome: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    ...style.type.headings.medium
   },
   feedback_description: {
     marginTop: 20,
-    fontSize: 16,
-    lineHeight: 25
+    ...style.type.paras.default
   },
   feedback_links: {
     flexDirection: 'row',

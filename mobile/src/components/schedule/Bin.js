@@ -12,7 +12,7 @@ export default (props) => {
   const { bin_type: binType } = col;
 
   return (
-    <View style={styles.bin}>
+    <View accessible={true} accessibilityLabel={binType} style={styles.bin}>
       <Image style={styles.bin_img} source={images[getBinImg(binType)]} />
     </View>
   );

@@ -14,12 +14,14 @@ import {
   ScrollView
 } from 'react-native';
 import images from '../../utils/images';
+import { style } from "../../utils/styles";
+import { ListItem, Br, Head, Para, LinkButton } from "../../utils/Typography";
 
 export default () => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleButton = useCallback(() => {
     // set onboarded to version
-    AsyncStorage.setItem('onboarded', JSON.stringify({version:"107e"})).then(() => {
+    AsyncStorage.setItem('onboarded', JSON.stringify({version:"110A"})).then(() => {
       setModalVisible(false);
     }).catch(console.error);
   }, []);
@@ -28,7 +30,7 @@ export default () => {
     AsyncStorage.getItem('onboarded').then((value) => {
       const onboarded = JSON.parse(value);
       // check for version rather than boolean
-      if(!onboarded || onboarded.version != "107e") setModalVisible(true);
+      if(!onboarded || onboarded.version != "110A") setModalVisible(true);
     }).catch(console.error);
   }, []);
 
@@ -40,34 +42,30 @@ export default () => {
             <Image style={styles.onboarding_image} source={images.recyclingLogoStretch} />
           </View>
           <View style={styles.onboarding_body}>
-            <Text style={styles.onboarding_welcome}>Welcome to the Recycling 2.0 app</Text>
-            <Text style={styles.onboarding_description}>
+            <Head style={styles.onboarding_welcome}>Welcome to the Recycling 2.0 app</Head>
+            <Para style={styles.onboarding_description}>
             This app supports your usage of the Recycling 2.0 service, redirecting household waste from landfill into local recycling streams.
-            </Text>
-            <View style={styles.onboarding_list}>
-              <Text style={styles.onboarding_list_item}>{'\u2022'}</Text>
-              <Text style={styles.onboarding_description}><Text style={{fontWeight: "bold"}}>Bin Schedule:</Text> Enter your address to find your 
-     next bin day</Text>
-            </View>
-            <View style={styles.onboarding_list}>
-              <Text style={styles.onboarding_list_item}>{'\u2022'}</Text>
-              <Text style={styles.onboarding_description}><Text style={{fontWeight: "bold"}}>Which bin does this go in?: </Text> Search and find    
-      out how to dispose of household items{'\n'}</Text>
-            </View>
-            <Text style={styles.onboarding_welcome}>What’s New</Text>
-            <Text style={styles.onboarding_description}>Collection Reminder</Text>
-            <View style={styles.onboarding_list}>
-              <Text style={styles.onboarding_list_item}>{'\u2022'}</Text>
-              <Text style={styles.onboarding_description}>Schedule a reminder notification for the day 
-               before your bin collection day</Text>
-            </View>
-            <Text style={styles.onboarding_description}>
+            </Para>
+            <ListItem style={styles.onboarding_description}>
+              <Text style={{fontWeight: "bold"}}>Bin Schedule:</Text> Enter your address to find your 
+     next bin day
+            </ListItem>
+            <ListItem style={styles.onboarding_description}>
+              <Text style={{fontWeight: "bold"}}>Which bin does this go in?: </Text> Search and find    
+      out how to dispose of household items{'\n'}
+            </ListItem>
+            <Head style={styles.onboarding_welcome}>What’s New</Head>
+            <Para style={styles.onboarding_description}>Collection Reminder</Para>
+            <ListItem style={styles.onboarding_description}>
+              Schedule a reminder notification for the day 
+               before your bin collection day
+            </ListItem>
+            <Para style={styles.onboarding_description}>
             This app is an early release and more features will be added in the
             coming months to support your usage of the Recycling 2.0 service.
-              {'\n\n'}
+              <Br/><Br/>
             We are continually improving the app and welcome your feedback.
-            
-            </Text>
+            </Para>
           </View>
         </ScrollView>
           <View style={styles.onboarding_close}>
@@ -110,13 +108,11 @@ const styles = StyleSheet.create({
     padding: 20
   },
   onboarding_welcome: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    ...style.type.headings.medium
   },
   onboarding_description: {
     marginTop: 10,
-    fontSize: 16,
-    lineHeight: 25
+    ...style.type.paras.default
   },
   onboarding_list: {
     flexDirection:"row",

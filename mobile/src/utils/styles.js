@@ -1,29 +1,34 @@
-export const styles = {
+const style = {
 	type : {
 		headings : {
 			small : {
-
+			    fontSize: 22,
+			    fontWeight: 'normal'
 			},
 			medium : {
-
+			    fontSize: 20,
+			    fontWeight: 'bold'
 			},
 			large : {
-
+			    fontSize: 24,
+			    fontWeight: 'bold'
 			}
 		},
 		paras : {
 			default: {
-
+			    fontSize: 16,
+			    lineHeight: 24
 			},
 			intro: {
-
+			    fontSize: 20,
+			    lineHeight: 32
 			}
 		},
 		bold : {
-
+    		fontWeight: 'bold'
 		},
 		italic : {
-
+			fontStyle: 'italic'
 		},
 		list : {
 
@@ -43,3 +48,5 @@ export const styles = {
 
 	}
 }
+
+export { style };

@@ -15,6 +15,8 @@ import {
 import images from './utils/images';
 import { openUrl } from './utils';
 import { RECYCLING_20_URL, POLICY_URL, CONTACT_URL, FEEDBACK_URL } from './utils/constants';
+import { style } from "./utils/styles";
+import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 
 export default (props) => {
   const { navigation } = props;
@@ -35,38 +37,34 @@ export default (props) => {
         </View>
 
         <ScrollView style={styles.about_scroll} contentContainerStyle={styles.about_scroll_content}>
-          <Text style={styles.about_welcome}>About Recycling 2.0</Text>
+          <Head style={styles.about_welcome}>About Recycling 2.0</Head>
           <View style={styles.about_photo}>
             <Image style={styles.about_image} source={images.aerielAltona} />
           </View>
           <View style={styles.about_body}>
-            <Text style={styles.about_description}>
+            <Para style={styles.about_description}>
                             Hobsons Bay City Council’s kerbside waste and recycling service
                             redirects household waste from landfill into local recycling streams.
-              {'\n\n'}
+              <Br/><Br/>
                             This app is an early release and more features will be added in the
                             coming months to support your usage of the Recycling 2.0 service.
-              {'\n\n'}
+              <Br/><Br/>
                             We are continually improving the app and welcome your feedback.
-            </Text>
+            </Para>
           </View>
           <View style={styles.about_links}>
-            <TouchableOpacity style={styles.about_link_button} onPress={handleContactClick}>
-              <Text style={styles.about_link_label}>Contact Hobsons Bay City Council</Text>
-              <Text><MIcon name='launch' size={18} color='#1352A5' /></Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.about_link_button} onPress={handleRecycling20Click}>
-              <Text style={styles.about_link_label}>Visit the Recycling 2.0 Website</Text>
-              <Text><MIcon name='launch' size={18} color='#1352A5' /></Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.about_link_button} onPress={handleFeedbackClick}>
-              <Text style={styles.about_link_label}>Provide App Feedback</Text>
-              <Text><MIcon name='launch' size={18} color='#1352A5' /></Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.about_link_button} onPress={handlePolicyClick}>
-              <Text style={styles.about_link_label}>Read Privacy Policy</Text>
-              <Text><MIcon name='launch' size={18} color='#1352A5' /></Text>
-            </TouchableOpacity>
+            <LinkButton onPress={handleContactClick}>
+              Contact Hobsons Bay City Council
+            </LinkButton>
+            <LinkButton onPress={handleRecycling20Click}>
+              Visit the Recycling 2.0 Website
+            </LinkButton>
+            <LinkButton onPress={handleFeedbackClick}>
+              Provide App Feedback
+            </LinkButton>
+            <LinkButton onPress={handlePolicyClick}>
+              Read Privacy Policy
+            </LinkButton>
           </View>
         </ScrollView>
       </View>
@@ -116,33 +114,13 @@ const styles = StyleSheet.create({
     padding: 20
   },
   about_welcome: {
-    marginLeft: 20,
-    fontSize: 20,
-    fontWeight: 'bold'
+    marginLeft: 20
   },
   about_description: {
-    marginTop: 10,
-    fontSize: 16,
-    lineHeight: 25
+    marginTop: 10
   },
   about_links: {
     flexDirection: 'column',
     padding: 20
   },
-  about_link_button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#9e9e9e'
-  },
-  about_link_label: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#1352A5'
-  }
 });
