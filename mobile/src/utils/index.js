@@ -3,6 +3,7 @@ import {
 } from 'react-native';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
+import isTomorrow from 'date-fns/isTomorrow';
 import startWith from 'lodash/startsWith';
 import min from 'lodash/min';
 import trimEnd from 'lodash/trimEnd';
@@ -26,6 +27,18 @@ export const openUrl = (url) => {
 export const formatDate = (date) => {
   const d = parse(date, 'dd/MM/yyyy', new Date());
   return format(d, 'dd MMMM');
+};
+
+export const formatDayNumber = (date) => {
+  const d = parse(date, 'dd/MM/yyyy', new Date());
+  return format(d, 'dd');
+};
+
+export const formatDayTomorrow = (date) => {
+  const d = parse(date, 'dd/MM/yyyy', new Date());
+  const t = isTomorrow(d);
+  const day = format(d, 'EEEE');
+  return t ? "Tomorrow" : day ;
 };
 
 export const formatDay = (date) => {

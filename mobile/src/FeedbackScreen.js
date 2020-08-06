@@ -18,11 +18,13 @@ import { FEEDBACK_URL } from './utils/constants';
 import SurveyMonkey from 'react-native-survey-monkey';
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
+//import {AppDataProvider, useData} from './utils/DataContext'
 
 export default (props) => {
   const { navigation } = props;
   const handleFeedbackClick = openUrl(FEEDBACK_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
+  //const [data, setData] = useData();
   
   const surveyMonkeyRef = createRef();
   const handleSurveyClick = () => surveyMonkeyRef.current.showSurveyMonkey('FMNNPFY');

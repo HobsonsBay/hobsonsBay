@@ -10,10 +10,11 @@ import images from '../../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default (props) => {
-  const { icon, onTouch, text } = props;
+  const { icon, onTouch, text, goTo, navigation } = props;
+  console.log(goTo);
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={React.useCallback(() => navigation.navigate(goTo))}>
       <View style={styles.button}>
         <Icon name={icon} size={26} color='#727272' />
         <Text style={styles.text}>{text}</Text>

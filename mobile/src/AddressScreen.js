@@ -19,8 +19,10 @@ import images from './utils/images';
 import { openUrl } from './utils';
 import { POLICY_URL } from './utils/constants';
 import Search from './components/address/Search';
+import { useData } from './utils/DataContext'
 
 export default (props) => {
+  const { setAddress } = useData();
   const { navigation } = props;
   const [listener] = useState({});
   const [showAll, setShowAll] = useState(true);
@@ -28,8 +30,10 @@ export default (props) => {
   const keyboardDidShow = useCallback(() => setShowAll(false), []);
   const keyboardDidHide = useCallback(() => setShowAll(true), []);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
+
   const handleSelection = useCallback((address) => {
     AsyncStorage.setItem('address', JSON.stringify(address)).then(() => {
+      setAddress(address["Property Address"])
       address && navigation.push('Schedule', { address });
     }).catch(console.error);
   }, []);

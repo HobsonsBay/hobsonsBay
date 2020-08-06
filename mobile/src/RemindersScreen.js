@@ -32,6 +32,8 @@ import postConfig from './api/postConfig';
 import deleteConfig from './api/deleteConfig';
 import putConfig from './api/putConfig';
 import useFullAddress from './hooks/useFullAddress';
+import { useData } from './utils/DataContext'
+
 
 export default (props) => {
   const { navigation } = props;
@@ -43,7 +45,15 @@ export default (props) => {
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(true);
   const handlePolicyClick = openUrl(POLICY_URL);
+  const {
+    data, setData, 
+    addressObj, setAddressObj, 
+    address, setAddress,
+    notifications, setNotifications
+  } = useData();
 
+
+  console.log('reminders render')
 
   //console.log(config);
 
@@ -155,6 +165,12 @@ export default (props) => {
     }
     setDisabled(!fullAddress);
   }, [fullAddress]);
+
+  // cheeky effect to set global notifications
+  // TODO improve this whole process 
+  useEffect(() => {
+    setNotifications(status)
+  }, [status]);
 
   const remindersPickerTimeStyle = [
     styles.reminders_picker_time,

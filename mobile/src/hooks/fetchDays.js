@@ -10,18 +10,18 @@ import {
 import { sortBins } from '../utils';
 const { API_URL } = require('../config/api');
 
-export default (asn) => {
-  const [data, setData] = useState({ area: '', day: '', days: [] });
+export default async (asn) => {
+  let data ={ area: '', day: '', days: [] };
 
-  const processSchedule = useCallback((rows) => {
+  const processSchedule = async (rows) => {
     const { note } = rows[0];
     data.note = note;
     const grouped = groupBy(rows, 'date');
     const mapped = map(grouped, (value, key) => ({ date: key, bins: sortBins(value) }));
     return mapped.length > 4 ? slice(mapped, 0, 4) : mapped;
-  }, []);
+  };
   
-  const getAddress = useCallback((asn) => {
+  const getAddress = async (asn) => {
     const ADDRESS_URL = `${API_URL}/addresses?asn=${asn}`;
     return fetch(ADDRESS_URL)
       .then((res) => res.json())
@@ -36,15 +36,13 @@ export default (asn) => {
       .then(({ rows }) => {
         return processSchedule(rows);
       });
-  }, []);
+  };
 
-  useEffect(() => {
     if (asn && data.day === '') {
-      getAddress(asn)
-        .then((days) => setData({ ...data, days }))
+      await getAddress(asn)
+        .then((days) => data = { ...data, days })
         .catch((e) => console.error('Error getting address', e));
     }
-  }, [asn]);
 
-  return [data];
+  return data;
 };

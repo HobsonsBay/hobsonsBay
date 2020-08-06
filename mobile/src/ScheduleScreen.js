@@ -28,34 +28,26 @@ import { openUrl, getAreaBackgroundColor, getAreaColor } from './utils';
 import { CALENDAR_URL } from './utils/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
+import { useData } from './utils/DataContext'
 
 export default (props) => {
   const { navigation, route } = props;
-  const address = get(route, 'params.address', {});
-  const propertyAddress = address['Property Address'];
-  const asn = address['Assessment Number'];
+  const {notifications, setNotifications, binDays, address, setAddress } = useData();
+  const propAddress = get(route, 'params.address', {});
+  const propertyAddress = propAddress['Property Address'];
+  const asn = propAddress['Assessment Number'];
   let [{ note, area, day, days }] = useDays(asn);
+  //let { note, area, day, days } = binDays;
   const loading = !day;
   const handleCalendarClick = openUrl(CALENDAR_URL);
   const [config, setConfig] = useState(null);
   
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
-  console.log(route);
+  //console.log(route);
 
-  // Text.defaultProps.allowFontScaling=false;
 
-  /*
-  useEffect(() => {
-    console.log('reminders effect called: ')
-    console.log(reminders)
-  }, [reminders]);
-
-  useEffect(() => {
-    console.log('config effect called');
-    console.log(config);
-  }, [config]);
-  */
+  console.log('schedule render')
 
   //ADD GA TRACKING FOR ZONE AND REMINDERS
   useEffect(() => {
@@ -64,7 +56,6 @@ export default (props) => {
             notifications: config ? "on" : "off"
           })
   }, [config, day]);
-
 
   // on focus, set config and reminders
   useFocusEffect(
@@ -112,12 +103,14 @@ export default (props) => {
         }).then(() => {
           AsyncStorage.removeItem('address').then(() => {
             navigation.goBack();
+            setAddress(false);
           }).catch(console.error);
         }).catch(console.error);
     }else{
       // if reminders aren't set
       AsyncStorage.removeItem('address').then(() => {
         navigation.goBack();
+        setAddress(false);
       }).catch(console.error);
     }
 
@@ -169,7 +162,7 @@ export default (props) => {
                 <View style={styles.schedule_title_bell_container}>
                   <TouchableOpacity style={styles.schedule_title_bell} onPress={handleNotification}>
                     <View style={styles.schedule_title_bell_icon}>
-                      { config ?
+                      { notifications ?
                         <Icon name='bell-o' size={20} color='#757575' />
                         :
                         <Icon name='bell-slash-o' size={20} color='#999999' />

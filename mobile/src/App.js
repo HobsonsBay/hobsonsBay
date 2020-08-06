@@ -23,6 +23,7 @@ import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
 import images from './utils/images';
+import {AppDataProvider, useData} from './utils/DataContext'
 
 const setNotification = async (value) => {
   try {
@@ -53,17 +54,16 @@ function CustomDrawerContent(props) {
     <DrawerContentScrollView {...props}>
       <View style={{
         flexDirection:"row",
-        alignItems:"center",
-        justifyContent:"space-between",
+        alignItems:"flex-end",
+        //justifyContent:"space-between",
         paddingHorizontal:20,
         paddingTop:10,
       }}>
-        <Text style={{fontSize:24,fontWeight:"bold"}}>Menu</Text>
         <Image style={{
-          height: 60,
-          width: 75
+          height: 41,
+          width: 150
           // 895 x 719
-        }} source={images.recyclingLogo} />
+        }} source={images.recyclingLogoWite} />
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
@@ -72,7 +72,7 @@ function CustomDrawerContent(props) {
 
 const navComp = (name, options) => {return ({
   drawerLabel:({ focused, color }) => {
-    return <Text numberOfLines={2} style={{ color: color, fontSize: 20 }}>{name}</Text>
+    return <Text numberOfLines={2} style={{ color: "#fff", fontSize: 14, fontWeight: 'bold' }}>{name}</Text>
   },
   ...options
 })}
@@ -85,6 +85,7 @@ export default function App (props) {
 
   return (
     <>
+    <AppDataProvider>
       <StatusBar />
       <Notifications/>
       <NavigationContainer 
@@ -97,7 +98,7 @@ export default function App (props) {
             analytics().setCurrentScreen(currentRouteName, currentRouteName);
           }
         }} >
-        <Drawer.Navigator drawerContent={CustomDrawerContent} initialRouteName='Home'>
+        <Drawer.Navigator drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={CustomDrawerContent} initialRouteName='Home'>
           <Drawer.Screen options={navComp('Home')} name='Home' component={Homepage}/>
           <Drawer.Screen options={navComp('Bin Schedule')} name='Bin Schedule' component={ScheduleStack}/>
           <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin does this go in?' component={FindStack} />
@@ -107,6 +108,7 @@ export default function App (props) {
         </Drawer.Navigator>
       </NavigationContainer>
       <Onboarding />
+    </AppDataProvider>
     </>
   );
 }
