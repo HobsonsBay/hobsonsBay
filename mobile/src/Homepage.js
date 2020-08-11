@@ -13,7 +13,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  Share,
+  Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import FootButton from './components/home/FootButton';
@@ -22,8 +24,9 @@ import NavTile from './components/home/NavTile';
 import ScheduleTile from './components/home/ScheduleTile';
 import ItemFindTile from './components/home/ItemFindTile';
 import images from './utils/images';
-import hasAddress from './utils/hasAddress';
-import hasNotification from './utils/hasNotification';
+import deleteConfig from './api/deleteConfig';
+import { clearAddress } from './utils/handleAddress';
+import { clearNotification } from './utils/hasNotification';
 import { openUrl } from './utils';
 import get from 'lodash/get';
 import { style } from "./utils/styles";
@@ -31,6 +34,7 @@ import useDays from './hooks/useDays';
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 import { useFocusEffect } from '@react-navigation/native';
 import { useData } from './utils/DataContext'
+import { handleAddressWarning } from "./ScheduleScreen"
 
 
 export default (props) => {
@@ -40,9 +44,79 @@ export default (props) => {
   const {
     address, setAddress,
     notifications, setNotifications,
-    binDays
+    binDays,
+    config, setConfig
   } = useData();
 
+  let shareMessage = {}
+
+  if(Platform.OS === 'android'){
+    shareMessage = {
+      title : "Recycling 2.0 Mobile App Download",
+      message: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
+    }
+  }else if(Platform.OS === 'ios'){
+    shareMessage = {
+        message:
+          'Recycling 2.0 Mobile App Download',
+        url: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
+      }
+  }
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share(shareMessage);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleAddressWarning = useCallback(() => {
+    Alert.alert(
+      'Change Address?',
+      'Changing your address will clear any reminders that you have set',
+      [
+        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+        { text: 'Change Address', onPress: handleAddressChange }
+      ],
+      { cancelable: false }
+    );
+  }, [config])
+
+  const handleAddressChange = useCallback(() => {  
+    // delete config code for reminders
+    if (config) {
+      const { id } = config;
+      deleteConfig(id)
+        .then(() => {
+          AsyncStorage.removeItem('config');
+          setNotifications(false);
+        }).then(() => {
+          setConfig(null);
+        }).then(() => {
+          clearAddress().then(() => {
+            setAddress(false);
+            navigation.navigate('Bin Schedule')
+          }).catch(console.error);
+        }).catch(console.error);
+    }else{
+      // if reminders aren't set
+      clearAddress().then(() => {
+        setAddress(false);
+        navigation.navigate('Bin Schedule')
+      }).catch(console.error);
+    }
+
+  }, [config]);
 
   const handleNotification = useCallback(() => navigation.navigate('Collection Reminder'));
   const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule'));
@@ -61,7 +135,7 @@ export default (props) => {
         </View>
         <ScrollView contentContainerStyle={styles.home_body}>
             <View style={styles.home_2up_wrap}>
-              <View style={styles.home_2up}>
+              <View style={[styles.home_2up,{opacity: binDays.day ? 1 : 0.3}]}>
                 <NavTile onPress={handleSchedule} label={
                  <Text>Bin Schedule<Br/>(Next bin days)</Text>  
                 }>
@@ -78,7 +152,7 @@ export default (props) => {
             </View>
             <View style={{justifyContent:'center', flex: 1, paddingVertical: 10}}>
               <View style={styles.button}>
-                <ActionButton onPress={handleSchedule} color={ address ? "#5E8310" : "#8B1614" }  left={
+                <ActionButton onPress={handleAddressWarning} color={ address ? "#5E8310" : "#8B1614" }  left={
                   <Icon name='map-marker' size={24} color='#ffffff' />
                 } right ={
                   <Icon name='gear' size={20} color='#ffffff' />
@@ -114,7 +188,7 @@ export default (props) => {
             <FootButton goTo='Feedback' icon='edit' text="Feedback" navigation={navigation}/>
           </View>
           <View style={styles.footer_button}>
-            <FootButton icon='share-square' text="Share"/>
+            <FootButton onPress={onShare} icon='share-square' text="Share"/>
           </View>
         </View>
       </View>

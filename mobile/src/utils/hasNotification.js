@@ -1,12 +1,12 @@
 //import React from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 
-export default async function(){
+const hasNotification = async () => {
     let out = false;
     await AsyncStorage.getItem('config').then((value) => {
       const config = JSON.parse(value);
       if(config){
-        out = true;
+        out = config;
       }else{
         out = false;
       }
@@ -14,4 +14,9 @@ export default async function(){
     return out;
 }
 
-//module.exports = hasAddress;
+const clearNotification = async () => {
+  AsyncStorage.removeItem('config');
+  return
+}
+
+export { hasNotification, clearNotification };

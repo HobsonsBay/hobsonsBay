@@ -6,15 +6,16 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default (props) => {
   const { label, onPress } = props;
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.tile}>
-        {props.children}
-      </View>
+      <LinearGradient colors={['#ebebeb', '#ffffff', '#ffffff']} style={styles.tile}>
+          {props.children}
+      </LinearGradient>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -24,8 +25,10 @@ const styles = StyleSheet.create({
   tile: {
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#ebebeb',
-    borderRadius: 10,
+    //backgroundColor: '#ebebeb',
+    borderRadius: 12,
+    borderColor: "#e0dddd",
+    borderWidth: 2,
     minWidth: 130,
     minHeight: 140
   },

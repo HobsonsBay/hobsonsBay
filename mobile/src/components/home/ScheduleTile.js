@@ -13,8 +13,7 @@ export default (props) => {
   const [binType, setBinType] = useState([]);
 
   useEffect(()=>{
-    if(binDays){
-      console.log(binDays.days[0])
+    if(binDays.days){
       setBinDate(binDays.days[0].date)
       setBinType(binDays.days[0].bins)
     }else{
@@ -49,8 +48,8 @@ export default (props) => {
 
   return (
     <View style={styles.tile}>
-      <View style={styles.redheader}><Text style={styles.monthtext}>{ formatDayTomorrow( binDate )}</Text></View>
-      <Text style={styles.bignumber}>{ formatDayNumber( binDate )}</Text>
+      <View style={styles.redheader}><Text style={styles.monthtext}>{ binDays.day && formatDayTomorrow( binDate )}</Text></View>
+      <Text style={styles.bignumber}>{ binDays.day && formatDayNumber( binDate )}</Text>
       <View style={styles.bintypes}>
         { binType.length > 0 && 
           binType.map((bin, key) => <View key={key} style={[styles.bintype,{backgroundColor:binCol(bin.bin_type)}]}></View>)
@@ -97,8 +96,8 @@ const styles = StyleSheet.create({
     height: 24,
     backgroundColor: "#fff",
     marginHorizontal: 5,
-    borderRadius: 12,
-    borderWidth: 2,
+    borderRadius: 3,
+    borderWidth: 1,
     borderColor: '#999'
   }
 });

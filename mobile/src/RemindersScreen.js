@@ -39,14 +39,13 @@ export default (props) => {
   const { navigation } = props;
   const [fullAddress] = useFullAddress();
   const [disabled, setDisabled] = useState(true);
-  const [config, setConfig] = useState(null);
   const [status, setStatus] = useState(false);
   const [date, setDate] = useState(startOfHour(new Date(2001, 1, 1, 18, 0, 0)));
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(true);
   const handlePolicyClick = openUrl(POLICY_URL);
   const {
-    data, setData, 
+    config, setConfig, 
     addressObj, setAddressObj, 
     address, setAddress,
     notifications, setNotifications
@@ -83,11 +82,24 @@ export default (props) => {
   const handlePressToggle = () => {
     if (disabled && !fullAddress) promptAddress();
   };
-
+  /*
+  {"Assessment Number": 9008401000, 
+  "ID Agility Property": 39097, 
+  "Property Address": "23 Shellard St Altona North, VIC 3025", 
+  "__position": 3, 
+  "_highlightResult": {
+    "Property Address": {
+      "matchLevel": "none", 
+      "matchedWords": [Array], 
+      "value": "23 Shellard St Altona North, VIC 3025"}
+    }, "objectID": "9008401000"
+  } {"address": "23 Shellard St Altona North, VIC 3025", "area": "2", "asn": 9008401000, "day": "Thursday"}
+ */
   const handleChangeToggle = (value) => {
     if (value) {
-      if (fullAddress) {
+      if (addressObj) {
         setDisabled(true);
+        console.log(addressObj,fullAddress)
         const { day, area } = fullAddress;
         const time = format(date, 'HHmm');
         const zone = `${day} Area ${area}`;

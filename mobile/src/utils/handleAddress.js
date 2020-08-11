@@ -1,7 +1,7 @@
 //import React from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 
-export default async function(){
+const hasAddress = async () => {
     let out = false;
     await AsyncStorage.getItem('address').then((value) => {
       const addressVal = JSON.parse(value);
@@ -14,4 +14,9 @@ export default async function(){
     return out;
 }
 
-//module.exports = hasAddress;
+const clearAddress = async () => {
+	AsyncStorage.removeItem('address');
+	return
+}
+
+export { hasAddress, clearAddress };

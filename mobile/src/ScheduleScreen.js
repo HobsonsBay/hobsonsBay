@@ -21,9 +21,9 @@ import {
   Alert
 } from 'react-native';
 import images from './utils/images';
-import useDays from './hooks/useDays';
 import Day from './components/schedule/Day';
 import deleteConfig from './api/deleteConfig';
+import { clearAddress } from './utils/handleAddress';
 import { openUrl, getAreaBackgroundColor, getAreaColor } from './utils';
 import { CALENDAR_URL } from './utils/constants';
 import { useFocusEffect } from '@react-navigation/native';
@@ -32,19 +32,11 @@ import { useData } from './utils/DataContext'
 
 export default (props) => {
   const { navigation, route } = props;
-  const {notifications, setNotifications, binDays, address, setAddress } = useData();
-  const propAddress = get(route, 'params.address', {});
-  const propertyAddress = propAddress['Property Address'];
-  const asn = propAddress['Assessment Number'];
-  let [{ note, area, day, days }] = useDays(asn);
-  //let { note, area, day, days } = binDays;
-  const loading = !day;
+  const {notifications, setNotifications, binDays, address, setAddress, config, setConfig } = useData();
+  const loading = !binDays.day;
   const handleCalendarClick = openUrl(CALENDAR_URL);
-  const [config, setConfig] = useState(null);
   
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
-
-  //console.log(route);
 
 
   console.log('schedule render')
@@ -52,27 +44,11 @@ export default (props) => {
   //ADD GA TRACKING FOR ZONE AND REMINDERS
   useEffect(() => {
     analytics().logEvent('recycle_app_config', {
-            zone: area ? `Area ${area} - ${day}` : "not_set",
-            notifications: config ? "on" : "off"
+            zone: binDays.area ? `Area ${binDays.area} - ${binDays.day}` : "not_set",
+            notifications: notifications ? "on" : "off"
           })
-  }, [config, day]);
+  }, [notifications, binDays.day]);
 
-  // on focus, set config and reminders
-  useFocusEffect(
-    React.useCallback(() => {
-      //console.log('focus effect called');
-      AsyncStorage.getItem('config').then((value) => {
-        const config = JSON.parse(value);
-        if (config) {
-          //console.log('set config vals')
-          setConfig(config);
-        }else{
-          //console.log('set config null')
-          setConfig(null);
-        }
-      }).catch(console.error);
-    }, [])
-  );
   
   const handleAddressWarning = useCallback(() => {
     Alert.alert(
@@ -88,27 +64,28 @@ export default (props) => {
 
   const handleAddressChange = useCallback(() => {  
 
-    console.log("address change called");
+    //console.log("address change called");
 
     // delete config code for reminders
     if (config) {
       const { id } = config;
       deleteConfig(id)
         .then(() => {
-          console.log("config deleted");
+          //console.log("config deleted");
           AsyncStorage.removeItem('config');
+          setNotifications(false);
         }).then(() => {
-          console.log("async config deleted");
+          //console.log("async config deleted");
           setConfig(null);
         }).then(() => {
-          AsyncStorage.removeItem('address').then(() => {
+          clearAddress().then(() => {
             navigation.goBack();
             setAddress(false);
           }).catch(console.error);
         }).catch(console.error);
     }else{
       // if reminders aren't set
-      AsyncStorage.removeItem('address').then(() => {
+      clearAddress().then(() => {
         navigation.goBack();
         setAddress(false);
       }).catch(console.error);
@@ -120,16 +97,16 @@ export default (props) => {
 
   const scheduleDayLabelStyle = [
     styles.schedule_day_label,
-    { backgroundColor: getAreaBackgroundColor(area) },
-    !isEmpty(note) ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } : {}
+    { backgroundColor: getAreaBackgroundColor(binDays.area) },
+    !isEmpty(binDays.note) ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } : {}
   ];
   const scheduleDayLabelTextStyle = [
     styles.schedule_day_label_text,
-    { color: getAreaColor(area) },
+    { color: getAreaColor(binDays.area) },
   ];
   const scheduleDayNoteStyle = [
     styles.schedule_day_note,
-    { backgroundColor: getAreaBackgroundColor(area) }
+    { backgroundColor: getAreaBackgroundColor(binDays.area) }
   ];
 
   return (
@@ -145,7 +122,7 @@ export default (props) => {
           <View style={styles.schedule_address_wrapper}>
             <View style={styles.schedule_address_card}>
               <Text><Icon name='map-marker' size={24} color='#757575' /></Text>
-              <Text style={styles.schedule_address_label} numberOfLines={1}>{propertyAddress}</Text>
+              <Text style={styles.schedule_address_label} numberOfLines={1}>{address}</Text>
             </View>
             <TouchableOpacity style={styles.schedule_edit} onPress={handleAddressWarning}>
               <Text style={styles.schedule_edit_label}>change address</Text>
@@ -156,7 +133,7 @@ export default (props) => {
         <ScrollView style={styles.schedule_body} contentContainerStyle={[styles.schedule_body_content, loading ? { flex: 1 } : {}]}>
           {loading && <ActivityIndicator size='large' color='#f0b41c' />}
           {!loading &&
-            <>
+            <React.Fragment>
               <View style={styles.schedule_title_wrapper}>
                 <Text style={styles.schedule_title} numberOfLines={1}>Your next collection days</Text>
                 <View style={styles.schedule_title_bell_container}>
@@ -172,11 +149,11 @@ export default (props) => {
                 </View>
               </View>
               <View style={scheduleDayLabelStyle}>
-                <Text style={scheduleDayLabelTextStyle}>Area {area} - {day}</Text>
+                <Text style={scheduleDayLabelTextStyle}>Area {binDays.area} - {binDays.day}</Text>
               </View>
-              {!isEmpty(note) &&
+              {!isEmpty(binDays.note) &&
                 <Text style={scheduleDayNoteStyle}>
-                  {note}
+                  {binDays.note}
                 </Text>
               }
               <Text style={styles.schedule_note}>
@@ -184,13 +161,13 @@ export default (props) => {
                 collection by <Text style={styles.schedule_note_time}>5am</Text>
               </Text>
               <View style={styles.schedule_days}>
-                {map(days, (row, index) => <Day day={day} row={row} key={index} />)}
+                {map(binDays.days, (row, index) => <Day day={binDays.day} row={row} key={index} />)}
               </View>
               <TouchableOpacity style={styles.schedule_calendar} onPress={handleCalendarClick}>
                 <Text style={styles.schedule_calendar_text}>View Calendar on Website</Text>
                 <Text><MIcon name='launch' size={18} color='#1051a4' /></Text>
               </TouchableOpacity>
-            </> }
+            </React.Fragment> }
         </ScrollView>
       </View>
     </SafeAreaView>

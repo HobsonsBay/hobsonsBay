@@ -1,6 +1,6 @@
 import React from 'react'
-import hasAddress from './hasAddress';
-import hasNotification from './hasNotification';
+import { hasAddress, clearAddress } from './handleAddress';
+import { hasNotification } from './hasNotification';
 import fetchDays from '../hooks/fetchDays';
 
 const DataContext = React.createContext()
@@ -27,102 +27,90 @@ function useData() {
 function AppDataProvider(props) {
 	const [address, setAddress] = React.useState(false);
 	const [addressObj, setAddressObj] = React.useState(null);
-	const [binDays, setBinDays] = React.useState(null);
-	const [configObj, setConfigObj] = React.useState(null);
+	const [binDays, setBinDays] = React.useState({area:false,zone:false,day:false,days:false});
+	const [config, setConfig] = React.useState(null);
   const [notifications, setNotifications] = React.useState(false);
-  const [data, setData] = React.useState({address:false,notifications:false});
 
-
-  // init with async values for address and notifications
-  hasAddress().then((val) => {
-  	//console.log(val);
-
-  	/*
-  	{
-  		"Assessment Number": 9008500150, 
-  		"ID Agility Property": 39099, 
-  		"Property Address": "17 Mulholland Lane Newport, VIC 3015", 
-  		"__position": 1, 
-  		"_highlightResult": {
-  			"Property Address": {
-  				"matchLevel": "none", 
-  				"matchedWords": [Array], 
-  				"value": "17 Mulholland Lane Newport, VIC 3015"
-  			}
-  		}, 
-  		"objectID": "9008500150"
-  	}
-	 */
-
-    setAddress(val["Property Address"])
-    setAddressObj(val["Assessment Number"])
-  });
-  hasNotification().then((val) => {
-    setNotifications(val)
-  });
-
-  const value = React.useMemo(() => {
-  	data, setData, 
-  	addressObj, setAddressObj, 
-  	address, setAddress,
-  	notifications, setNotifications,
-  	binDays, setBinDays
-  }, [
-  	data, 
-  	addressObj, 
-  	address,
-  	notifications
-  ]);
-
-  // console.log('new value');
-  // console.log(value);
-
-
-
-  React.useEffect(()=>{
-  	console.log('set data')
-  	console.log(data)
-  },[
-  	data
-  ])
-  React.useEffect(()=>{
+  //hook for changing address object to then set bin day data
+  React.useMemo(()=>{
   	console.log('set addressObj')
-  	console.log(addressObj)
-  	if (addressObj) fetchDays(addressObj).then((res)=>setBinDays(res))
+  	//console.log(addressObj)
+  	if (addressObj) {
+  		fetchDays(addressObj["Assessment Number"]).then((res)=>setBinDays(res))
+  	}else{
+  		setBinDays({area:false,zone:false,day:false,days:false})
+  	}
   },[
   	addressObj
   ])
-  React.useEffect(()=>{
+
+  //hook for changing bin day data
+  React.useMemo(()=>{
   	console.log('set bin days')
   	console.log(binDays)
   },[
   	binDays
   ])
-  React.useEffect(()=>{
+
+
+  React.useMemo(()=>{
   	console.log('set address')
-  	console.log(address)
+  	//console.log(address)  
+  	hasAddress().then((val) => {
+	  	/*
+	  	sample address payload
+	  	{
+	  		"Assessment Number": 9008500150, 
+	  		"ID Agility Property": 39099, 
+	  		"Property Address": "17 Mulholland Lane Newport, VIC 3015", 
+	  		"__position": 1, 
+	  		"_highlightResult": {
+	  			"Property Address": {
+	  				"matchLevel": "none", 
+	  				"matchedWords": [Array], 
+	  				"value": "17 Mulholland Lane Newport, VIC 3015"
+	  			}
+	  		}, 
+	  		"objectID": "9008500150"
+	  	}
+		 	*/
+		 	console.log('run on has address');
+
+	    setAddress(val["Property Address"])
+	    setAddressObj(val)
+	  });
+
   	if(!address) {
   		setAddressObj(false);
-  		setBinDays(null);
+  		setBinDays({area:false,zone:false,day:false,days:false});
   	}
   },[
   	address
   ])
-  React.useEffect(()=>{
+
+  React.useMemo(()=>{
   	console.log('set notifications')
   	console.log(notifications)
+	  hasNotification().then((val) => {
+	  	if (val){
+	  	 setNotifications(true);
+	  	 setConfig(val);
+	  	}
+	  });
   },[
   	notifications
   ])
+
+
   console.log('context rerender')
 
   return <DataContext.Provider 
 			  	value={{
-			  		data, setData, 
 				  	addressObj, setAddressObj, 
 				  	address, setAddress,
 				  	notifications, setNotifications,
-				  	binDays, setBinDays
+				  	config, setConfig,
+				  	binDays, setBinDays,
 				  }} {...props} 
 				 />
 }
