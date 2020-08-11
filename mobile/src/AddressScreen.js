@@ -20,6 +20,7 @@ import { openUrl } from './utils';
 import { POLICY_URL } from './utils/constants';
 import Search from './components/address/Search';
 import { useData } from './utils/DataContext'
+import NavBar from "./components/navigation/NavBar";
 
 export default (props) => {
   const { setAddress } = useData();
@@ -57,12 +58,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.address}>
-        <View style={styles.address_head}>
-          <TouchableOpacity style={styles.address_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={24} color='#212121' /></Text>
-          </TouchableOpacity>
-          <Image style={styles.address_logo} source={images.hbccLogo} />
-        </View>
+        <NavBar navigation={navigation}/>
 
         <View style={styles.address_body}>
           <Text style={styles.address_title}>Find your bin day</Text>
@@ -90,22 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff'
-  },
-  address_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  address_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  address_logo: {
-    height: 32,
-    width: 75,
-    marginRight: 15
   },
   address_body: {
     flex: 1,

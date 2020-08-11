@@ -20,6 +20,7 @@ import images from './utils/images';
 import { openUrl } from './utils';
 import { RECYCLING_BIN_URL, FOGO_BIN_URL, RUBBISH_BIN_URL, GLASS_BIN_URL } from './utils/constants';
 import Search from './components/find/Search';
+import NavBar from "./components/navigation/NavBar";
 
 export default (props) => {
   const { navigation } = props;
@@ -48,12 +49,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.find}>
-        <View style={styles.find_head}>
-          <TouchableOpacity style={styles.find_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={24} color='#212121' /></Text>
-          </TouchableOpacity>
-          <Image style={styles.find_logo} source={images.hbccLogo} />
-        </View>
+        <NavBar navigation={navigation}/>
 
         <ScrollView style={styles.find_scroll} contentContainerStyle={styles.find_scroll_content}>
           <View style={styles.find_body}>
@@ -114,22 +110,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff'
-  },
-  find_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  find_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  find_logo: {
-    height: 32,
-    width: 75,
-    marginRight: 15
   },
   find_scroll: {
     flex: 1

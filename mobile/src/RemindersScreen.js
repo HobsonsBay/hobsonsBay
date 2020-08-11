@@ -33,6 +33,7 @@ import deleteConfig from './api/deleteConfig';
 import putConfig from './api/putConfig';
 import useFullAddress from './hooks/useFullAddress';
 import { useData } from './utils/DataContext'
+import NavBar from "./components/navigation/NavBar";
 
 
 export default (props) => {
@@ -194,12 +195,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <ScrollView  style={styles.reminders}>
-        <View style={styles.reminders_head}>
-          <TouchableOpacity style={styles.reminders_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={26} color='#212121' /></Text>
-          </TouchableOpacity>
-          <Image style={styles.reminders_logo} source={images.hbccLogo} />
-        </View>
+        <NavBar navigation={navigation}/>
         <View style={styles.reminders_body}>
           <Text style={styles.reminders_title}>Collection Reminder</Text>
           <View style={styles.reminders_toggle}>
@@ -301,22 +297,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff'
-  },
-  reminders_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  reminders_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  reminders_logo: {
-    height: 32,
-    width: 75,
-    marginRight: 15
   },
   reminders_body: {
     padding: 20

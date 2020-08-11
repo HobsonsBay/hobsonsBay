@@ -18,6 +18,7 @@ import { FEEDBACK_URL } from './utils/constants';
 import SurveyMonkey from 'react-native-survey-monkey';
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
+import NavBar from "./components/navigation/NavBar";
 //import {AppDataProvider, useData} from './utils/DataContext'
 
 export default (props) => {
@@ -31,12 +32,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.feedback}>
-        <View style={styles.feedback_head}>
-          <TouchableOpacity style={styles.feedback_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={26} color='#212121' /></Text>
-          </TouchableOpacity>
-          <Image style={styles.feedback_logo} source={images.hbccLogo} />
-        </View>
+        <NavBar navigation={navigation}/>
         <ScrollView>
           <View style={styles.feedback_body}>
             <Head style={styles.feedback_welcome}>Feedback</Head>
@@ -69,22 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff'
-  },
-  feedback_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  feedback_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  feedback_logo: {
-    height: 32,
-    width: 75,
-    marginRight: 15
   },
   feedback_body: {
     padding: 20

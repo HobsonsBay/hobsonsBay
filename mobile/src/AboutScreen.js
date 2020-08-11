@@ -17,6 +17,7 @@ import { openUrl } from './utils';
 import { RECYCLING_20_URL, POLICY_URL, CONTACT_URL, FEEDBACK_URL } from './utils/constants';
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
+import NavBar from "./components/navigation/NavBar";
 
 export default (props) => {
   const { navigation } = props;
@@ -29,13 +30,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.about}>
-        <View style={styles.about_head}>
-          <TouchableOpacity style={styles.about_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={26} color='#212121' /></Text>
-          </TouchableOpacity>
-          <Image style={styles.about_logo} source={images.hbccLogo} />
-        </View>
-
+        <NavBar navigation={navigation}/>
         <ScrollView style={styles.about_scroll} contentContainerStyle={styles.about_scroll_content}>
           <Head style={styles.about_welcome}>About Recycling 2.0</Head>
           <View style={styles.about_photo}>
@@ -78,22 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff'
-  },
-  about_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  about_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  about_logo: {
-    height: 32,
-    width: 75,
-    marginRight: 15
   },
   about_scroll: {
     flex: 1

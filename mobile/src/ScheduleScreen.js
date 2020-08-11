@@ -28,7 +28,8 @@ import { openUrl, getAreaBackgroundColor, getAreaColor } from './utils';
 import { CALENDAR_URL } from './utils/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
-import { useData } from './utils/DataContext'
+import { useData } from './utils/DataContext';
+import NavBar from "./components/navigation/NavBar";
 
 export default (props) => {
   const { navigation, route } = props;
@@ -36,7 +37,6 @@ export default (props) => {
   const loading = !binDays.day;
   const handleCalendarClick = openUrl(CALENDAR_URL);
   
-  const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
 
   console.log('schedule render')
@@ -112,12 +112,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.schedule}>
-        <View style={styles.schedule_head}>
-          <TouchableOpacity style={styles.schedule_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={24} color='#212121' /></Text>
-          </TouchableOpacity>
-          <Image style={styles.schedule_logo} source={images.hbccLogo} />
-        </View>
+        <NavBar navigation={navigation}/>
         <View style={styles.schedule_address}>
           <View style={styles.schedule_address_wrapper}>
             <View style={styles.schedule_address_card}>
@@ -181,22 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff'
   },
-  schedule_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  schedule_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  schedule_logo: {
-    height: 32,
-    width: 75,
-    marginRight: 15
-  },
+
   schedule_address: {
     flexDirection: 'row',
     justifyContent: 'center',

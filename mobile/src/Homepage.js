@@ -33,13 +33,13 @@ import { style } from "./utils/styles";
 import useDays from './hooks/useDays';
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 import { useFocusEffect } from '@react-navigation/native';
-import { useData } from './utils/DataContext'
-import { handleAddressWarning } from "./ScheduleScreen"
+import { useData } from './utils/DataContext';
+import { handleAddressWarning } from "./ScheduleScreen";
+import NavBar from "./components/navigation/NavBar";
 
 
 export default (props) => {
   const { navigation } = props;
-  const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
   const {
     address, setAddress,
@@ -127,12 +127,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.homepage}>
-        <View style={styles.home_head}>
-          <Image style={styles.home_logo} source={images.hbccLogo} />
-          <TouchableOpacity style={styles.home_button} onPress={handleBurger}>
-            <Text><Icon name='bars' size={26} color='#212121' /></Text>
-          </TouchableOpacity>
-        </View>
+        <NavBar navigation={navigation}/>
         <ScrollView contentContainerStyle={styles.home_body}>
             <View style={styles.home_2up_wrap}>
               <View style={[styles.home_2up,{opacity: binDays.day ? 1 : 0.3}]}>
@@ -203,22 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     justifyContent: 'space-around'
-  },
-  home_head: {
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  home_button: {
-    width: 64,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  home_logo: {
-    height: 32,
-    width: 75,
-    marginLeft: 15
   },
   home_body: {
     padding: 20,
