@@ -15,7 +15,7 @@ export default (props) => {
 
 	return (
 		<View style={styles.home_head}>
-		  <Image style={styles.home_logo} source={images.hbccLogo} />
+		  <TouchableOpacity onPress={()=>{navigation.navigate('Home')}}><Image style={styles.home_logo} source={images.hbccLogo} /></TouchableOpacity>
 		  <TouchableOpacity style={styles.home_button} onPress={handleBurger}>
 		    <Text><Icon name='bars' size={26} color='#212121' /></Text>
 		  </TouchableOpacity>

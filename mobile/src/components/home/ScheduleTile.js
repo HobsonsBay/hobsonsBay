@@ -5,7 +5,7 @@ import {
   Image,
   Text,
 } from 'react-native';
-import { formatDayNumber, formatDayTomorrow } from '../../utils';
+import { formatDate, formatDayTomorrow } from '../../utils';
 
 export default (props) => {
   const { label, binDays } = props;
@@ -49,7 +49,7 @@ export default (props) => {
   return (
     <View style={styles.tile}>
       <View style={styles.redheader}><Text style={styles.monthtext}>{ binDays.day && formatDayTomorrow( binDate )}</Text></View>
-      <Text style={styles.bignumber}>{ binDays.day && formatDayNumber( binDate )}</Text>
+      <Text style={styles.date}>{ binDays.day && formatDate( binDate )}</Text>
       <View style={styles.bintypes}>
         { binType.length > 0 && 
           binType.map((bin, key) => <View key={key} style={[styles.bintype,{backgroundColor:binCol(bin.bin_type)}]}></View>)
@@ -80,9 +80,9 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: 'bold'
   },
-  bignumber: {
+  date: {
     fontWeight: 'bold',
-    fontSize: 36
+    fontSize: 16
   },
   bintypes:{
     //backgroundColor: "#fff",

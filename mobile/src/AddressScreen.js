@@ -87,6 +87,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff'
   },
+  address_head: {
+    height: 64,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  address_button: {
+    width: 64,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  address_logo: {
+    height: 32,
+    width: 75,
+    marginRight: 15
+  },
   address_body: {
     flex: 1,
     paddingVertical: 10,

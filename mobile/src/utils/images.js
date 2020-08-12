@@ -11,6 +11,7 @@ export default {
   hbccLogo: require('../assets/hbcc-logo.png'),
   recyclingLogo: require('../assets/recycling-20-logo.png'),
   r2Bins: require('../assets/r2_bins.png'),
+  r2BinSearch: require('../assets/r20_item_search.png'),
   recyclingLogoStretch: require('../assets/recycling-20-logo-stretch.png'),
   recyclingLogoWite: require('../assets/recycling-logo-white.png'),
   aerielAltona: require('../assets/aeriel-altona.png')

@@ -120,7 +120,7 @@ export default (props) => {
 
   const handleNotification = useCallback(() => navigation.navigate('Collection Reminder'));
   const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule'));
-  const handleItems = useCallback(() => navigation.navigate('Which bin does this go in?'));
+  const handleItems = useCallback(() => navigation.navigate('Which bin'));
 
   console.log('homepage render')
   
@@ -137,8 +137,8 @@ export default (props) => {
                   <ScheduleTile binDays={binDays}/>
                 </NavTile>
               </View>
-              <View onPress={handleItems} style={styles.home_2up}>
-                <NavTile label={
+              <View style={styles.home_2up}>
+                <NavTile onPress={handleItems} label={
                  <Text>What bin does<Br/>this go in?</Text>  
                 }>
                   <ItemFindTile/>

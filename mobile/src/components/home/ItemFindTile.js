@@ -15,8 +15,7 @@ export default (props) => {
 
   return (
     <View style={styles.tile}>
-      <ImageBackground source={images.r2Bins} style={{width: 698 * 0.15, height: 472 * 0.15}}>
-        <Text style={styles.bignumber}>?</Text>
+      <ImageBackground source={images.r2BinSearch} style={{width: 384 * 0.25, height: 268 * 0.25}}>
       </ImageBackground>
     </View>
   );
@@ -29,11 +28,5 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     justifyContent: 'center'
-  },
-  bignumber: {
-    fontWeight: 'bold',
-    fontSize: 72,
-    textAlign: 'center'
-    //backgroundColor: "#333"
   },
 });

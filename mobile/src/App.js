@@ -101,7 +101,7 @@ export default function App (props) {
         <Drawer.Navigator drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={CustomDrawerContent} initialRouteName='Home'>
           <Drawer.Screen options={navComp('Home')} name='Home' component={Homepage}/>
           <Drawer.Screen options={navComp('Bin Schedule')} name='Bin Schedule' component={ScheduleStack}/>
-          <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin does this go in?' component={FindStack} />
+          <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin' component={FindStack} />
           <Drawer.Screen options={navComp('Reminder',{unmountOnBlur: true})} name='Collection Reminder' component={RemindersScreen}/>
           <Drawer.Screen options={navComp('Feedback')} name='Feedback' component={FeedbackScreen} />
           <Drawer.Screen options={navComp('About')} name='About' component={AboutScreen} />
