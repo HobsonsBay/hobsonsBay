@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* HobsonsBayTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HobsonsBayTests.m */; };
 		0100C3440E4719E1AFE973FF /* libPods-HobsonsBayTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F0A7E6DB5A3D8F7A0F0DD92A /* libPods-HobsonsBayTests.a */; };
+		06EE124724E396F8007FD525 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06EE124624E396F8007FD525 /* SplashScreen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -63,6 +64,7 @@
 		00E356F21AD99517003FC87E /* HobsonsBayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HobsonsBayTests.m; sourceTree = "<group>"; };
 		01DC98B9C63A491BB914B48C /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		063BDB41329E36B9E53E3272 /* Pods-HobsonsBay-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HobsonsBay-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-HobsonsBay-tvOS/Pods-HobsonsBay-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		06EE124624E396F8007FD525 /* SplashScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		087FE81299DEB8CEF087D4A3 /* libPods-HobsonsBay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HobsonsBay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* HobsonsBay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HobsonsBay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = HobsonsBay/AppDelegate.h; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				06EE124624E396F8007FD525 /* SplashScreen.storyboard */,
 				221099F12463996E006D7BBF /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* HobsonsBay */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -416,6 +419,7 @@
 				F92F0EC63C7441E583EDBBA2 /* Fontisto.ttf in Resources */,
 				221099F22463996E006D7BBF /* GoogleService-Info.plist in Resources */,
 				1C470C1BADBC45BFB8C9628C /* Foundation.ttf in Resources */,
+				06EE124724E396F8007FD525 /* SplashScreen.storyboard in Resources */,
 				F5FCE63FEBB94124804BF252 /* Ionicons.ttf in Resources */,
 				2CDD2F6CF1D447DFBEDFC2D1 /* MaterialCommunityIcons.ttf in Resources */,
 				BD29A2EBDCB94BB5AE5AC84B /* MaterialIcons.ttf in Resources */,

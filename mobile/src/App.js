@@ -3,7 +3,7 @@ import React from 'react';
 import { createDrawerNavigator, 
   DrawerContentScrollView, 
   DrawerItemList,
-  DrawerItem 
+  DrawerItem
 } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar, 
@@ -24,6 +24,8 @@ import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-community/async-storage';
 import images from './utils/images';
 import {AppDataProvider, useData} from './utils/DataContext'
+import SplashScreen from 'react-native-splash-screen'
+import DrawerContent from './components/navigation/DrawerContent'
 
 const setNotification = async (value) => {
   try {
@@ -47,7 +49,7 @@ if (Platform.OS === "android"){
 const Drawer = createDrawerNavigator();
 
 
-function CustomDrawerContent(props) {
+const CustomDrawerContent = (props) => {
   //props.label = CustomText();
   //console.log(props);
   return (
@@ -82,6 +84,11 @@ export default function App (props) {
   
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
+  React.useEffect(() => {
+    // do stuff while splash screen is shown
+      // After having done stuff (such as async tasks) hide the splash screen
+      SplashScreen.hide();
+  })
 
   return (
     <>
@@ -98,7 +105,7 @@ export default function App (props) {
             analytics().setCurrentScreen(currentRouteName, currentRouteName);
           }
         }} >
-        <Drawer.Navigator drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={CustomDrawerContent} initialRouteName='Home'>
+        <Drawer.Navigator drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={props => <DrawerContent {...props} />} initialRouteName='Home'>
           <Drawer.Screen options={navComp('Home')} name='Home' component={Homepage}/>
           <Drawer.Screen options={navComp('Bin Schedule')} name='Bin Schedule' component={ScheduleStack}/>
           <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin' component={FindStack} />
