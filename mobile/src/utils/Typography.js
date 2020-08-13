@@ -6,7 +6,9 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image
 } from 'react-native';
+import images from './images';
 import { style } from "./styles";
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -42,6 +44,18 @@ const LinkButton = (props) => {
   )
 }
 
+const LinkTile = (props) => {
+  return(
+    <View style={styles.link_tile}>
+    <TouchableOpacity onPress={props.onPress}>
+      <Image style={styles.link_tile_image} source={images[props.icon]} />
+          </TouchableOpacity>   
+      <Text style={styles.link_tile_label}>{props.children}</Text>
+    </View>
+ 
+  )
+}
+
 
 const styles = StyleSheet.create({
   onboarding_list: {
@@ -65,6 +79,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#9e9e9e'
   },
+  link_tile:{
+    flexDirection: 'row',
+    marginBottom: 15,
+    flex: 1
+  },
+  link_tile_image:{
+    width: 48,
+    height: 48,
+    marginRight: 10
+  },
+  link_tile_label:{
+    fontSize: 16,    
+    flex: 1,
+    lineHeight: 25
+  },
   about_link_label: {
     flex: 1,
     fontSize: 15,
@@ -73,4 +102,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export { style, ListItem, Br, Head, Para, LinkButton };
+export { style, ListItem, Br, Head, Para, LinkButton, LinkTile };

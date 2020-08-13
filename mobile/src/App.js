@@ -14,6 +14,7 @@ import { StatusBar,
 import ScheduleStack from './ScheduleStack';
 import Homepage from './Homepage';
 import AboutScreen from './AboutScreen';
+import Contact from './Contact';
 import FeedbackScreen from './FeedbackScreen';
 import RemindersScreen from './RemindersScreen';
 import FindStack from './FindStack';
@@ -112,6 +113,7 @@ export default function App (props) {
           <Drawer.Screen options={navComp('Reminder',{unmountOnBlur: true})} name='Collection Reminder' component={RemindersScreen}/>
           <Drawer.Screen options={navComp('Feedback')} name='Feedback' component={FeedbackScreen} />
           <Drawer.Screen options={navComp('About')} name='About' component={AboutScreen} />
+          <Drawer.Screen options={navComp('Contact')} name='Contact' component={Contact} />
         </Drawer.Navigator>
       </NavigationContainer>
       <Onboarding />

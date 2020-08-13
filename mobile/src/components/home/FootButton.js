@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default (props) => {
   const { icon, onTouch, text, goTo, navigation, onPress } = props;
-  console.log(goTo);
 
   return (
     <TouchableOpacity onPress={ goTo ? React.useCallback(() => navigation.navigate(goTo)) : onPress }>

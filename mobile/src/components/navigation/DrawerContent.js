@@ -62,7 +62,7 @@ export default function(props){
 						style={styles.item}
 						label="Contact"
 						labelStyle={styles.itemLabel}
-						onPress={()=>{props.navigation.navigate('')}}
+						onPress={()=>{props.navigation.navigate('Contact')}}
 					/>
 					<DrawerItem 
 						style={styles.item}

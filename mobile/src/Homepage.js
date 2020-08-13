@@ -177,7 +177,7 @@ export default (props) => {
             <FootButton goTo='About' icon='recycle' text="About" navigation={navigation}/>
           </View>
           <View style={styles.footer_button}>
-            <FootButton goTo="" icon='phone' text="Contact"/>
+            <FootButton goTo='Contact' icon='phone' text="Contact" navigation={navigation}/>
           </View>
           <View style={styles.footer_button}>
             <FootButton goTo='Feedback' icon='edit' text="Feedback" navigation={navigation}/>

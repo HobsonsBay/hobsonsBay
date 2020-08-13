@@ -14,5 +14,10 @@ export default {
   r2BinSearch: require('../assets/r20_item_search.png'),
   recyclingLogoStretch: require('../assets/recycling-20-logo-stretch.png'),
   recyclingLogoWite: require('../assets/recycling-logo-white.png'),
-  aerielAltona: require('../assets/aeriel-altona.png')
+  aerielAltona: require('../assets/aeriel-altona.png'),
+  custService:  require('../assets/Call-Customer-service.png'),
+  langLine: require('../assets/Language-Line.png'),
+  liveChat: require('../assets/Live-chat.png'),
+  relayService: require('../assets/National-Relay-Service.png'),
+  visit:  require('../assets/Visit.png'),
 };
