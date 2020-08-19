@@ -6,9 +6,10 @@ import {
 } from '@react-navigation/drawer';
 import images from '../../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useData } from '../../utils/DataContext';
 
 export default function(props){
-	console.log(props);
+	const { onShare } = useData();
 	return(
 		<React.Fragment>
 			<View style={styles.logo}>
@@ -74,7 +75,7 @@ export default function(props){
 						style={styles.item}
 						label="Share"
 						labelStyle={styles.itemLabel}
-						onPress={()=>{props.navigation.navigate('')}}
+						onPress={()=>{onShare()}}
 					/>
 				</View>
 			</View>

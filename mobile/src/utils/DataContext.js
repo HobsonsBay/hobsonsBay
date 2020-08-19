@@ -2,6 +2,7 @@ import React from 'react'
 import { hasAddress, clearAddress } from './handleAddress';
 import { hasNotification } from './hasNotification';
 import fetchDays from '../hooks/fetchDays';
+import { Share } from 'react-native';
 
 const DataContext = React.createContext()
 
@@ -30,6 +31,7 @@ function AppDataProvider(props) {
 	const [binDays, setBinDays] = React.useState({area:false,zone:false,day:false,days:false});
 	const [config, setConfig] = React.useState(null);
   const [notifications, setNotifications] = React.useState(false);
+  const [onboard, setOnboard] = React.useState(true);
 
   //hook for changing address object to then set bin day data
   React.useMemo(()=>{
@@ -102,7 +104,40 @@ function AppDataProvider(props) {
   ])
 
 
-  console.log('context rerender')
+  let shareMessage = {}
+
+  if(Platform.OS === 'android'){
+    shareMessage = {
+      title : "I’m loving Hobson Bay City Council’s Recycling 2.0 app - bin collection schedule, reminders and info on what does/doesn’t go in each bin, all on my phone. Find out how to download for your phone too:",
+      message: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
+    }
+  }else if(Platform.OS === 'ios'){
+    shareMessage = {
+        message:
+          "I’m loving Hobson Bay City Council’s Recycling 2.0 app - bin collection schedule, reminders and info on what does/doesn’t go in each bin, all on my phone. Find out how to download for your phone too:",
+        url: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
+      }
+  }
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share(shareMessage);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+
+  //console.log('context rerender')
 
   return <DataContext.Provider 
 			  	value={{
@@ -111,6 +146,8 @@ function AppDataProvider(props) {
 				  	notifications, setNotifications,
 				  	config, setConfig,
 				  	binDays, setBinDays,
+				  	onShare,
+				  	onboard, setOnboard
 				  }} {...props} 
 				 />
 }

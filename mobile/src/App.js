@@ -26,7 +26,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import images from './utils/images';
 import {AppDataProvider, useData} from './utils/DataContext'
 import SplashScreen from 'react-native-splash-screen'
-import DrawerContent from './components/navigation/DrawerContent'
+import DrawerContent from './components/navigation/DrawerContent';
 
 const setNotification = async (value) => {
   try {
@@ -116,7 +116,7 @@ export default function App (props) {
           <Drawer.Screen options={navComp('Contact')} name='Contact' component={Contact} />
         </Drawer.Navigator>
       </NavigationContainer>
-      <Onboarding />
+      <Onboarding/>
     </AppDataProvider>
     </>
   );

@@ -39,7 +39,7 @@ export default (props) => {
   
 
 
-  console.log('schedule render')
+  //console.log('schedule render')
 
   //ADD GA TRACKING FOR ZONE AND REMINDERS
   useEffect(() => {

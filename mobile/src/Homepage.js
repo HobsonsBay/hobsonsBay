@@ -14,7 +14,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Share,
   Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -45,40 +44,16 @@ export default (props) => {
     address, setAddress,
     notifications, setNotifications,
     binDays,
-    config, setConfig
+    config, setConfig,
+    onShare, onboard
   } = useData();
 
-  let shareMessage = {}
+  useEffect(()=>{
+    //console.log("onboard")
+    //console.log(onboard)
+    if(!onboard) navigation.navigate('Bin Schedule', { screen: 'Address' });
+  },[onboard])
 
-  if(Platform.OS === 'android'){
-    shareMessage = {
-      title : "Recycling 2.0 Mobile App Download",
-      message: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
-    }
-  }else if(Platform.OS === 'ios'){
-    shareMessage = {
-        message:
-          'Recycling 2.0 Mobile App Download',
-        url: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
-      }
-  }
-
-  const onShare = async () => {
-    try {
-      const result = await Share.share(shareMessage);
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   const handleAddressWarning = useCallback(() => {
     Alert.alert(
@@ -105,14 +80,16 @@ export default (props) => {
         }).then(() => {
           clearAddress().then(() => {
             setAddress(false);
-            navigation.navigate('Bin Schedule')
+            navigation.navigate('Bin Schedule', { screen: 'Address' });
+            //navigation.navigate('Bin Schedule')
           }).catch(console.error);
         }).catch(console.error);
     }else{
       // if reminders aren't set
       clearAddress().then(() => {
         setAddress(false);
-        navigation.navigate('Bin Schedule')
+        //navigation.navigate('Address')
+        navigation.navigate('Bin Schedule', { screen: 'Address' });
       }).catch(console.error);
     }
 
@@ -122,7 +99,7 @@ export default (props) => {
   const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule'));
   const handleItems = useCallback(() => navigation.navigate('Which bin'));
 
-  console.log('homepage render')
+  //console.log('homepage render')
   
   return (
     <SafeAreaView style={styles.view}>
@@ -132,14 +109,14 @@ export default (props) => {
             <View style={styles.home_2up_wrap}>
               <View style={[styles.home_2up,{opacity: binDays.day ? 1 : 0.3}]}>
                 <NavTile onPress={handleSchedule} label={
-                 <Text>Bin Schedule<Br/>(Next bin days)</Text>  
+                 <Text>Bin Schedule</Text>  
                 }>
                   <ScheduleTile binDays={binDays}/>
                 </NavTile>
               </View>
               <View style={styles.home_2up}>
                 <NavTile onPress={handleItems} label={
-                 <Text>What bin does<Br/>this go in?</Text>  
+                 <Text>Which bin does<Br/>this go in?</Text>  
                 }>
                   <ItemFindTile/>
                 </NavTile>

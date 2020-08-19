@@ -60,7 +60,8 @@ export default (props) => {
 
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
   const goToBinSchedule = useCallback(() => {
-    navigation.reset({ index: 0, routes: [{ name: 'Bin Schedule' }] });
+    //navigation.reset({ index: 0, routes: [{ name: 'Bin Schedule' }] });
+    navigation.navigate('Bin Schedule', { screen: 'Address' });
   }, []);
 
   // Alert user that an address is required to turn on reminders
@@ -177,6 +178,8 @@ export default (props) => {
       }).catch(console.error);
     }
     setDisabled(!fullAddress);
+    console.log("test for full adress")
+    console.log(fullAddress)
   }, [fullAddress]);
 
   // cheeky effect to set global notifications
@@ -190,7 +193,6 @@ export default (props) => {
     { color: (disabled || !status) ? '#e0e0e0' : '#616161' }
   ];
 
-  console.log(date)
 
   return (
     <SafeAreaView style={styles.view}>

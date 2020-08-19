@@ -16,21 +16,31 @@ import {
 import images from '../../utils/images';
 import { style } from "../../utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "../../utils/Typography";
+import { useData } from '../../utils/DataContext';
 
-export default () => {
+export default (props) => {
+  const {
+    address, onboard, setOnboard 
+  } = useData();
+  const version = "110b";
+
   const [modalVisible, setModalVisible] = useState(false);
   const handleButton = useCallback(() => {
     // set onboarded to version
-    AsyncStorage.setItem('onboarded', JSON.stringify({version:"110A"})).then(() => {
+    AsyncStorage.setItem('onboarded', JSON.stringify({version:version})).then(() => {
+      //console.log("address");
+      //console.log(address);
+      if(!address){
+        setOnboard(false);
+      }
       setModalVisible(false);
     }).catch(console.error);
-  }, []);
+  }, [address]);
 
   useEffect(() => {
     AsyncStorage.getItem('onboarded').then((value) => {
       const onboarded = JSON.parse(value);
-      // check for version rather than boolean
-      if(!onboarded || onboarded.version != "110A") setModalVisible(true);
+      if(!onboarded || onboarded.version != version) setModalVisible(true);
     }).catch(console.error);
   }, []);
 
@@ -52,14 +62,24 @@ export default () => {
             </ListItem>
             <ListItem style={styles.onboarding_description}>
               <Text style={{fontWeight: "bold"}}>Which bin does this go in?: </Text> Search and find    
-      out how to dispose of household items{'\n'}
+      out how to dispose of household items
             </ListItem>
-            <Head style={styles.onboarding_welcome}>What’s New</Head>
-            <Para style={styles.onboarding_description}>Collection Reminder</Para>
             <ListItem style={styles.onboarding_description}>
-              Schedule a reminder notification for the day 
-               before your bin collection day
+              <Text style={{fontWeight: "bold"}}>Collection Reminder: </Text> Schedule a reminder notification for the day 
+               before your bin collection day{'\n'}
             </ListItem>
+
+            <Head style={styles.onboarding_welcome}>What’s New</Head>
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Home Screen: </Text> At a glance information about your next bin day and easy access to all the app settings
+            </ListItem>
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Contact Page: </Text> HBCC contact details at your fingertips.
+            </ListItem>
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Sharing: </Text> Want to recommend this app to someone? Now you can easily with the share button on the Home Page or the one in the menu
+            </ListItem>
+            
             <Para style={styles.onboarding_description}>
             This app is an early release and more features will be added in the
             coming months to support your usage of the Recycling 2.0 service.
