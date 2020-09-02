@@ -20,6 +20,20 @@ const formatBinName = (type) => {
   return type;
 };
 
+const hashFunc = (req) => {
+  var str = req.url.substr(0,req.url.lastIndexOf('&auth'));
+  str += "secret key"
+  var hash = 0, i, chr;
+  for (i = 0; i < str.length; i++) {
+    chr   = str.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  var buff = new Buffer.from(hash.toString()).toString("base64")
+  return buff;
+}
+
 module.exports = {
-  formatBinName
+  formatBinName,
+  hashFunc
 };

@@ -13,6 +13,9 @@
     "KNACK_PROPERTY_OBJECT_ID": "@knack_property_object_id",
     "KNACK_ITEM_OBJECT_ID": "@knack_item_object_id",
     "KNACK_USER_CONFIGS_OBJECT_ID": "@knack_user_configs_object_id",
-    "FIREBASE_ADMIN": "@firebase_admin"
+    "FIREBASE_ADMIN": "@firebase_admin",
+    "AWS_MYSQL_URL": "@aws_mysql_url",
+    "AWS_MYSQL_USER": "@aws_mysql_user",
+    "AWS_MYSQL_PASS": "@aws_mysql_pass"
   }
 }
