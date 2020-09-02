@@ -25,7 +25,7 @@ import ItemFindTile from './components/home/ItemFindTile';
 import images from './utils/images';
 import deleteConfig from './api/deleteConfig';
 import { clearAddress } from './utils/handleAddress';
-import { clearNotification } from './utils/hasNotification';
+import { clearNotification } from './utils/handleNotification';
 import { openUrl } from './utils';
 import get from 'lodash/get';
 import { style } from "./utils/styles";
@@ -45,7 +45,8 @@ export default (props) => {
     notifications, setNotifications,
     binDays,
     config, setConfig,
-    onShare, onboard
+    onShare, onboard,
+    notificationsOff
   } = useData();
 
   useEffect(()=>{
@@ -70,25 +71,16 @@ export default (props) => {
   const handleAddressChange = useCallback(() => {  
     // delete config code for reminders
     if (config) {
-      const { id } = config;
-      deleteConfig(id)
-        .then(() => {
-          AsyncStorage.removeItem('config');
-          setNotifications(false);
+        notificationsOff().then((res)=>{
+          return clearAddress()
         }).then(() => {
-          setConfig(null);
-        }).then(() => {
-          clearAddress().then(() => {
-            setAddress(false);
-            navigation.navigate('Bin Schedule', { screen: 'Address' });
-            //navigation.navigate('Bin Schedule')
-          }).catch(console.error);
+          setAddress(false);
+          navigation.navigate('Bin Schedule', { screen: 'Address' });
         }).catch(console.error);
     }else{
       // if reminders aren't set
       clearAddress().then(() => {
         setAddress(false);
-        //navigation.navigate('Address')
         navigation.navigate('Bin Schedule', { screen: 'Address' });
       }).catch(console.error);
     }

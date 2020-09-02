@@ -149,6 +149,7 @@ export default (props) => {
         //console.log('null')
         setRawMessageData(null);
       }
+      console.log(response.data.type);
     })
   }, []);
 
@@ -197,7 +198,8 @@ export default (props) => {
   useEffect(() => {
     //console.log('raw message data effect:')
     //console.log(rawMessageData)
-    if(rawMessageData){
+    if(rawMessageData && rawMessageData.data.type != 'service'){
+      console.log(rawMessageData.data.type);
       setMessageData(handleRawMessageData(rawMessageData));
       showNotificationBar();
     }else{

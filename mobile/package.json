@@ -28,6 +28,7 @@
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
+    "react-devtools": "^4.8.2",
     "react-instantsearch": "^6.3.0",
     "react-instantsearch-native": "^6.3.0",
     "react-native": "0.62.2",

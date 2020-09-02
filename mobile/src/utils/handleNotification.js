@@ -1,5 +1,5 @@
-//import React from "react";
 import AsyncStorage from '@react-native-community/async-storage';
+
 
 const hasNotification = async () => {
     let out = false;

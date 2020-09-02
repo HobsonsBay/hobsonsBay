@@ -31,14 +31,13 @@ import Toggle from './components/reminders/Toggle';
 import postConfig from './api/postConfig';
 import deleteConfig from './api/deleteConfig';
 import putConfig from './api/putConfig';
-import useFullAddress from './hooks/useFullAddress';
 import { useData } from './utils/DataContext'
 import NavBar from "./components/navigation/NavBar";
+import NotificationsOn from "./utils/handleNotification";
 
 
 export default (props) => {
   const { navigation } = props;
-  const [fullAddress] = useFullAddress();
   const [disabled, setDisabled] = useState(true);
   const [status, setStatus] = useState(false);
   const [date, setDate] = useState(startOfHour(new Date(2001, 1, 1, 18, 0, 0)));
@@ -49,7 +48,9 @@ export default (props) => {
     config, setConfig, 
     addressObj, setAddressObj, 
     address, setAddress,
-    notifications, setNotifications
+    notifications, setNotifications,
+    notificationsOn, notificationsOff, notificationsChange,
+    //fullAddress
   } = useData();
 
 
@@ -59,6 +60,7 @@ export default (props) => {
 
 
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
+
   const goToBinSchedule = useCallback(() => {
     //navigation.reset({ index: 0, routes: [{ name: 'Bin Schedule' }] });
     navigation.navigate('Bin Schedule', { screen: 'Address' });
@@ -68,7 +70,7 @@ export default (props) => {
   const promptAddress = () => {
     Alert.alert(
       'Address Required',
-      'Add an Address in Bin Schedule to receive reminders',
+      'Add an Address in Bin Schedule to receive notifications',
       [
         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
         { text: 'Go to Bin Schedule', onPress: goToBinSchedule }
@@ -82,76 +84,86 @@ export default (props) => {
   };
 
   const handlePressToggle = () => {
-    if (disabled && !fullAddress) promptAddress();
+    if (disabled && !address) promptAddress();
   };
-  /*
-  {"Assessment Number": 9008401000, 
-  "ID Agility Property": 39097, 
-  "Property Address": "23 Shellard St Altona North, VIC 3025", 
-  "__position": 3, 
-  "_highlightResult": {
-    "Property Address": {
-      "matchLevel": "none", 
-      "matchedWords": [Array], 
-      "value": "23 Shellard St Altona North, VIC 3025"}
-    }, "objectID": "9008401000"
-  } {"address": "23 Shellard St Altona North, VIC 3025", "area": "2", "asn": 9008401000, "day": "Thursday"}
- */
+
   const handleChangeToggle = (value) => {
-    if (value) {
-      if (addressObj) {
-        setDisabled(true);
-        console.log(addressObj,fullAddress)
-        const { day, area } = fullAddress;
-        const time = format(date, 'HHmm');
-        const zone = `${day} Area ${area}`;
-        messaging().requestPermission()
-          .then(() => messaging().getToken())
-          .then(token => {
-            const body = { token, zone, time };
-            return postConfig(body);
-          }).then((config) => {
-            return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
-          }).then(([config]) => {
-            setStatus(value);
-            setConfig(config);
-            setDisabled(false);
-          }).catch(console.error);
-      }
-    } else {
-      if (config) {
-        setDisabled(true);
-        const { id } = config;
-        deleteConfig(id)
-          .then(() => {
-            return AsyncStorage.removeItem('config');
-          }).then(() => {
-            setStatus(value);
-            setConfig(null);
-            setDisabled(false);
-          }).catch(console.error);
-      }
+    setDisabled(true);
+
+    // check if notifications are not active, and set them on
+    if(!notifications){
+
+      // tempororary holder for reminder vals
+      const type = { type_reminder:true, type_service:true, type_news:false };
+
+      notificationsOn(type, format(date, 'HHmm'))
+      .then((response)=>{
+        console.log('trigger on',response);
+        setStatus(true);
+        setDisabled(false);
+      }).catch((e)=>{
+        alert('A network error occurred. Please try again later');
+        console.log('noton err:',e);
+        setStatus(false);
+        setDisabled(false);
+      })
+
+    }else{
+      notificationsOff()
+      .then((response)=>{
+        console.log('trigger off', response);
+        setStatus(false);
+        setDisabled(false);
+      }).catch((e)=>{
+        alert('A network error occurred. Please try again later');
+        console.log('notoff err:',e);
+        setStatus(true);
+        setDisabled(false);
+      })
     }
-    //setDisabled(false);
-  };
+  }
 
   const handleChangeTime = (event, selectedDate) => {
     const currentDate = startOfHour(selectedDate || date);
     setShow(Platform.OS === 'ios');
 
     if (config) {
-      const { id } = config;
+
       const time = format(currentDate, 'HHmm', { timeZone: 'Australia/Melbourne' });
-      const body = { ...config, time };
-      putConfig(id, body)
-        .then((config) => {
-          return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
-        }).then(([config]) => {
-          setDate(currentDate);
+
+      const type = { type_reminder:true, type_service:true, type_news:false };
+
+      notificationsChange(type, time)
+        .then((config) => { 
           setConfig(config);
-        }).catch(console.error);
+          setDate(currentDate);
+        }).catch((e)=>{
+          alert('A network error occurred. Please try again later');
+          console.log('notchange err:',e);
+          setStatus(true);
+          setDisabled(false);
+        });
     }
   };
+
+  const handleChangeType = (service) => {
+    const type = { 
+      type_reminder: config.type_reminder,
+      type_service: config.type_service,
+      type_news: config.type_news,
+      ...service 
+    }
+    notificationsChange(type, config.time)
+      .then((config) => { 
+        setConfig({...config, ...service})
+      }).catch((e)=>{
+        alert('A network error occurred. Please try again later');
+        console.log('notchange err:',e);
+        setStatus(true);
+        setDisabled(false);
+      });
+
+  }
 
   const showPicker = () => {
     if (disabled) {
@@ -163,30 +175,22 @@ export default (props) => {
   };
 
   useEffect(() => {
-    if (fullAddress) {
-      AsyncStorage.getItem('config').then((value) => {
-        const config = JSON.parse(value);
-        console.log("config from async")
-        console.log(config)
-        if (config) {
-          const { time } = config;
-          const currentDate = getReminderDate(time);
-          setStatus(true);
-          setDate(currentDate);
-        }
-        setConfig(config);
-      }).catch(console.error);
+    setDisabled(!address);
+  }, [address]);
+
+  useEffect(() => {
+    if (config) {
+      const currentDate = getReminderDate(config.time);
+      setStatus(true);
+      setDate(currentDate);
     }
-    setDisabled(!fullAddress);
-    console.log("test for full adress")
-    console.log(fullAddress)
-  }, [fullAddress]);
+  }, [config]);
 
   // cheeky effect to set global notifications
   // TODO improve this whole process 
-  useEffect(() => {
-    setNotifications(status)
-  }, [status]);
+  // useEffect(() => {
+  //   setNotifications(status)
+  // }, [status]);
 
   const remindersPickerTimeStyle = [
     styles.reminders_picker_time,
@@ -203,7 +207,7 @@ export default (props) => {
           <View style={styles.reminders_toggle}>
             <Text style={styles.reminders_toggle_label}>Remind Me</Text>
             <View style={styles.reminders_toggle_spinner} >
-              { fullAddress && <ActivityIndicator animating={disabled} size='large' color='#333333' /> }
+              { address && <ActivityIndicator animating={disabled} size='large' color='#333333' /> }
               <Toggle style={styles.reminders_toggle_cb} value={status} disabled={disabled} onPress={handlePressToggle} onChange={handleChangeToggle} />
             </View>
           </View>
@@ -221,6 +225,26 @@ export default (props) => {
             Reminders will be sent on the hour. Any time set will default to the nearest hour.
           </Text>
         </View>
+        
+        {config &&
+          <View>
+            <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_reminder:!config.type_reminder})}>
+              <Text style={styles.reminders_policy_text}>Test Reminder {
+                config.type_reminder ? "on" : "off"
+              }</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_service:!config.type_service})}>
+              <Text style={styles.reminders_policy_text}>Test Service {
+                config.type_service ? "on" : "off"
+              }</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_news:!config.type_news})}>
+              <Text style={styles.reminders_policy_text}>Test news {
+                config.type_news ? "on" : "off"
+              }</Text>
+            </TouchableOpacity>
+          </View>
+        }
         <TouchableOpacity style={styles.reminders_policy} onPress={handlePolicyClick}>
           <Text style={styles.reminders_policy_text}>Privacy Policy</Text>
           <Text><MIcon name='launch' size={22} color='#1051a4' /></Text>

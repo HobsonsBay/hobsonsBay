@@ -1,8 +1,14 @@
 import React from 'react'
 import { hasAddress, clearAddress } from './handleAddress';
-import { hasNotification } from './hasNotification';
+import { hasNotification } from './handleNotification';
 import fetchDays from '../hooks/fetchDays';
+import useFullAddress from '../hooks/useFullAddress';
 import { Share } from 'react-native';
+import postConfig from '../api/postConfig';
+import deleteConfig from '../api/deleteConfig';
+import putConfig from '../api/putConfig';
+import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const DataContext = React.createContext()
 
@@ -28,17 +34,103 @@ function useData() {
 function AppDataProvider(props) {
 	const [address, setAddress] = React.useState(false);
 	const [addressObj, setAddressObj] = React.useState(null);
+  const [fullAddress] = useFullAddress();
 	const [binDays, setBinDays] = React.useState({area:false,zone:false,day:false,days:false});
 	const [config, setConfig] = React.useState(null);
   const [notifications, setNotifications] = React.useState(false);
   const [onboard, setOnboard] = React.useState(true);
+
+  const notificationsOn = async ( type, time ) => {
+    /* function to perform the following when reminders are 
+    turned on for the first time of after remindersOff has been called:
+        - check address is set
+        - run firebase requestPermission function
+        - call API postConfig function
+        - update asyncstorage with returned values for config
+        - update setconfig with returned values
+    */
+    const { day, area } = binDays;
+    const zone = `${day} Area ${area}`;
+    console.log(config)
+    console.log(notifications)
+    console.log(hasNotification())
+    console.log('start')
+    const status = await messaging().requestPermission()
+          .then((res) => {
+            //console.log('promise chain fbperm')
+            return messaging().getToken()
+          }).then(token => {
+            //console.log('promise chain fbtoken')
+            //console.log(token);
+            return postConfig({ token, zone, time, ...type });
+          }).then((config) => {
+            //console.log('promise chain postconf')
+            return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
+          }).then(([config]) => {
+            //console.log('promise chain asyncconf')
+            setConfig(config);
+            setNotifications(true);
+            return true;
+          }).catch((err)=>{
+            //console.log('promise chain broken')
+            return Promise.reject(err)
+          });
+
+    return status
+  }
+
+  const notificationsOff = async () => {
+    /* function to turn off reminders by performing the following:
+        - call API deleteConfig function
+        - update asyncstorage with null values for config
+        - update setconfig with null values
+    */
+    const { id } = config;
+
+    const status = deleteConfig(id)
+      .then(() => {
+        return AsyncStorage.removeItem('config');
+      }).then(() => {
+        setConfig(null);
+        setNotifications(false);
+        return false
+      }).catch((err)=>{
+        return Promise.reject(err)
+      });
+
+    return status
+  }
+
+  const notificationsChange = async ( type, time ) => {
+    /* function to update reminder settings by performing the following:
+        - call API putConfig function
+        - update asyncstorage with returned values for config
+        - update setconfig with returned values
+    */    
+    const updateConfig = {...config, ...type, time};
+    const status = putConfig(config.id, updateConfig)
+      .then((config) => {
+        return Promise.all([config, AsyncStorage.setItem('config', JSON.stringify(config))]);
+      }).then(([config]) => { 
+        setConfig(config);
+        return config
+      }).catch((err)=>{
+        return Promise.reject(err)
+      });
+
+    return status
+  }
 
   //hook for changing address object to then set bin day data
   React.useMemo(()=>{
   	console.log('set addressObj')
   	//console.log(addressObj)
   	if (addressObj) {
-  		fetchDays(addressObj["Assessment Number"]).then((res)=>setBinDays(res))
+  		fetchDays(addressObj["Assessment Number"])
+      .then((res)=>setBinDays(res))
+      .catch((e)=>{
+        console.log(e)
+      })
   	}else{
   		setBinDays({area:false,zone:false,day:false,days:false})
   	}
@@ -56,26 +148,8 @@ function AppDataProvider(props) {
 
 
   React.useMemo(()=>{
-  	console.log('set address')
-  	//console.log(address)  
+
   	hasAddress().then((val) => {
-	  	/*
-	  	sample address payload
-	  	{
-	  		"Assessment Number": 9008500150, 
-	  		"ID Agility Property": 39099, 
-	  		"Property Address": "17 Mulholland Lane Newport, VIC 3015", 
-	  		"__position": 1, 
-	  		"_highlightResult": {
-	  			"Property Address": {
-	  				"matchLevel": "none", 
-	  				"matchedWords": [Array], 
-	  				"value": "17 Mulholland Lane Newport, VIC 3015"
-	  			}
-	  		}, 
-	  		"objectID": "9008500150"
-	  	}
-		 	*/
 		 	console.log('run on has address');
 
 	    setAddress(val["Property Address"])
@@ -109,13 +183,13 @@ function AppDataProvider(props) {
   if(Platform.OS === 'android'){
     shareMessage = {
       title : "I’m loving Hobson Bay City Council’s Recycling 2.0 app - bin collection schedule, reminders and info on what does/doesn’t go in each bin, all on my phone. Find out how to download for your phone too:",
-      message: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
+      message: "https://www.hobsonsbay.vic.gov.au/recycling2.0app"
     }
   }else if(Platform.OS === 'ios'){
     shareMessage = {
         message:
           "I’m loving Hobson Bay City Council’s Recycling 2.0 app - bin collection schedule, reminders and info on what does/doesn’t go in each bin, all on my phone. Find out how to download for your phone too:",
-        url: "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services/Recycling-2.0-mobile-phone-app"
+        url: "https://www.hobsonsbay.vic.gov.au/recycling2.0app"
       }
   }
 
@@ -143,11 +217,13 @@ function AppDataProvider(props) {
 			  	value={{
 				  	addressObj, setAddressObj, 
 				  	address, setAddress,
+            fullAddress,
 				  	notifications, setNotifications,
 				  	config, setConfig,
 				  	binDays, setBinDays,
 				  	onShare,
-				  	onboard, setOnboard
+				  	onboard, setOnboard,
+            notificationsOn, notificationsOff, notificationsChange
 				  }} {...props} 
 				 />
 }

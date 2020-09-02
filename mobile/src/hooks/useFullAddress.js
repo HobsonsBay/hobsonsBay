@@ -20,6 +20,7 @@ export default () => {
   };
 
   useEffect(() => {
+    console.log('trigger use fulladdress')
     getAddress()
       .then((fullAddress) => setData(fullAddress))
       .catch(() => setData(null));

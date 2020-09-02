@@ -35,14 +35,20 @@ export default async (asn) => {
       .then((res) => res.json())
       .then(({ rows }) => {
         return processSchedule(rows);
+      })
+      .catch((error) => {
+        return Promise.reject(error)
       });
   };
 
-    if (asn && data.day === '') {
-      await getAddress(asn)
-        .then((days) => data = { ...data, days })
-        .catch((e) => console.error('Error getting address', e));
-    }
+  if (asn && data.day === '') {
+    await getAddress(asn)
+      .then((days) => data = { ...data, days })
+      .catch((error) => {
+        alert('A network error occurred. Please try again later');
+        return Promise.reject(error)
+      });
+  }
 
   return data;
 };
