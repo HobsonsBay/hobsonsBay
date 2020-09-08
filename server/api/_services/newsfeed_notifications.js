@@ -40,6 +40,18 @@ const mysql = require('serverless-mysql')({config});
 
 const NEWSFEED_OBJECT_URL = `${KNACK_API_URL}${KNACK_NEWSFEED_OBJECT_ID}`;
 
+/* this is the function to get the newsfeed from AWS 
+
+*/
+const getNewsfeed = async (page) => {
+  const rows = 10
+  const pageNum = (page-1) * rows;
+  const query = `SELECT * FROM newsfeed ORDER BY id DESC LIMIT ${rows} OFFSET ${pageNum};`
+  const newsfeed = await mysql.query(query);
+  await mysql.end();
+  return newsfeed
+}
+
 
 /* This is the main function 
   It checks agility for scheduled posts,
@@ -70,6 +82,7 @@ const newsfeed = async () =>{
         body: post.field_2710 ,
         link_text: post.field_2711.label ,
         link_url:  post.field_2711.url ,
+        type:  post.field_2712 ,
         zones: (post.field_2708 == true) ? "[\"all\"]" : JSON.stringify(zones)
       });
 
@@ -171,10 +184,11 @@ const fetch_agility = async () => {
   let output = await fetch(`${RECORDS_URL}?${QUERY}`, options).then((response) => response.json());
   
   // filter output based on hour extracted from post matched against current time.
+  const dateLocal = startOfHour(utcToZonedTime(new Date(),timeZone));
+
   let filtered = output.records.filter((post) => {
-    const timeZone = 'Australia/Melbourne';
     const dateServer = utcToZonedTime(new Date(post.field_2699.unix_timestamp));
-    const dateLocal = utcToZonedTime(new Date(),timeZone);
+    console.log(dateServer,dateLocal);
     return dateServer.getHours() == dateLocal.getHours();
   })
 
@@ -222,7 +236,7 @@ const getTokensAWS = async (zones, page) => {
 
   const pageNum = (page-1) * 1000;
 
-  const queryStr = `SELECT token, zone, type_service FROM user_configs WHERE zone in(${mysql.escape(zones)}) AND type_service=true LIMIT ${pageNum},10000;`;
+  const queryStr = `SELECT token, zone, type_service FROM user_configs WHERE zone in(${mysql.escape(zones)}) AND type_service=true LIMIT ${pageNum},1000;`;
   //const queryStr = `SELECT token FROM user_configs WHERE zone in(${mysql.escape(zones)}) LIMIT ${pageNum},10000;`;
   let result = [];
   tokens = await mysql.query(queryStr);
@@ -239,6 +253,21 @@ const sendPushNotifications = async (messages) => {
   let output = {};
   for (message of messages){
     if (message.tokens.length > 0){
+
+      /*
+      // TODO implement batching of notification sends
+
+
+      if(tokens.length > 0){
+        //console.log(tokens)
+
+        for ( let i = 0; i < tokens.length; i += 100){
+          //console.log(`processing ${i} of ${tokens.length}`);
+          let subTokens = tokens.slice(i, i + 100);
+          */
+
+
+
       await admin.messaging().sendToDevice(message.tokens,{
       //await testSend(message.tokens,{
         notification : message.notification,
@@ -253,6 +282,13 @@ const sendPushNotifications = async (messages) => {
         console.log('Error sending message:', error);
         output.error = "firebase send error"
       });
+
+
+
+
+
+    }else{
+
     }
   }
   return output;
@@ -270,5 +306,6 @@ const testSend = async (tokens, notification) => {
 }
 
 module.exports = {
-  newsfeed
+  newsfeed,
+  getNewsfeed
 };

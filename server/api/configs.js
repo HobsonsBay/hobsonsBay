@@ -7,9 +7,9 @@ const {
   put_mysql,
   deleteConfig, 
   delete_mysql, 
-  getTokens, 
-  getDb, 
-  testMysql 
+  //getTokens, 
+  //getDb, 
+  //testMysql 
 } = require('./_services/configs');
 
 module.exports = async (req, res) => {
@@ -39,33 +39,33 @@ module.exports = async (req, res) => {
   switch (method) {
     case 'GET':
       // await (service == 'aws') ? data = testMysql(id) : data = getConfig(id);
-      if (service == 'aws'){
-        data = await get_mysql(id);
-      }else{
-        data = await getConfig(id);
-      }
+      // if (service == 'aws'){
+         data = await get_mysql(id);
+      // }else{
+      //   data = await getConfig(id);
+      // }
       break;
     case 'POST':
-      console.log(body)
-      if (service == 'aws'){
+      // console.log(body)
+      // if (service == 'aws'){
         data = await post_mysql(body);
-      }else{
-        data = await postConfig(body);
-      }
+      // }else{
+      //   data = await postConfig(body);
+      // }
       break;
     case 'PUT':
-      if (service == 'aws'){
-        data = await put_mysql(id, body);
-      }else{
-        data = await putConfig(id, body);
-      }
+      // if (service == 'aws'){
+         data = await put_mysql(id, body);
+      // }else{
+      //  data = await putConfig(id, body);
+      // }
       break;
     case 'DELETE':
-      if (service == 'aws'){
+//      if (service == 'aws'){
         data = await delete_mysql(id);
-      }else{
-        data = await deleteConfig(id);
-      }
+      // }else{
+      //   data = await deleteConfig(id);
+      // }
       break;
 
     default:
@@ -73,7 +73,7 @@ module.exports = async (req, res) => {
       return;
   }
 
-  console.log(data);
+  //console.log(data);
 
   res.status(200).json(data);
 };

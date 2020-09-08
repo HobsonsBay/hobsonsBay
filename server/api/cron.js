@@ -8,14 +8,16 @@ module.exports = async (req, res) => {
 
   switch (action) {
     case 'reminders':
-      hour = await sendReminders();
+      hour = {};
+      hour.reminders = await sendReminders();
+      hour.newsfeed = await newsfeed();
       break;
     case 'test':
-      hour = await testReminders();
+      //hour = await testReminders();
       break;
-    case 'testnews':
+    case 'news':
       hour = await newsfeed();
-      //hour = await getConfigsAWS("Thursday Area 4","1800",1);
+      //hour = await getDb("Thursday Area 4","1800",1);
       break;
     case 'items':
       hour = await syncItems();

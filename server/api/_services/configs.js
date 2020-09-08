@@ -287,7 +287,7 @@ const getDb = async () => {
   csvOut = '"k_id","token","zone","time"\n'
   json.records.forEach((key,idx) => {
     //console.log(key.id)
-    // 1,"f05vqkTQog0:APA91bGaU70LoC23DZ8A6FaCXix8fixad7IUBvoPamsRg-WDGOwfCniKLymAaZbII524VhtR_SRdOpgMiQ3nzhjQwHwZqCTz6j50bbwv_HIAHHm_F5e2fx_HYbIp1AvMLT5tsUV1VLc_"," Thursday Area 3","18:00:00"
+    // 1,"**********0:APA91bGaU70LoC23DZ8A6FaCXix8fixad7IUBvoPamsRg-WDGOwfCniKLymAaZbII524VhtR_SRdOpgMiQ3nzhjQwHwZqCTz6j50bbwv_HIAHHm_F5e2fx_HYbIp1AvMLT5tsUV1VLc_"," Thursday Area 3","18:00:00"
     csvOut += `"${key.id}","${key.field_2218}","${key.field_2219}","${key.field_2221}"\n`;
   })
   console.log(csvOut)

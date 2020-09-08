@@ -9,6 +9,7 @@ const get = require('lodash/get');
 const keys = require('lodash/keys');
 const { formatBinName } = require('../_utils');
 const admin = require('firebase-admin');
+const newsfeed = require('./newsfeed_notifications');
 
 const {
   APPLICATION_ID,
@@ -124,7 +125,7 @@ const sendReminders = async () => {
   }
 
   // run if the db reminder time is less than 1 minute
-  if (difference < 60) {
+  if (difference < 1) {
     //console.log('run loop')
     // get tomorrow's zones
     const { rows } = await getZones();
@@ -174,8 +175,8 @@ const sendReminders = async () => {
           //console.log(`processing ${i} of ${tokens.length}`);
           let subTokens = tokens.slice(i, i + 100);
           //console.log(subTokens)
-          //await admin.messaging().sendToDevice(subTokens,
-          await testSend(subTokens,
+          await admin.messaging().sendToDevice(subTokens,
+          //await testSend(subTokens,
             { 
               notification: { ...message },
               data: {
@@ -201,6 +202,7 @@ const sendReminders = async () => {
       // add info to output
       output.zones.push({ name:zones[i], sent: fcmSuccess, unsent: fcmError });
     }
+
   }else{
     output.error = "time difference error"
     console.log('time difference error: '+hour)
