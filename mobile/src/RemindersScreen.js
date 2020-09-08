@@ -3,6 +3,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-community/picker';
+import CheckBox from '@react-native-community/checkbox';
 import messaging from '@react-native-firebase/messaging';
 import format from 'date-fns/format';
 import startOfHour from 'date-fns/startOfHour';
@@ -52,6 +53,7 @@ export default (props) => {
     notificationsOn, notificationsOff, notificationsChange,
     //fullAddress
   } = useData();
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
 
   console.log('reminders render')
@@ -94,7 +96,7 @@ export default (props) => {
     if(!notifications){
 
       // tempororary holder for reminder vals
-      const type = { type_reminder:true, type_service:true, type_news:false };
+      const type = { type_reminder:true, type_service:true };
 
       notificationsOn(type, format(date, 'HHmm'))
       .then((response)=>{
@@ -131,7 +133,7 @@ export default (props) => {
 
       const time = format(currentDate, 'HHmm', { timeZone: 'Australia/Melbourne' });
 
-      const type = { type_reminder:true, type_service:true, type_news:false };
+      const type = { type_reminder:true, type_service:true};
 
       notificationsChange(type, time)
         .then((config) => { 
@@ -150,7 +152,6 @@ export default (props) => {
     const type = { 
       type_reminder: config.type_reminder,
       type_service: config.type_service,
-      type_news: config.type_news,
       ...service 
     }
     notificationsChange(type, config.time)
@@ -228,6 +229,17 @@ export default (props) => {
         
         {config &&
           <View>
+
+            <CheckBox
+              boxType="square"
+              tintColors={{true:"#2196F3"}}
+              disabled={true}
+              lineWidth={3}
+              animationDuration={0.2}
+              onAnimationType="one-stroke"
+              value={toggleCheckBox}
+              onValueChange={(newValue) => setToggleCheckBox(newValue)}
+            />
             <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_reminder:!config.type_reminder})}>
               <Text style={styles.reminders_policy_text}>Test Reminder {
                 config.type_reminder ? "on" : "off"
@@ -236,11 +248,6 @@ export default (props) => {
             <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_service:!config.type_service})}>
               <Text style={styles.reminders_policy_text}>Test Service {
                 config.type_service ? "on" : "off"
-              }</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_news:!config.type_news})}>
-              <Text style={styles.reminders_policy_text}>Test news {
-                config.type_news ? "on" : "off"
               }</Text>
             </TouchableOpacity>
           </View>

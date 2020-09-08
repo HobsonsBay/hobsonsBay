@@ -46,7 +46,9 @@ export default (props) => {
     binDays,
     config, setConfig,
     onShare, onboard,
-    notificationsOff
+    notificationsOff,
+    unread,
+    navToNews, setNavToNews
   } = useData();
 
   useEffect(()=>{
@@ -55,6 +57,12 @@ export default (props) => {
     if(!onboard) navigation.navigate('Bin Schedule', { screen: 'Address' });
   },[onboard])
 
+  useEffect(()=>{
+    if(navToNews) {
+      setNavToNews(false);
+      navigation.navigate('Newsfeed');
+    }
+  },[navToNews])
 
   const handleAddressWarning = useCallback(() => {
     Alert.alert(
@@ -149,7 +157,7 @@ export default (props) => {
             <FootButton goTo='Contact' icon='phone' text="Contact" navigation={navigation}/>
           </View>
           <View style={styles.footer_button}>
-            <FootButton goTo='Feedback' icon='edit' text="Feedback" navigation={navigation}/>
+            <FootButton goTo='Newsfeed' unread={unread} icon='newspaper' text="News" navigation={navigation}/>
           </View>
           <View style={styles.footer_button}>
             <FootButton onPress={onShare} icon='share-square' text="Share"/>

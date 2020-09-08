@@ -35,9 +35,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  home_logo: {
-    height: 32,
-    width: 75,
+  home_logo: { // 1181 × 506
+    height: 41,
+    width: 95,
     marginLeft: 15
   },
 });

@@ -55,17 +55,6 @@ export default (props) => {
   */
 
 
-  // let slideState = {
-  //   height: new Animated.Value(0)
-  // };
-
-  // const showNotificationBar = () => {
-  //   Animated.timing(slideState.height, {
-  //     toValue: 100,
-  //     duration: 1000
-  //   }).start();
-  // }
-
 
   useEffect(() => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open

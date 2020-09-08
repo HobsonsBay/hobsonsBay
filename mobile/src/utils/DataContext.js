@@ -9,6 +9,7 @@ import deleteConfig from '../api/deleteConfig';
 import putConfig from '../api/putConfig';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
+import getNewsfeed from '../api/getNewsfeed';
 
 const DataContext = React.createContext()
 
@@ -39,6 +40,15 @@ function AppDataProvider(props) {
 	const [config, setConfig] = React.useState(null);
   const [notifications, setNotifications] = React.useState(false);
   const [onboard, setOnboard] = React.useState(true);
+  const [newsfeed,setNewsfeed] = React.useState([]);
+  const [newsLast,setNewsLast] = React.useState(0);
+  const [zone, setZone] = React.useState(false);
+  const [newPosts, setNewPosts] = React.useState(false);
+  const [unread, setUnread] = React.useState(false);
+  const [rawMessageData,setRawMessageData] = React.useState(null);
+  const [navToNews,setNavToNews] = React.useState(false);
+
+  console.log('context rerender')
 
   const notificationsOn = async ( type, time ) => {
     /* function to perform the following when reminders are 
@@ -121,6 +131,143 @@ function AppDataProvider(props) {
     return status
   }
 
+
+  const getNotification = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('notification')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      // read error
+    }
+    //console.log('Done.')
+  }
+
+  const removeNotification = async () => {
+    try {
+      await AsyncStorage.removeItem('notification')
+    } catch(e) {
+      // remove error
+    }
+    //console.log('Done.')
+  }
+
+  // add on message hook
+  React.useEffect(() => {
+    getNotification().then((remoteMessage)=>{
+      setRawMessageData(remoteMessage);
+    })
+    //trigger from in app state
+    const newsUpdate = messaging().onMessage(async remoteMessage => {
+      setRawMessageData(remoteMessage);
+    });
+    return newsUpdate;
+  }, []);
+
+  React.useEffect(() => {
+    //trigger from background state
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      setRawMessageData(remoteMessage);
+    });
+    //trigger from quit state
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {          
+          setRawMessageData(remoteMessage);
+        }
+      });
+
+  }, []);
+
+  React.useEffect(() => {
+    console.log(rawMessageData)
+
+    if(rawMessageData && rawMessageData.data.type == 'service'){
+      newsCompare();
+      removeNotification();
+      setNavToNews(true);
+    }
+  }, [rawMessageData]);
+
+
+  /* Newsfeed actions */
+
+  React.useEffect(() => {
+
+    AsyncStorage.getItem('newsLast').then((value) => {
+      console.log('async newsLast fetch',value);
+      let last = 0;
+      if(value != null){
+        setNewsLast(parseInt(value));
+        last = parseInt(value);
+      }else{
+        setNewsLast(0);
+      }
+      return newsCompare(last);
+    }).then((newsfeed)=>{
+      setNewsfeed(newsfeed);
+    })
+    // dummy test for undread items.
+    //AsyncStorage.setItem('newsLast','120')
+  }, []);
+
+  const newsCompare = async (last) => {
+    feed = await getNewsfeed(1).then((response)=>{
+      return response;
+    });
+    console.log("feed last is",feed[0].id,last)
+    if (feed[0].id > last){
+      setUnread(true);
+    }
+    return feed
+  }
+
+
+
+  React.useMemo(()=>{
+    // Filter newsfeed by zone
+    if(newsfeed.length > 0){
+      for(const post of newsfeed){
+        let zones = JSON.parse(post.zones);
+        if (zones.includes(zone) || zones[0] == "all"){
+          post.inZone = true;
+        }else{
+          post.inZone = false;
+        }
+      }
+    }
+  },[newsfeed,zone])
+
+  React.useEffect(()=>{
+    console.log('nl updated',newsLast)
+  },[newsLast])
+
+  // // //hook for changing newsfeed
+  // React.useMemo(()=>{
+  //   console.log("newsLast updated to",newsLast)
+  //   if (newsfeed.length > 0){
+  //     console.log('latest from api',newsfeed[0].id)
+  //     if(newsLast == newsfeed[0].id){
+  //       setUnread(false);
+  //     }
+  //   }else{
+  //     getNewsfeed(1)
+  //     .then(response => {
+  //       setNewsfeed(response);
+  //       if(newsLast < response[0].id){
+  //         setUnread(true);
+  //       }
+  //     })
+  //     .catch(error => console.log(error));
+  //   }
+  // },[
+  //   newsLast
+  // ])
+
+  React.useEffect(() => {
+    console.log('unread =',unread)
+  }, [unread]);
+
   //hook for changing address object to then set bin day data
   React.useMemo(()=>{
   	console.log('set addressObj')
@@ -134,17 +281,33 @@ function AppDataProvider(props) {
   	}else{
   		setBinDays({area:false,zone:false,day:false,days:false})
   	}
+
   },[
   	addressObj
   ])
 
   //hook for changing bin day data
   React.useMemo(()=>{
-  	console.log('set bin days')
-  	console.log(binDays)
+    console.log('set bin days')
+    if (binDays.area) {
+      setZone(`${binDays.day} Area ${binDays.area}`);
+    }else{
+      setZone(false);
+    }
   },[
-  	binDays
+    binDays
   ])
+
+
+  //hook for changing zone
+  React.useMemo(()=>{
+    console.log('set zone')
+    console.log(zone)
+  },[
+    zone
+  ])
+
+
 
 
   React.useMemo(()=>{
@@ -154,7 +317,9 @@ function AppDataProvider(props) {
 
 	    setAddress(val["Property Address"])
 	    setAddressObj(val)
-	  });
+	  }).catch((e)=>{
+      console.log(e)
+    });
 
   	if(!address) {
   		setAddressObj(false);
@@ -223,7 +388,9 @@ function AppDataProvider(props) {
 				  	binDays, setBinDays,
 				  	onShare,
 				  	onboard, setOnboard,
-            notificationsOn, notificationsOff, notificationsChange
+            notificationsOn, notificationsOff, notificationsChange,
+            getNewsfeed, newsfeed,setNewsfeed, newsLast,setNewsLast, unread, setUnread,
+            navToNews,setNavToNews
 				  }} {...props} 
 				 />
 }

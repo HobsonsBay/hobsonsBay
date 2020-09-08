@@ -34,6 +34,12 @@ export default function(props){
 					/>
 					<DrawerItem 
 						style={styles.item}
+						label="Newsfeed"
+						labelStyle={styles.itemLabel}
+						onPress={()=>{props.navigation.navigate('Newsfeed')}}
+					/>
+					<DrawerItem 
+						style={styles.item}
 						label={({ focused, color }) => {
 	    				return (
 					    	<Text 

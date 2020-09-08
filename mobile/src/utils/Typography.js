@@ -47,12 +47,20 @@ const LinkButton = (props) => {
 const LinkTile = (props) => {
   return(
     <View style={styles.link_tile}>
-    <TouchableOpacity onPress={props.onPress}>
-      <Image style={styles.link_tile_image} source={images[props.icon]} />
-          </TouchableOpacity>   
+      <TouchableOpacity onPress={props.onPress}>
+        <Image style={styles.link_tile_image} source={images[props.icon]} />
+      </TouchableOpacity>   
       <Text style={styles.link_tile_label}>{props.children}</Text>
     </View>
  
+  )
+}
+
+const LinkText = (props) => {
+  return(
+    <TouchableOpacity onPress={props.onPress}>
+      <Text style={[styles.link_text,props.style]}>{props.children}</Text>
+    </TouchableOpacity>
   )
 }
 
@@ -94,6 +102,12 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 25
   },
+  link_text:{
+    color: "#1352A5",
+    textDecorationLine: "underline",
+    textDecorationStyle: "solid",
+    textDecorationColor: "#000"
+  },
   about_link_label: {
     flex: 1,
     fontSize: 15,
@@ -102,4 +116,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export { style, ListItem, Br, Head, Para, LinkButton, LinkTile };
+export { style, ListItem, Br, Head, Para, LinkButton, LinkTile, LinkText };

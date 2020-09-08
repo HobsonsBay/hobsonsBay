@@ -20,4 +20,7 @@ export default {
   liveChat: require('../assets/Live-chat.png'),
   relayService: require('../assets/National-Relay-Service.png'),
   visit:  require('../assets/Visit.png'),
+  news_alert: require('../assets/news_alert.png'),
+  news_announce: require('../assets/news_announce.png'),
+  news_update: require('../assets/news_update.png'),
 };
