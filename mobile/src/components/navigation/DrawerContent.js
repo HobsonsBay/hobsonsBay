@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useData } from '../../utils/DataContext';
 
 export default function(props){
-	const { onShare } = useData();
+	const { onShare, unread } = useData();
 	return(
 		<React.Fragment>
 			<View style={styles.logo}>
@@ -34,26 +34,36 @@ export default function(props){
 					/>
 					<DrawerItem 
 						style={styles.item}
-						label="Newsfeed"
+						label={({ focused, color }) => {
+		    				return (
+		    					<View style={styles.newsfeed}>{unread && (
+						    		<View width={10} height={10} style={styles.unreadDot}></View>
+						    	)}
+						    	<Text 
+						    		style={styles.itemLabel}
+						    	>News</Text>
+						    	</View>
+						    )
+	  					}}
 						labelStyle={styles.itemLabel}
 						onPress={()=>{props.navigation.navigate('Newsfeed')}}
 					/>
 					<DrawerItem 
 						style={styles.item}
 						label={({ focused, color }) => {
-	    				return (
-					    	<Text 
-					    		numberOfLines={2} 
-					    		style={styles.itemLabel}
-					    	>Which bin does{"\n"}this go in?</Text>
-					    )
-  					}}
+		    				return (
+						    	<Text 
+						    		numberOfLines={2} 
+						    		style={styles.itemLabel}
+						    	>Which bin does{"\n"}this go in?</Text>
+						    )
+	  					}}
 						labelStyle={styles.itemLabel}
 						onPress={()=>{props.navigation.navigate('Which bin')}}
 					/>
 					<DrawerItem 
 						style={styles.item}
-						label="Reminder"
+						label="Notifications"
 						labelStyle={styles.itemLabel}
 						onPress={()=>{props.navigation.navigate('Collection Reminder')}}
 					/>
@@ -111,10 +121,22 @@ const styles = StyleSheet.create({
 		 marginLeft: 58,
 		 marginRight: 0
 	},
+	newsfeed:{
+		position: 'relative',
+	},
 	menuWrap: {
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'space-around',
 		paddingLeft: 20
+	},
+	unreadDot:{
+	    position: 'absolute',
+	    left: 40,
+	    top: 4,
+	    width: 10,
+	    height: 10,
+	    borderRadius: 5,
+	    backgroundColor: "#f00"
 	}
 })

@@ -15,8 +15,11 @@ export default (props) => {
   return (
     <TouchableOpacity onPress={ goTo ? React.useCallback(() => navigation.navigate(goTo)) : onPress }>
       <View style={styles.button}>
+        {unread && (
+          <View style={styles.unreadDot}></View>
+        )}
         <Icon name={icon} size={26} color='#727272' />
-        <Text style={styles.text}>{ unread && "*"}{text}</Text>
+        <Text style={styles.text}>{text}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -35,5 +38,14 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     marginTop: 5
+  },
+  unreadDot:{
+    position: 'absolute',
+    right: 8,
+    top: 8,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#f00"
   }
 });

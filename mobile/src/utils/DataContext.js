@@ -137,7 +137,7 @@ function AppDataProvider(props) {
       const jsonValue = await AsyncStorage.getItem('notification')
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch(e) {
-      // read error
+      return Promise.reject(e)
     }
     //console.log('Done.')
   }
@@ -146,7 +146,7 @@ function AppDataProvider(props) {
     try {
       await AsyncStorage.removeItem('notification')
     } catch(e) {
-      // remove error
+      return Promise.reject(e)
     }
     //console.log('Done.')
   }
@@ -154,8 +154,11 @@ function AppDataProvider(props) {
   // add on message hook
   React.useEffect(() => {
     getNotification().then((remoteMessage)=>{
-      setRawMessageData(remoteMessage);
-    })
+      console.log('async',remoteMessage);
+      if(remoteMessage != null) setRawMessageData(remoteMessage);
+    }).catch((err)=>{
+        console.log(err);
+      });
     //trigger from in app state
     const newsUpdate = messaging().onMessage(async remoteMessage => {
       setRawMessageData(remoteMessage);
@@ -175,16 +178,42 @@ function AppDataProvider(props) {
         if (remoteMessage) {          
           setRawMessageData(remoteMessage);
         }
+      }).catch((err)=>{
+        console.log(err);
       });
 
   }, []);
 
-  React.useEffect(() => {
-    console.log(rawMessageData)
+  /*
+{
+  "notification":{
+    "android":{},
+    "body":"This is an example push notification",
+    "title":"Notification test for area 1&2 thurs"
+  },
+  "sentTime":1599620631784,
+  "ttl":2419200,
+  "data":{
+    "type":"service"
+  },
+  "messageId":"0:1599620631830939%441f80b6441f80b6",
+  "from":"915718145351",
+  "collapseKey":
+  "au.gov.vic.hobsonsbay"
+}
+  */
 
-    if(rawMessageData && rawMessageData.data.type == 'service'){
+  React.useEffect(() => {
+    console.log('rawMessageData',typeof(rawMessageData))
+
+    if(rawMessageData != null && rawMessageData.data.type == 'service'){
       newsCompare();
-      removeNotification();
+      removeNotification().then((remoteMessage)=>{
+        console.log(remoteMessage);
+        setRawMessageData(remoteMessage);
+      }).catch((err)=>{
+        console.log(err);
+      });
       setNavToNews(true);
     }
   }, [rawMessageData]);
@@ -206,19 +235,20 @@ function AppDataProvider(props) {
       return newsCompare(last);
     }).then((newsfeed)=>{
       setNewsfeed(newsfeed);
-    })
+    }).catch((e)=>{
+      console.log(e);
+    });
     // dummy test for undread items.
     //AsyncStorage.setItem('newsLast','120')
   }, []);
 
   const newsCompare = async (last) => {
     feed = await getNewsfeed(1).then((response)=>{
+      //setNewsfeed(newsfeed);
       return response;
+    }).catch((e)=>{
+      return Promise.reject(e)
     });
-    console.log("feed last is",feed[0].id,last)
-    if (feed[0].id > last){
-      setUnread(true);
-    }
     return feed
   }
 
@@ -234,6 +264,10 @@ function AppDataProvider(props) {
         }else{
           post.inZone = false;
         }
+      }
+      console.log("feed last is",feed[0].id,newsLast,feed[0].inZone)
+      if (feed[0].id > newsLast && feed[0].inZone){
+        setUnread(true);
       }
     }
   },[newsfeed,zone])

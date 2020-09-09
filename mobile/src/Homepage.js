@@ -139,7 +139,7 @@ export default (props) => {
                 } right ={
                   <Text style={styles.button_text}>{ notifications ? "On" : "Off" }</Text>
                 }>
-                  <Text style={styles.button_text}>Reminder Notifications</Text>
+                  <Text style={styles.button_text}>Push Notifications</Text>
                 </ActionButton>
               </View>
             </View>

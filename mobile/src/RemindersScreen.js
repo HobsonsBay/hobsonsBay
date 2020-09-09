@@ -53,7 +53,10 @@ export default (props) => {
     notificationsOn, notificationsOff, notificationsChange,
     //fullAddress
   } = useData();
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [serviceDiasbled,setServiceDisabled] = useState(true);
+  const [reminderDiasbled,setReminderDisabled] = useState(true);
+  const [serviceActive,setServiceActive] = useState(false);
+  const [reminderActive,setReminderActive] = useState(false);
 
 
   console.log('reminders render')
@@ -103,8 +106,10 @@ export default (props) => {
         console.log('trigger on',response);
         setStatus(true);
         setDisabled(false);
+        setServiceDisabled(false)
+        setReminderDisabled(false)
       }).catch((e)=>{
-        alert('A network error occurred. Please try again later');
+        Alert.alert('A network error occurred. Please try again later');
         console.log('noton err:',e);
         setStatus(false);
         setDisabled(false);
@@ -116,8 +121,12 @@ export default (props) => {
         console.log('trigger off', response);
         setStatus(false);
         setDisabled(false);
+        setServiceActive(false);
+        setReminderActive(false);
+        setServiceDisabled(true)
+        setReminderDisabled(true)
       }).catch((e)=>{
-        alert('A network error occurred. Please try again later');
+        Alert.alert('A network error occurred. Please try again later');
         console.log('notoff err:',e);
         setStatus(true);
         setDisabled(false);
@@ -140,7 +149,7 @@ export default (props) => {
           setConfig(config);
           setDate(currentDate);
         }).catch((e)=>{
-          alert('A network error occurred. Please try again later');
+          Alert.alert('A network error occurred. Please try again later');
           console.log('notchange err:',e);
           setStatus(true);
           setDisabled(false);
@@ -149,6 +158,8 @@ export default (props) => {
   };
 
   const handleChangeType = (service) => {
+    setServiceDisabled(true)
+    setReminderDisabled(true)
     const type = { 
       type_reminder: config.type_reminder,
       type_service: config.type_service,
@@ -157,11 +168,14 @@ export default (props) => {
     notificationsChange(type, config.time)
       .then((config) => { 
         setConfig({...config, ...service})
+        setServiceDisabled(false)
+        setReminderDisabled(false)
       }).catch((e)=>{
         alert('A network error occurred. Please try again later');
         console.log('notchange err:',e);
         setStatus(true);
-        setDisabled(false);
+        setServiceDisabled(false)
+        setReminderDisabled(false)
       });
 
   }
@@ -169,7 +183,7 @@ export default (props) => {
   const showPicker = () => {
     if (disabled) {
       promptAddress();
-    } else {
+    } else if(reminderActive) {
       setShow(status);
       setModal(true);
     }
@@ -181,77 +195,110 @@ export default (props) => {
 
   useEffect(() => {
     if (config) {
+      // convert vals to bool
+      config.type_service = !!+config.type_service;
+      config.type_reminder = !!+config.type_reminder;
+
+      //console.log("rem conf",config);
       const currentDate = getReminderDate(config.time);
       setStatus(true);
       setDate(currentDate);
+      setServiceActive(config.type_service);
+      setReminderActive(config.type_reminder);
+      setServiceDisabled(false)
+      setReminderDisabled(false)
     }
   }, [config]);
 
-  // cheeky effect to set global notifications
-  // TODO improve this whole process 
-  // useEffect(() => {
-  //   setNotifications(status)
-  // }, [status]);
+  useEffect(()=>{
+    console.log('status',status,'serviceActive',serviceActive,'serviceDiasbled',serviceDiasbled,'reminderActive',reminderActive,'reminderDiasbled',reminderDiasbled);
+    if(!serviceActive && !reminderActive && status){
+      Alert.alert(
+        'Turn Off Notifications?',
+        'Would you like to turn off notifications all together?',
+        [
+          { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+          { text: 'Yes', onPress: handleChangeToggle }
+        ]
+      );
+    }
+  },[serviceActive,reminderActive])
+
 
   const remindersPickerTimeStyle = [
     styles.reminders_picker_time,
-    { color: (disabled || !status) ? '#e0e0e0' : '#616161' }
+    { color: (disabled || !reminderActive) ? '#e0e0e0' : '#616161' }
   ];
 
 
   return (
     <SafeAreaView style={styles.view}>
+      <NavBar navigation={navigation}/>
       <ScrollView  style={styles.reminders}>
-        <NavBar navigation={navigation}/>
         <View style={styles.reminders_body}>
-          <Text style={styles.reminders_title}>Collection Reminder</Text>
+          <Text style={styles.reminders_title}>Notifications</Text>
           <View style={styles.reminders_toggle}>
-            <Text style={styles.reminders_toggle_label}>Remind Me</Text>
+            <Text style={styles.reminders_toggle_label}>Receive push notifications</Text>
             <View style={styles.reminders_toggle_spinner} >
               { address && <ActivityIndicator animating={disabled} size='large' color='#333333' /> }
               <Toggle style={styles.reminders_toggle_cb} value={status} disabled={disabled} onPress={handlePressToggle} onChange={handleChangeToggle} />
             </View>
           </View>
-          <Text style={styles.reminders_description}>
-            Receive a push notification <Text style={styles.reminders_description_duration}>the day before</Text> your collection day.
-          </Text>
-          <View style={styles.reminders_picker}>
-            <Text style={styles.reminders_picker_label}>Set Reminder Time</Text>
-            <TouchableOpacity style={styles.reminders_picker_selector} onPress={showPicker} activeOpacity={0.8}>
-              <Text style={remindersPickerTimeStyle}>{formatTime(date)}</Text>
-              <Text><Icon name='chevron-down' size={16} color={(disabled || !status) ? '#e0e0e0' : '#616161'} /></Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.reminders_description_helptext}>
-            Reminders will be sent on the hour. Any time set will default to the nearest hour.
-          </Text>
-        </View>
-        
-        {config &&
           <View>
+            <View style={[styles.reminders_toggle,styles.lineTop]}>
+              <Text style={styles.reminders_toggle_label}>Remind Me</Text>
+              <CheckBox
+                boxType="square"
+                tintColors={{true:"#2196F3"}}
+                disabled={reminderDiasbled}
+                lineWidth={3}
+                animationDuration={0}
+                onAnimationType="one-stroke"
+                value={reminderActive}
+                onValueChange={(newValue) => handleChangeType({type_reminder:!config.type_reminder})}
+              />
+            </View>
+            <View style={{opacity:reminderActive ? 1 :0.5}}>
+              <Text style={styles.reminders_description}>
+                Receive a push notification <Text style={styles.reminders_description_duration}>the day before</Text> your collection day.
+              </Text>
+              <View style={styles.reminders_picker}>
+                <Text style={styles.reminders_picker_label}>Set Reminder Time</Text>
+                <TouchableOpacity style={styles.reminders_picker_selector} onPress={showPicker} activeOpacity={0.8}>
+                  <Text style={remindersPickerTimeStyle}>{formatTime(date)}</Text>
+                  <Text><Icon name='chevron-down' size={16} color={(disabled || !reminderActive) ? '#e0e0e0' : '#616161'} /></Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.reminders_description}>
+                Reminders will be sent on the hour. Any time set will default to the nearest hour.
+              </Text>
+            </View>
 
-            <CheckBox
+          </View>
+          <View>
+            <View style={[styles.reminders_toggle,styles.lineTop]}>
+              <Text style={styles.reminders_toggle_label}>Keep Me Updated</Text>
+              <CheckBox
               boxType="square"
               tintColors={{true:"#2196F3"}}
-              disabled={true}
+              disabled={serviceDiasbled}
               lineWidth={3}
-              animationDuration={0.2}
+              animationDuration={0}
               onAnimationType="one-stroke"
-              value={toggleCheckBox}
-              onValueChange={(newValue) => setToggleCheckBox(newValue)}
+              value={serviceActive}
+              onValueChange={(newValue) => handleChangeType({type_service:!config.type_service})}
             />
-            <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_reminder:!config.type_reminder})}>
-              <Text style={styles.reminders_policy_text}>Test Reminder {
-                config.type_reminder ? "on" : "off"
-              }</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{padding:10}} onPress={() => handleChangeType({type_service:!config.type_service})}>
-              <Text style={styles.reminders_policy_text}>Test Service {
-                config.type_service ? "on" : "off"
-              }</Text>
-            </TouchableOpacity>
+            </View>
+            <View style={{opacity:serviceActive ? 1 :0.5}}>
+
+              <Text style={styles.reminders_description}>
+                Receive push notifications for emergencies, changes, and events related to your bin collection service.  
+              </Text>
+
+            </View>
           </View>
-        }
+        </View>
+        
         <TouchableOpacity style={styles.reminders_policy} onPress={handlePolicyClick}>
           <Text style={styles.reminders_policy_text}>Privacy Policy</Text>
           <Text><MIcon name='launch' size={22} color='#1051a4' /></Text>
@@ -325,7 +372,8 @@ export default (props) => {
 };
 
 const styles = StyleSheet.create({
-  view: { flex: 1 },
+  view: { flex: 1,
+    backgroundColor: '#fff' },
   reminders: {
     flex: 1,
     flexDirection: 'column',
@@ -345,7 +393,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   reminders_toggle_label: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '400',
     color: '#000'
   },
@@ -355,9 +403,14 @@ const styles = StyleSheet.create({
   reminders_toggle_cb: {
     marginRight: 0
   },
+  lineTop:{
+    paddingTop: 10,
+    borderTopColor: "#aaa",
+    borderTopWidth: 1
+  },
   reminders_description: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 16,
     color: '#424242',
     lineHeight: 25
   },
@@ -377,7 +430,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   reminders_picker_label: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '400',
     color: '#212121'
   },
@@ -387,7 +440,7 @@ const styles = StyleSheet.create({
   },
   reminders_picker_time: {
     marginRight: 10,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold'
   },
   reminders_policy: {

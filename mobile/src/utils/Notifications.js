@@ -102,6 +102,7 @@ export default (props) => {
       const jsonValue = await AsyncStorage.getItem('notification')
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch(e) {
+      return Promise.reject(e)
       // read error
     }
     //console.log('Done.')
@@ -112,6 +113,7 @@ export default (props) => {
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem('notification', jsonValue)
     } catch(e) {
+      return Promise.reject(e)
       // save error
     }
 
@@ -122,6 +124,7 @@ export default (props) => {
     try {
       await AsyncStorage.removeItem('notification')
     } catch(e) {
+      return Promise.reject(e)
       // remove error
     }
     //console.log('Done.')
@@ -138,7 +141,7 @@ export default (props) => {
         //console.log('null')
         setRawMessageData(null);
       }
-      console.log(response.data.type);
+      //console.log(response.data.type);
     })
   }, []);
 
