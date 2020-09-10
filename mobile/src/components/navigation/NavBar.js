@@ -11,6 +11,7 @@ import images from '../../utils/images';
 
 export default (props) => {
   const { navigation } = props;
+  //console.log(navigation)
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
 	return (

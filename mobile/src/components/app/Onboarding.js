@@ -22,7 +22,7 @@ export default (props) => {
   const {
     address, onboard, setOnboard 
   } = useData();
-  const version = "110b";
+  const version = "112a";
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleButton = useCallback(() => {
@@ -53,6 +53,17 @@ export default (props) => {
           </View>
           <View style={styles.onboarding_body}>
             <Head style={styles.onboarding_welcome}>Welcome to the Recycling 2.0 app</Head>
+            <Br/>
+            <Head style={styles.onboarding_welcome}>What’s New</Head>
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Home Screen: </Text> A quick view of your next bin day and all the  
+     app features
+            </ListItem>
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Newsfeed and notifications </Text> Turn on notifications to receive service 
+      updates, changes and news.
+            </ListItem>
+            <Br/>
             <Para style={styles.onboarding_description}>
             This app supports your usage of the Recycling 2.0 service, redirecting household waste from landfill into local recycling streams.
             </Para>
@@ -67,17 +78,6 @@ export default (props) => {
             <ListItem style={styles.onboarding_description}>
               <Text style={{fontWeight: "bold"}}>Collection Reminder: </Text> Schedule a reminder notification for the day 
                before your bin collection day{'\n'}
-            </ListItem>
-
-            <Head style={styles.onboarding_welcome}>What’s New</Head>
-            <ListItem style={styles.onboarding_description}>
-                <Text style={{fontWeight: "bold"}}>Home Screen: </Text> At a glance information about your next bin day and easy access to all the app settings
-            </ListItem>
-            <ListItem style={styles.onboarding_description}>
-                <Text style={{fontWeight: "bold"}}>Contact Page: </Text> HBCC contact details at your fingertips.
-            </ListItem>
-            <ListItem style={styles.onboarding_description}>
-                <Text style={{fontWeight: "bold"}}>Sharing: </Text> Want to recommend this app to someone? Now you can easily with the share button on the Home Page or the one in the menu
             </ListItem>
             
             <Para style={styles.onboarding_description}>

@@ -21,9 +21,11 @@ import { POLICY_URL } from './utils/constants';
 import Search from './components/address/Search';
 import { useData } from './utils/DataContext'
 import NavBar from "./components/navigation/NavBar";
+import { useFocusEffect } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
 export default (props) => {
-  const { setAddress } = useData();
+  const { address, setAddress } = useData();
   const { navigation } = props;
   const [listener] = useState({});
   const [showAll, setShowAll] = useState(true);
@@ -32,10 +34,11 @@ export default (props) => {
   const keyboardDidHide = useCallback(() => setShowAll(true), []);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
+
   const handleSelection = useCallback((address) => {
     AsyncStorage.setItem('address', JSON.stringify(address)).then(() => {
       setAddress(address["Property Address"])
-      address && navigation.push('Schedule', { address });
+      address && navigation.replace('Schedule', { address });
     }).catch(console.error);
   }, []);
 
@@ -48,12 +51,6 @@ export default (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    AsyncStorage.getItem('address').then((value) => {
-      const address = JSON.parse(value);
-      address && navigation.push('Schedule', { address });
-    }).catch(console.error);
-  }, []);
 
   return (
     <SafeAreaView style={styles.view}>

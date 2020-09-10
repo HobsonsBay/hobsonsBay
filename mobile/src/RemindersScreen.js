@@ -75,10 +75,10 @@ export default (props) => {
   const promptAddress = () => {
     Alert.alert(
       'Address Required',
-      'Add an Address in Bin Schedule to receive notifications',
+      'Add an address to be able to receive notifications',
       [
         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-        { text: 'Go to Bin Schedule', onPress: goToBinSchedule }
+        { text: 'Go to Address', onPress: goToBinSchedule }
       ],
       { cancelable: false }
     );

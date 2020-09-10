@@ -36,11 +36,12 @@ export default (props) => {
   const {notifications, setNotifications, binDays, address, setAddress, config, setConfig } = useData();
   const loading = !binDays.day;
   const handleCalendarClick = openUrl(CALENDAR_URL);
+
+  useFocusEffect(() => {
+    console.log(address);
+    if(!address || address == 'change') navigation.replace('Address');
+  });
   
-
-
-  //console.log('schedule render')
-
   //ADD GA TRACKING FOR ZONE AND REMINDERS
   useEffect(() => {
     analytics().logEvent('recycle_app_config', {
@@ -62,6 +63,8 @@ export default (props) => {
     );
   }, [config])
 
+
+
   const handleAddressChange = useCallback(() => {  
 
     //console.log("address change called");
@@ -79,15 +82,15 @@ export default (props) => {
           setConfig(null);
         }).then(() => {
           clearAddress().then(() => {
-            navigation.goBack();
             setAddress(false);
+            navigation.replace('Address');
           }).catch(console.error);
         }).catch(console.error);
     }else{
       // if reminders aren't set
       clearAddress().then(() => {
-        navigation.goBack();
         setAddress(false);
+        navigation.replace('Address');
       }).catch(console.error);
     }
 
@@ -134,7 +137,7 @@ export default (props) => {
                 <View style={styles.schedule_title_bell_container}>
                   <TouchableOpacity style={styles.schedule_title_bell} onPress={handleNotification}>
                     <View style={styles.schedule_title_bell_icon}>
-                      { notifications ?
+                      { notifications && config && config.type_reminder ?
                         <Icon name='bell-o' size={20} color='#757575' />
                         :
                         <Icon name='bell-slash-o' size={20} color='#999999' />

@@ -377,19 +377,16 @@ function AppDataProvider(props) {
   ])
 
 
-  let shareMessage = {}
-
-  if(Platform.OS === 'android'){
-    shareMessage = {
-      title : "I’m loving Hobson Bay City Council’s Recycling 2.0 app - bin collection schedule, reminders and info on what does/doesn’t go in each bin, all on my phone. Find out how to download for your phone too:",
-      message: "https://www.hobsonsbay.vic.gov.au/recycling2.0app"
-    }
-  }else if(Platform.OS === 'ios'){
-    shareMessage = {
+  let shareMessage = {
         message:
           "I’m loving Hobson Bay City Council’s Recycling 2.0 app - bin collection schedule, reminders and info on what does/doesn’t go in each bin, all on my phone. Find out how to download for your phone too:",
         url: "https://www.hobsonsbay.vic.gov.au/recycling2.0app"
       }
+
+  if(Platform.OS === 'android'){
+    shareMessage = {
+      message: shareMessage.message+" "+shareMessage.url
+    }
   }
 
   const onShare = async () => {

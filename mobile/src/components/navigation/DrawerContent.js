@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useData } from '../../utils/DataContext';
 
 export default function(props){
-	const { onShare, unread } = useData();
+	const { onShare, unread, address } = useData();
 	return(
 		<React.Fragment>
 			<View style={styles.logo}>
@@ -30,7 +30,7 @@ export default function(props){
 						style={styles.item}
 						label="Bin Schedule"
 						labelStyle={styles.itemLabel}
-						onPress={()=>{props.navigation.navigate('Bin Schedule')}}
+						onPress={()=>{props.navigation.navigate('Bin Schedule', { screen: address ? 'Schedule' : 'Address' })}}
 					/>
 					<DrawerItem 
 						style={styles.item}

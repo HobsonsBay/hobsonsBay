@@ -80,23 +80,28 @@ export default (props) => {
     // delete config code for reminders
     if (config) {
         notificationsOff().then((res)=>{
-          return clearAddress()
+          return clearAddress();
         }).then(() => {
-          setAddress(false);
-          navigation.navigate('Bin Schedule', { screen: 'Address' });
+          setAddress('change');
         }).catch(console.error);
     }else{
       // if reminders aren't set
       clearAddress().then(() => {
-        setAddress(false);
-        navigation.navigate('Bin Schedule', { screen: 'Address' });
+        setAddress('change');
       }).catch(console.error);
     }
 
   }, [config]);
 
+  useEffect(()=>{
+    if (address == 'change'){
+      setAddress(false);
+      navigation.navigate('Bin Schedule', { screen: 'Address' });
+    }
+  },[address])
+
   const handleNotification = useCallback(() => navigation.navigate('Collection Reminder'));
-  const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule'));
+  const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule', { screen: address ? 'Schedule' : 'Address' }));
   const handleItems = useCallback(() => navigation.navigate('Which bin'));
 
   //console.log('homepage render')
@@ -124,13 +129,13 @@ export default (props) => {
             </View>
             <View style={{justifyContent:'center', flex: 1, paddingVertical: 10}}>
               <View style={styles.button}>
-                <ActionButton onPress={handleAddressWarning} color={ address ? "#5E8310" : "#8B1614" }  left={
+                <ActionButton onPress={handleAddressWarning} color={ address && address != 'change' ? "#5E8310" : "#8B1614" }  left={
                   <Icon name='map-marker' size={24} color='#ffffff' />
                 } right ={
                   <Icon name='gear' size={20} color='#ffffff' />
                 }>
-                  <Text style={styles.button_text}>{ address ? "Current Address is set to:" : "Current Address is not set." }</Text>
-                  <Text numberOfLines={1} style={styles.button_sub_text}>{ address ? address : "Set an address to see bin days" }</Text>
+                  <Text style={styles.button_text}>{ address && address != 'change' ? "Current Address is set to:" : "Current Address is not set." }</Text>
+                  <Text numberOfLines={1} style={styles.button_sub_text}>{ address && address != 'change' ? address : "Set an address to see bin days" }</Text>
                 </ActionButton>
               </View>
               <View style={styles.button}>
@@ -139,7 +144,7 @@ export default (props) => {
                 } right ={
                   <Text style={styles.button_text}>{ notifications ? "On" : "Off" }</Text>
                 }>
-                  <Text style={styles.button_text}>Push Notifications</Text>
+                  <Text style={styles.button_text}>Notifications</Text>
                 </ActionButton>
               </View>
             </View>

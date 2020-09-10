@@ -9,7 +9,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar, 
   Text, 
   Image,
-  View 
+  View,
+  TextInput
 } from 'react-native';
 import ScheduleStack from './ScheduleStack';
 import Homepage from './Homepage';
@@ -28,6 +29,18 @@ import images from './utils/images';
 import {AppDataProvider, useData} from './utils/DataContext'
 import SplashScreen from 'react-native-splash-screen'
 import DrawerContent from './components/navigation/DrawerContent';
+
+
+Text.defaultProps = {
+  ...Text.defaultProps,
+  maxFontSizeMultiplier: 1.1,
+};
+
+TextInput.defaultProps = {
+  ...TextInput.defaultProps,
+  maxFontSizeMultiplier: 1.1,
+};
+
 
 const setNotification = async (value) => {
   try {
@@ -49,38 +62,6 @@ if (Platform.OS === "android"){
 }
 
 const Drawer = createDrawerNavigator();
-
-
-const CustomDrawerContent = (props) => {
-  //props.label = CustomText();
-  //console.log(props);
-  return (
-    <DrawerContentScrollView {...props}>
-      <View style={{
-        flexDirection:"row",
-        alignItems:"flex-end",
-        //justifyContent:"space-between",
-        paddingHorizontal:20,
-        paddingTop:10,
-      }}>
-        <Image style={{
-          height: 41,
-          width: 150
-          // 895 x 719
-        }} source={images.recyclingLogoWite} />
-      </View>
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>
-  );
-}
-
-const navComp = (name, options) => {return ({
-  drawerLabel:({ focused, color }) => {
-    return <Text numberOfLines={2} style={{ color: "#fff", fontSize: 14, fontWeight: 'bold' }}>{name}</Text>
-  },
-  ...options
-})}
-
 
 export default function App (props) {
   
@@ -108,14 +89,14 @@ export default function App (props) {
           }
         }} >
         <Drawer.Navigator drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={props => <DrawerContent {...props} />} initialRouteName='Home'>
-          <Drawer.Screen options={navComp('Home')} name='Home' component={Homepage}/>
-          <Drawer.Screen options={navComp('Bin Schedule')} name='Bin Schedule' component={ScheduleStack}/>
-          <Drawer.Screen options={navComp('Newsfeed')} name='Newsfeed' component={Newsfeed}/>
-          <Drawer.Screen options={navComp('Which bin does\nthis go in?')} name='Which bin' component={FindStack} />
-          <Drawer.Screen options={navComp('Reminder',{unmountOnBlur: true})} name='Collection Reminder' component={RemindersScreen}/>
-          <Drawer.Screen options={navComp('Feedback')} name='Feedback' component={FeedbackScreen} />
-          <Drawer.Screen options={navComp('About')} name='About' component={AboutScreen} />
-          <Drawer.Screen options={navComp('Contact')} name='Contact' component={Contact} />
+          <Drawer.Screen name='Home' component={Homepage}/>
+          <Drawer.Screen name='Bin Schedule' component={ScheduleStack}/>
+          <Drawer.Screen name='Newsfeed' component={Newsfeed}/>
+          <Drawer.Screen name='Which bin' component={FindStack} />
+          <Drawer.Screen options={{unmountOnBlur: true}} name='Collection Reminder' component={RemindersScreen}/>
+          <Drawer.Screen name='Feedback' component={FeedbackScreen} />
+          <Drawer.Screen name='About' component={AboutScreen} />
+          <Drawer.Screen name='Contact' component={Contact} />
         </Drawer.Navigator>
       </NavigationContainer>
       <Onboarding/>
