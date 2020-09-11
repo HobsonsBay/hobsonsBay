@@ -8,6 +8,7 @@ export default {
   glass: require('../assets/glass.png'),
   recycling: require('../assets/recycling.png'),
   rubbish: require('../assets/rubbish.png'),
+  rubbish_home: require('../assets/homepage_rubbish.png'),
   hbccLogo: require('../assets/hbcc-logo.png'),
   recyclingLogo: require('../assets/recycling-20-logo.png'),
   r2Bins: require('../assets/r2_bins.png'),

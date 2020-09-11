@@ -4,7 +4,9 @@ import {
   View,
   Image,
   Text,
+  ImageBackground
 } from 'react-native';
+import images from '../../utils/images';
 import { formatDate, formatDayTomorrow } from '../../utils';
 
 export default (props) => {
@@ -29,7 +31,7 @@ export default (props) => {
         return "#9ACA3C"
       break;
       case 'Rubbish':
-        return "#536130"
+        return "#999"
       break;
       case "Commingled Recycling":
       case 'Mixed Recycling':
@@ -52,7 +54,11 @@ export default (props) => {
       <Text style={styles.date}>{ binDays.day && formatDate( binDate )}</Text>
       <View style={styles.bintypes}>
         { binType.length > 0 && 
-          binType.map((bin, key) => <View key={key} style={[styles.bintype,{backgroundColor:binCol(bin.bin_type)}]}></View>)
+          binType.map((bin, key) => <View key={key} style={[styles.bintype,{backgroundColor:binCol(bin.bin_type)}]}>
+              {bin.bin_type == 'Rubbish' && (
+                <ImageBackground source={images.rubbish_home} style={styles.bg}><Text> </Text></ImageBackground>
+              )}
+            </View>)
         }
       </View>
     </View>
@@ -99,5 +105,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     borderWidth: 1,
     borderColor: '#999'
+  },
+  bg: {
+    width: 22,
+    height: 22,
   }
 });
