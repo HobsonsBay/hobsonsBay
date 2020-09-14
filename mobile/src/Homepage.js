@@ -109,7 +109,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.homepage}>
-        <NavBar navigation={navigation} route={route}/>
+        <NavBar navigation={navigation} route={route} isHome={true}/>
         <ScrollView contentContainerStyle={styles.home_body}>
             <View style={styles.home_2up_wrap}>
               <View style={[styles.home_2up,{opacity: binDays.day ? 1 : 0.3}]}>

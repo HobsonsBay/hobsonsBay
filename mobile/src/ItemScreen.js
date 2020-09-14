@@ -1,4 +1,5 @@
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import trim from 'lodash/trim';
@@ -42,7 +43,7 @@ export default (props) => {
       <View style={styles.item}>
         <View style={styles.item_head}>
           <TouchableOpacity style={styles.item_button} onPress={handleButton}>
-            <Text><Icon name='md-arrow-back' size={24} color='#212121' /></Text>
+            <Text><MaterialIcon name='arrow-back' size={32} color='#212121' /></Text>
             <Text style={styles.item_button_text}>Which bin does this go in?</Text>
           </TouchableOpacity>
           <Image style={styles.item_logo} source={images.hbccLogo} />

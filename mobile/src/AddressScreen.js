@@ -38,9 +38,12 @@ export default (props) => {
   const handleSelection = useCallback((address) => {
     AsyncStorage.setItem('address', JSON.stringify(address)).then(() => {
       setAddress(address["Property Address"])
-      address && navigation.replace('Schedule', { address });
     }).catch(console.error);
   }, []);
+
+  useEffect(()=>{
+      address && navigation.replace('Schedule', { address });
+  },[address])
 
   useEffect(() => {
     listener.kdsListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
