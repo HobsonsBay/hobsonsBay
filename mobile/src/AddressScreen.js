@@ -26,7 +26,7 @@ import { CommonActions } from '@react-navigation/native';
 
 export default (props) => {
   const { address, setAddress } = useData();
-  const { navigation } = props;
+  const { navigation, route } = props;
   const [listener] = useState({});
   const [showAll, setShowAll] = useState(true);
   const handlePolicyClick = openUrl(POLICY_URL);
@@ -55,7 +55,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.address}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
 
         <View style={styles.address_body}>
           <Text style={styles.address_title}>Find your bin day</Text>

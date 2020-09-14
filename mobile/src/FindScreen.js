@@ -23,7 +23,7 @@ import Search from './components/find/Search';
 import NavBar from "./components/navigation/NavBar";
 
 export default (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const [listener] = useState({});
   const [showAll, setShowAll] = useState(true);
   const [cleared, setCleared] = useState(true);
@@ -49,7 +49,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.find}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
 
         <ScrollView style={styles.find_scroll} contentContainerStyle={styles.find_scroll_content}>
           <View style={styles.find_body}>

@@ -20,7 +20,7 @@ import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 import NavBar from "./components/navigation/NavBar";
 
 export default (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const handleContactClick = openUrl(CONTACT_URL);
   const handleRecycling20Click = openUrl(RECYCLING_20_URL);
   const handleFeedbackClick = openUrl(FEEDBACK_URL);
@@ -30,7 +30,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.about}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
         <ScrollView style={styles.about_scroll} contentContainerStyle={styles.about_scroll_content}>
           <Head style={styles.about_welcome}>About Recycling 2.0</Head>
           <View style={styles.about_photo}>

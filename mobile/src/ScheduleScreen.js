@@ -115,7 +115,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.schedule}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
         <View style={styles.schedule_address}>
           <View style={styles.schedule_address_wrapper}>
             <View style={styles.schedule_address_card}>

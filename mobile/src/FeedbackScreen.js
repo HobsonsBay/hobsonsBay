@@ -22,7 +22,7 @@ import NavBar from "./components/navigation/NavBar";
 //import {AppDataProvider, useData} from './utils/DataContext'
 
 export default (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const handleFeedbackClick = openUrl(FEEDBACK_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
   //const [data, setData] = useData();
@@ -32,7 +32,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.feedback}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
         <ScrollView>
           <View style={styles.feedback_body}>
             <Head style={styles.feedback_welcome}>Feedback</Head>

@@ -96,7 +96,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.newsfeed}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
         <ScrollView style={styles.newsfeed_scroll} contentContainerStyle={styles.newsfeed_scroll_content}>
           <Text style={styles.news_title}>News</Text>
           {newsfeed.map((c, index) => (

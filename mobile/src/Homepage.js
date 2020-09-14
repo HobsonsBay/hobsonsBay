@@ -38,7 +38,7 @@ import NavBar from "./components/navigation/NavBar";
 
 
 export default (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
 
   const {
     address, setAddress,
@@ -109,7 +109,7 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.homepage}>
-        <NavBar navigation={navigation}/>
+        <NavBar navigation={navigation} route={route}/>
         <ScrollView contentContainerStyle={styles.home_body}>
             <View style={styles.home_2up_wrap}>
               <View style={[styles.home_2up,{opacity: binDays.day ? 1 : 0.3}]}>

@@ -38,7 +38,7 @@ import NotificationsOn from "./utils/handleNotification";
 
 
 export default (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const [disabled, setDisabled] = useState(true);
   const [status, setStatus] = useState(false);
   const [date, setDate] = useState(startOfHour(new Date(2001, 1, 1, 18, 0, 0)));
@@ -233,7 +233,7 @@ export default (props) => {
 
   return (
     <SafeAreaView style={styles.view}>
-      <NavBar navigation={navigation}/>
+      <NavBar navigation={navigation} route={route}/>
       <ScrollView  style={styles.reminders}>
         <View style={styles.reminders_body}>
           <Text style={styles.reminders_title}>Notifications</Text>
