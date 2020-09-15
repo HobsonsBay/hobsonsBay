@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
+import Question from "./components/quiz/Question";
 import NavBar from "./components/navigation/NavBar";
 import { useData } from './utils/DataContext';
 import { useFocusEffect } from '@react-navigation/native';
@@ -78,14 +79,13 @@ const questionsData = [{
   category : "Glass"
 },{
   id: "2",
-  question : "New Which bin does this go in?",
-  image : "https://s3-ap-southeast-2.amazonaws.com/ap-southeast-2-assets.knack.com/assets/5cf7091b790be9000a691701/5e717096e712ae0015d7e9be/thumb_18/bottlesglass02_v1.png",
-  answer_1 : "Mixed Recycling",
-  answer_2 : "Glass",
-  answer_3 : "Food and Garden",
-  answer_4 : "Rubbish",
-  correct_answer : "2",
-  category : "Glass"
+  question : "A longer example of a text based question here to see what it looks like on screen.\n\nPick a bin from below",
+  answer_1 : "Food and Garden",
+  answer_2 : "Rubbish",
+  answer_3 : "Mixed Recycling",
+  answer_4 : "Glass",
+  correct_answer : "3",
+  category : "Mixed Recycling"
 }]
 
 export default (props) => {
@@ -96,7 +96,8 @@ export default (props) => {
   const [questionNumber, setQuestionNumber] = React.useState(null);
   const [quizState, setQuizState] = React.useState('init');
   const [currentQuestion, setCurrentQuestion ] = React.useState(false);
-  const [answers, setAnswers] =React.useState([]);
+  const [isLast, setIsLast ] = React.useState(false);
+  const [answers, setAnswers] = React.useState([]);
   const [answer, setAnswer] = React.useState({a:false,c:false});
 
   React.useEffect(()=>{
@@ -110,9 +111,14 @@ export default (props) => {
       case 'start':
         setQuestionNumber(1)
         setCurrentQuestion(questions[0])
+        setIsLast(false);
+      break;
+      case 'endscreen':
+
       break;
       case 'reset':
         setInProgress(false);
+        setIsLast(false);
         setQuiz(null);
         setQuestions(null);
         setCurrentQuestion(0);
@@ -122,6 +128,16 @@ export default (props) => {
       break;
     }
   },[quizState])
+
+  const nextQuestion = () => {
+    let next = questionNumber+1;
+    console.log('next',next, questions.length);
+    setQuestionNumber(next)
+    setCurrentQuestion(questions[next-1])
+    if (next == questions.length){
+      setIsLast(true);
+    }
+  }
 
   const getQuiz = async () => {
     return quizData;
@@ -136,6 +152,14 @@ export default (props) => {
       setQuestions(qData);
       setQuizState('start');
     })
+  }
+
+  const endQuiz = () => {
+      setQuizState('endscreen');
+  }
+
+  const loadQuestion = () => {
+    return <Question nextQuestion={nextQuestion} question={currentQuestion} questionNumber={questionNumber}/>
   }
 
 
@@ -157,24 +181,18 @@ export default (props) => {
             ))
           }
           {quizState == 'start' && (
-            <View id={currentQuestion.id}>
-              <Head>Question number {questionNumber}</Head>
-              <View style={styles.q_photo}>
-                <Image style={styles.q_photo_img} source={{ uri: currentQuestion.image }} resizeMode='contain'/>
-              </View>
-              <Para>{currentQuestion.question}</Para>
-              <TouchableOpacity onPress={()=>setAnswer({a:1,c:currentQuestion.category})}>
-                <Head>{currentQuestion.answer_1}</Head>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>setAnswer({a:2,c:currentQuestion.category})}>
-                <Head>{currentQuestion.answer_2}</Head>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>setAnswer({a:3,c:currentQuestion.category})}>
-                <Head>{currentQuestion.answer_3}</Head>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>setAnswer({a:4,c:currentQuestion.category})}>
-                <Head>{currentQuestion.answer_4}</Head>
-              </TouchableOpacity>
+            <Question 
+              key={questionNumber} 
+              nextQuestion={nextQuestion} 
+              question={currentQuestion} 
+              questionNumber={questionNumber} 
+              isLast={isLast}
+              endQuiz= {endQuiz}
+            />
+          )}
+          {quizState == 'endscreen' && (
+            <View>
+              <Head>Quiz Finished</Head>
             </View>
           )}
           <Br/>

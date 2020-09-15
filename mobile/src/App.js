@@ -10,7 +10,8 @@ import { StatusBar,
   Text, 
   Image,
   View,
-  TextInput
+  TextInput,
+  Linking
 } from 'react-native';
 import ScheduleStack from './ScheduleStack';
 import Homepage from './Homepage';
@@ -65,6 +66,22 @@ if (Platform.OS === "android"){
 const Drawer = createDrawerNavigator();
 
 export default function App (props) {
+
+  // React.useEffect(()=>{
+  //   if (Platform.OS === 'android') {
+  //     Linking.getInitialURL().then(url => {
+  //       this.navigate(url);
+  //     });
+  //   } else {
+  //     Linking.addEventListener('url', this.handleOpenURL);
+  //   }
+  // })
+
+  // const handleOpenURL = (event) => {
+  //   console.log(event.url);
+  //   const route = e.url.replace(/.*?:\/\//g, '');
+  //   // do something with the url, in our case navigate(route)
+  // }
   
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
