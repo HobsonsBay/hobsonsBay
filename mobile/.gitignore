@@ -62,3 +62,11 @@ buck-out/
 
 /android/app/google-services.json
 /ios/GoogleService-Info.plist
+
+.idea
+/ios/HobsonsBay 2020-09-09 16-44-14/DistributionSummary.plist
+/ios/HobsonsBay 2020-09-09 16-44-14/ExportOptions.plist
+/ios/HobsonsBay 2020-09-09 16-44-14/Packaging.log
+*.lock
+/android/gradle.properties
+/ios/Podfile.lock
