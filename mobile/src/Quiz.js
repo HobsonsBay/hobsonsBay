@@ -16,6 +16,9 @@ import NavBar from "./components/navigation/NavBar";
 import { useData } from './utils/DataContext';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
+import getQuiz from './api/getQuiz';
+import getQuestions from './api/getQuestions';
+import postQuizData from './api/postQuizData';
 
 /* QUIZ COMPONENT
 MVP:
@@ -56,49 +59,57 @@ consider having an AWS db to keep track of zone and question and answer
 
 */
 
-const quizData = [{
-  id : "1",
-  name : "easy quiz"
-},{
-  id : "2",
-  name : "medium quiz"
-},{
-  id : "3",
-  name : "hard quiz"
-}]
+// const quizData = [{
+//   id : "1",
+//   name : "easy quiz"
+// },{
+//   id : "2",
+//   name : "medium quiz"
+// },{
+//   id : "3",
+//   name : "hard quiz"
+// }]
 
-const questionsData = [{
-  id: "1",
-  question : "Which bin does this go in?",
-  image : "https://s3-ap-southeast-2.amazonaws.com/ap-southeast-2-assets.knack.com/assets/5cf7091b790be9000a691701/5e717096e712ae0015d7e9be/thumb_18/bottlesglass02_v1.png",
-  answer_1 : "Mixed Recycling",
-  answer_2 : "Glass",
-  answer_3 : "Food and Garden",
-  answer_4 : "Rubbish",
-  correct_answer : "2",
-  category : "Glass"
-},{
-  id: "2",
-  question : "A longer example of a text based question here to see what it looks like on screen.\n\nPick a bin from below",
-  answer_1 : "Food and Garden",
-  answer_2 : "Rubbish",
-  answer_3 : "Mixed Recycling",
-  answer_4 : "Glass",
-  correct_answer : "3",
-  category : "Mixed Recycling"
-}]
+// const questionsData = [{
+//   id: "1",
+//   question : "Which bin does this go in?",
+//   image : "https://s3-ap-southeast-2.amazonaws.com/ap-southeast-2-assets.knack.com/assets/5cf7091b790be9000a691701/5e717096e712ae0015d7e9be/thumb_18/bottlesglass02_v1.png",
+//   answer_1 : "Mixed Recycling",
+//   answer_2 : "Glass",
+//   answer_3 : "Food and Garden",
+//   answer_4 : "Rubbish",
+//   correct_answer : "2",
+//   category : "Glass"
+// },{
+//   id: "2",
+//   question : "A longer example of a text based question here to see what it looks like on screen.\n\nPick a bin from below",
+//   answer_1 : "Food and Garden",
+//   answer_2 : "Rubbish",
+//   answer_3 : "Mixed Recycling",
+//   answer_4 : "Glass",
+//   correct_answer : "3",
+//   category : "Mixed Recycling"
+// }]
 
 export default (props) => {
   const { navigation, route } = props;
   const [inProgress, setInProgress] = React.useState(false);
   const [quiz, setQuiz] = React.useState(null);
+  const [quizID, setQuizID] = React.useState(null);
   const [questions, setQuestions] = React.useState(null);
   const [questionNumber, setQuestionNumber] = React.useState(null);
   const [quizState, setQuizState] = React.useState('init');
   const [currentQuestion, setCurrentQuestion ] = React.useState(false);
   const [isLast, setIsLast ] = React.useState(false);
   const [answers, setAnswers] = React.useState([]);
-  const [answer, setAnswer] = React.useState({a:false,c:false});
+  const nullAnswer = {
+      id: false,
+      correct: false,
+      answer: false,
+      category: false,
+    };
+  const [answer, setAnswer] = React.useState(nullAnswer);
+  const [score, setScore] = React.useState(0);
 
   React.useEffect(()=>{
     switch (quizState){
@@ -106,6 +117,8 @@ export default (props) => {
         getQuiz().then((data)=>{
           setQuiz(data);
           setQuizState('ready');
+        }).catch((er)=>{
+          setQuizState('error');
         })
       break;
       case 'start':
@@ -114,20 +127,39 @@ export default (props) => {
         setIsLast(false);
       break;
       case 'endscreen':
-
+        finishQuiz(quizID,score);
       break;
       case 'reset':
-        setInProgress(false);
-        setIsLast(false);
-        setQuiz(null);
-        setQuestions(null);
-        setCurrentQuestion(0);
-        setAnswers([]);
-        setAnswer({id:false,a:false});
-        setQuizState('init');
+        resetQuiz();
+      break;
+      case 'resume':
+
+      break;
+      case 'error':
+
       break;
     }
   },[quizState])
+
+
+  React.useEffect(()=>{
+    if(answer.id){
+      setAnswers([...answers,answer]);
+      registerAnswer(answer.id,answer.answer)
+      answer.correct && setScore(score+1);
+    } 
+  },[answer])
+
+  React.useEffect(()=>{
+    let scoreAdd = 0;
+    let catAdd = {};
+    for(a of answers){
+      a.correct && scoreAdd++;
+    }
+    setScore(scoreAdd);
+    answers.length > 0 && registerProgress(answers);
+  },[answers])
+
 
   const nextQuestion = () => {
     let next = questionNumber+1;
@@ -139,18 +171,22 @@ export default (props) => {
     }
   }
 
-  const getQuiz = async () => {
-    return quizData;
-  }
+  // const getQuiz = async () => {
+  //   return quizData;
+  // }
 
-  const getQuestions = async (id) => {
-    return questionsData;
-  }
+  // const getQuestions = async (id) => {
+  //   return questionsData;
+  // }
 
   const startQuiz = (id) => {
     getQuestions(id).then((qData)=>{
+      setQuizID(id);
       setQuestions(qData);
       setQuizState('start');
+      registerQuiz(id);
+    }).catch((er)=>{
+      setQuizState('error');
     })
   }
 
@@ -158,10 +194,82 @@ export default (props) => {
       setQuizState('endscreen');
   }
 
+  const resetQuiz = () => {
+        loadFromAsync();
+        setInProgress(false);
+        setIsLast(false);
+        setQuiz(null);
+        setQuizID(null);
+        setQuestions(null);
+        setCurrentQuestion(0);
+        setAnswers([]);
+        setAnswer(nullAnswer);
+        setScore(0);
+        setQuizState('init');
+  }
+
   const loadQuestion = () => {
     return <Question nextQuestion={nextQuestion} question={currentQuestion} questionNumber={questionNumber}/>
   }
 
+  const registerQuiz = async (id) => {
+    AsyncStorage.setItem('quizInProgress', ""+id).then(()=>{
+      return quizAnswersApi(id,'quiz_start',1)
+    }).then((val)=>{
+      console.log("started");
+    })
+  }
+
+  const registerAnswer = async (id,answer) => {
+    quizAnswersApi(id,'question_answer',answer)
+    .then((val)=>{
+      console.log("question answerd");
+    })
+  }
+
+  const registerProgress = async (answers) => {
+    AsyncStorage.setItem('quizData', JSON.stringify(answers)).then(()=>{
+      return true
+    })
+  }
+
+  const finishQuiz = async (id,score) => {
+    await AsyncStorage.removeItem('quizInProgress').then(()=>{
+      return AsyncStorage.removeItem('quizData');
+    }).then(()=>{
+      return quizAnswersApi(id,'quiz_end',score)
+    }).then((val)=>{
+      console.log("finished");
+    })
+  }
+
+  const quizAnswersApi = async (id,event,data) => {
+    console.log("api call",id,event,data);
+    data = {
+      qid: id,
+      value: data,
+      event: event
+    }
+    await postQuizData(data).then(()=>{
+      return true;
+    }).catch((error) => {
+      console.log(error);
+      return false;
+    })
+    
+  }
+
+  const loadFromAsync = async () => {
+    let inProg = await AsyncStorage.getItem('quizInProgress').then((val)=>{
+          return (val) ? parseInt(val) : false;
+        })
+    let quizData = await AsyncStorage.getItem('quizData').then((val)=>{
+        let out = (val) ? JSON.parse(val) : false;
+        console.log(out);
+        return (out && out.length > 0) && out;
+        })
+    console.log('load from async',inProg,quizData);
+  }
 
   return (
     <SafeAreaView style={styles.view}>
@@ -188,11 +296,19 @@ export default (props) => {
               questionNumber={questionNumber} 
               isLast={isLast}
               endQuiz= {endQuiz}
+              postAnswer={setAnswer}
             />
           )}
           {quizState == 'endscreen' && (
             <View>
               <Head>Quiz Finished</Head>
+              <Head>{score}/{questions.length}</Head>
+            </View>
+          )}
+          {quizState == 'error' && (
+            <View>
+              <Head>A Connection Error Occurred</Head>
+              <Para>Please try again later</Para>
             </View>
           )}
           <Br/>

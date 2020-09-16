@@ -27,7 +27,8 @@ export default (props) => {
     questionNumber, 
     nextQuestion, 
     isLast, 
-    endQuiz 
+    endQuiz,
+    postAnswer
   } = props;
   const [answer, setAnswer] = React.useState({a:false,c:false});
   const {correct_answer,category} = question;
@@ -38,11 +39,13 @@ export default (props) => {
   React.useEffect(()=>{
     console.log(answer.a, correct_answer)
     if(answer.a && answer.a == correct_answer){
+      postAnswer(answerData(true,answer));
       console.log('correct')
       setCorrect(true);
       setWrong(false);
       setNext(true);
     }else if (answer.a && answer.a != correct_answer){
+      postAnswer(answerData(false,answer));
       console.log('wrong')
       setCorrect(false);
       setWrong(true);
@@ -50,6 +53,26 @@ export default (props) => {
     }else{
       console.log('void')
     }
+  },[answer])
+
+  const answerData = React.useCallback((correct,answer) => {
+    /* feed back answer data to quiz template
+      Fields:
+      ID
+      Correct
+      Answer
+      Category
+    */
+    let data = {
+      id: question.id,
+      correct: correct,
+      answer: answer.a,
+      category: answer.c
+    }
+
+    console.log(data);
+    return data;
+
   },[answer])
 
   const answerColor = (id) => {
