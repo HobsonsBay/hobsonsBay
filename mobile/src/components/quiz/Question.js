@@ -98,34 +98,47 @@ export default (props) => {
         </View>
       )}
       <Para>{question.question}</Para>
-      <TouchableOpacity 
-        disabled={answer.a}
-        style={[styles.answerButton,answerColor(1)]} 
-        onPress={()=>setAnswer({a:1,c:category})}
-      >
-        <Head>{question.answer_1}</Head>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        disabled={answer.a}
-        style={[styles.answerButton,answerColor(2)]} 
-        onPress={()=>setAnswer({a:2,c:category})}
-      >
-        <Head>{question.answer_2}</Head>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        disabled={answer.a}
-        style={[styles.answerButton,answerColor(3)]} 
-        onPress={()=>setAnswer({a:3,c:category})}
-      >
-        <Head>{question.answer_3}</Head>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        disabled={answer.a}
-        style={[styles.answerButton,answerColor(4)]} 
-        onPress={()=>setAnswer({a:4,c:category})}
-      >
-        <Head>{question.answer_4}</Head>
-      </TouchableOpacity>
+
+      {question.answer_1.length > 0 && (
+        <TouchableOpacity 
+          disabled={answer.a}
+          style={[styles.answerButton,answerColor(1)]} 
+          onPress={()=>setAnswer({a:1,c:category})}
+        >
+          <Head>{question.answer_1}</Head>
+        </TouchableOpacity>
+      )}
+
+      {question.answer_2.length > 0 && (
+        <TouchableOpacity 
+          disabled={answer.a}
+          style={[styles.answerButton,answerColor(2)]} 
+          onPress={()=>setAnswer({a:2,c:category})}
+        >
+          <Head>{question.answer_2}</Head>
+        </TouchableOpacity>
+      )}
+
+      {question.answer_3.length > 0 && (
+        <TouchableOpacity 
+          disabled={answer.a}
+          style={[styles.answerButton,answerColor(3)]} 
+          onPress={()=>setAnswer({a:3,c:category})}
+        >
+          <Head>{question.answer_3}</Head>
+        </TouchableOpacity>
+      )}
+      
+      {question.answer_4.length > 0 && (
+        <TouchableOpacity 
+          disabled={answer.a}
+          style={[styles.answerButton,answerColor(4)]} 
+          onPress={()=>setAnswer({a:4,c:category})}
+        >
+          <Head>{question.answer_4}</Head>
+        </TouchableOpacity>
+      )}
+
       <View style={styles.answerText}>
         {correct && <Head>Correct!</Head> }
         {wrong && <Head>Wrong Answer</Head> }

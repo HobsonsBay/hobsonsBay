@@ -110,21 +110,50 @@ export default (props) => {
     };
   const [answer, setAnswer] = React.useState(nullAnswer);
   const [score, setScore] = React.useState(0);
+  const [resumeData, setResumeData] = React.useState(null);
 
+
+  //Main Quiz state manager
   React.useEffect(()=>{
     switch (quizState){
       case 'init':
-        getQuiz().then((data)=>{
-          setQuiz(data);
-          setQuizState('ready');
-        }).catch((er)=>{
-          setQuizState('error');
+        loadFromAsync().then((resume)=>{
+          if(resume){
+            setQuizState('resume');
+          }else{
+            getQuiz().then((data)=>{
+              setQuiz(data);
+              setQuizState('ready');
+            }).catch((er)=>{
+              setQuizState('error');
+            })
+          }
         })
       break;
       case 'start':
         setQuestionNumber(1)
         setCurrentQuestion(questions[0])
         setIsLast(false);
+        setQuizState('inprogress');
+      break;
+      case 'resumefromdata':
+        let current = resumeData.d.length
+        setAnswers(resumeData.d)
+        if (current >= questions.length){
+          setQuizState('endscreen');
+        }else{
+          setQuestionNumber(current+1)
+          setCurrentQuestion(questions[current])
+          if (current+1 == questions.length){
+            setIsLast(true);
+          }else{
+            setIsLast(false);
+          }
+          setQuizState('inprogress');
+        }
+      break;
+      case 'inprogress':
+
       break;
       case 'endscreen':
         finishQuiz(quizID,score);
@@ -146,7 +175,6 @@ export default (props) => {
     if(answer.id){
       setAnswers([...answers,answer]);
       registerAnswer(answer.id,answer.answer)
-      answer.correct && setScore(score+1);
     } 
   },[answer])
 
@@ -171,14 +199,6 @@ export default (props) => {
     }
   }
 
-  // const getQuiz = async () => {
-  //   return quizData;
-  // }
-
-  // const getQuestions = async (id) => {
-  //   return questionsData;
-  // }
-
   const startQuiz = (id) => {
     getQuestions(id).then((qData)=>{
       setQuizID(id);
@@ -195,21 +215,16 @@ export default (props) => {
   }
 
   const resetQuiz = () => {
-        loadFromAsync();
-        setInProgress(false);
-        setIsLast(false);
-        setQuiz(null);
-        setQuizID(null);
-        setQuestions(null);
-        setCurrentQuestion(0);
-        setAnswers([]);
-        setAnswer(nullAnswer);
-        setScore(0);
-        setQuizState('init');
-  }
-
-  const loadQuestion = () => {
-    return <Question nextQuestion={nextQuestion} question={currentQuestion} questionNumber={questionNumber}/>
+    setInProgress(false);
+    setIsLast(false);
+    setQuiz(null);
+    setQuizID(null);
+    setQuestions(null);
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setAnswer(nullAnswer);
+    setScore(0);
+    setQuizState('init');
   }
 
   const registerQuiz = async (id) => {
@@ -269,6 +284,31 @@ export default (props) => {
         return (out && out.length > 0) && out;
         })
     console.log('load from async',inProg,quizData);
+    if (inProg && quizData){
+      setResumeData({q:inProg,d:quizData})
+      return true
+    } else{
+      return false
+    }
+  }
+
+  const resumeQuiz = React.useCallback(()=>{
+
+    getQuestions(resumeData.q).then((qData)=>{
+      setQuizID(resumeData.q);
+      setQuestions(qData);
+      setQuizState('resumefromdata');
+    }).catch((er)=>{
+      setQuizState('error');
+    })
+  },[resumeData])
+
+  const clearResume = async () => {
+    await AsyncStorage.removeItem('quizInProgress').then(()=>{
+      return AsyncStorage.removeItem('quizData');
+    }).then(()=>{
+      resetQuiz();
+    })
   }
 
   return (
@@ -288,7 +328,7 @@ export default (props) => {
               </View>
             ))
           }
-          {quizState == 'start' && (
+          {quizState == 'inprogress' && (
             <Question 
               key={questionNumber} 
               nextQuestion={nextQuestion} 
@@ -309,6 +349,19 @@ export default (props) => {
             <View>
               <Head>A Connection Error Occurred</Head>
               <Para>Please try again later</Para>
+            </View>
+          )}
+          {quizState == 'resume' && (
+            <View>
+              <Head>You have a quiz in progress</Head>
+              <Para>Would you like to resume from where you left off?</Para>
+
+              <TouchableOpacity onPress={()=>resumeQuiz(resumeData)}>
+                <Head>Yes</Head>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={clearResume}>
+                <Head>No</Head>
+              </TouchableOpacity>
             </View>
           )}
           <Br/>

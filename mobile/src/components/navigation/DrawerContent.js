@@ -67,6 +67,12 @@ export default function(props){
 						labelStyle={styles.itemLabel}
 						onPress={()=>{props.navigation.navigate('Collection Reminder')}}
 					/>
+					<DrawerItem 
+						style={styles.item}
+						label="Quiz"
+						labelStyle={styles.itemLabel}
+						onPress={()=>{props.navigation.navigate('Quiz')}}
+					/>
 				</View>
 				<View>
 					<DrawerItem
