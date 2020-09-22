@@ -30,7 +30,7 @@ import { openUrl } from './utils';
 import get from 'lodash/get';
 import { style } from "./utils/styles";
 import useDays from './hooks/useDays';
-import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
+import { ListItem, Br, Head, Para, LinkButton, LinkText } from "./utils/Typography";
 import { useFocusEffect } from '@react-navigation/native';
 import { useData } from './utils/DataContext';
 import { handleAddressWarning } from "./ScheduleScreen";
@@ -147,6 +147,8 @@ export default (props) => {
                   <Text style={styles.button_text}>Notifications</Text>
                 </ActionButton>
               </View>
+              <Br/>
+             { /* <LinkText onPress={()=>navigation.navigate("Quiz")}>Quiz</LinkText> */ }
             </View>
             <View style={{justifyContent:'center', alignItems: 'center', flex: 1.3}}>
               { /* <Image style={{height: 470 * 0.13,width: 1663 * 0.13

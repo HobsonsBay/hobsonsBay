@@ -157,11 +157,11 @@ const fetch_agility = async () => {
         operator: 'is',
         value: "No"
       },
-      // {
-      //   field: fields.sent,
-      //   operator: 'is',
-      //   value: "No"
-      // },
+      {
+        field: fields.sent,
+        operator: 'is',
+        value: "No"
+      },
       {
         field: fields.status,
         operator: 'is',
