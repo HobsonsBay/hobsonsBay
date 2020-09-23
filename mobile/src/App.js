@@ -106,7 +106,7 @@ export default function App (props) {
             analytics().setCurrentScreen(currentRouteName, currentRouteName);
           }
         }} >
-        <Drawer.Navigator initialRouteName='Quiz' drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Navigator initialRouteName='Home' drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={props => <DrawerContent {...props} />}>
           <Drawer.Screen name='Home' component={Homepage}/>
           <Drawer.Screen name='Bin Schedule' component={ScheduleStack}/>
           <Drawer.Screen name='Newsfeed' component={Newsfeed}/>

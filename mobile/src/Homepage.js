@@ -103,6 +103,7 @@ export default (props) => {
   const handleNotification = useCallback(() => navigation.navigate('Collection Reminder'));
   const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule', { screen: address ? 'Schedule' : 'Address' }));
   const handleItems = useCallback(() => navigation.navigate('Which bin'));
+  const handleQuiz = useCallback(() => navigation.navigate('Quiz'));
 
   //console.log('homepage render')
   
@@ -127,7 +128,23 @@ export default (props) => {
                 </NavTile>
               </View>
             </View>
-            <View style={{justifyContent:'center', flex: 1, paddingVertical: 10}}>
+            <View style={styles.home_2up_wrap}>
+              <View style={styles.home_2up}>
+                <NavTile onPress={handleQuiz} label={
+                 <Text>Take the quiz</Text>  
+                }>
+                  <Text>QUIZ</Text>
+                </NavTile>
+              </View>
+              <View style={styles.home_2up}>
+                <NavTile onPress={()=>{return false;}} label={
+                 <Text>Tips and Stats</Text>  
+                }>
+                  <Text>TIPS AND STATS</Text>
+                </NavTile>
+              </View>
+            </View>
+            <View style={styles.home_control_buttons}>
               <View style={styles.button}>
                 <ActionButton onPress={handleAddressWarning} color={ address && address != 'change' ? "#5E8310" : "#8B1614" }  left={
                   <Icon name='map-marker' size={24} color='#ffffff' />
@@ -194,12 +211,17 @@ const styles = StyleSheet.create({
   home_2up_wrap: {
     flexDirection: "row",
     justifyContent: "space-around",
+    paddingBottom: 10
   },
   home_2up: {
     alignItems: 'center'
   },
+  home_control_buttons: {
+    flex: 1, 
+    paddingBottom: 40
+  },
   button: {
-    marginTop: 10
+    marginBottom: 10
   },
   button_text:{
     fontSize: 16,

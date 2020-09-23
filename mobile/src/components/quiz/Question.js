@@ -36,6 +36,8 @@ export default (props) => {
   const [wrong, setWrong] = React.useState(false);
   const [next, setNext] = React.useState(false);
 
+  question.image = (question.image && question.image.length > 1) ? question.image : false;
+
   React.useEffect(()=>{
     console.log(answer.a, correct_answer)
     if(answer.a && answer.a == correct_answer){

@@ -10,13 +10,15 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { style } from "./utils/styles";
-import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
+import { openUrl } from './utils';
+import { ListItem, Br, Head, Para, LinkButton, LinkText } from "./utils/Typography";
 import Question from "./components/quiz/Question";
 import NavBar from "./components/navigation/NavBar";
 import { useData } from './utils/DataContext';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import getQuiz from './api/getQuiz';
+import getTips from './api/getTips';
 import getQuestions from './api/getQuestions';
 import postQuizData from './api/postQuizData';
 
@@ -25,7 +27,7 @@ MVP:
 20 questions
 Multi choice (4 answers)
 Image in question
-End screen with score and links to fin out more
+End screen with score and links to find out more
 
 MVP+:
 sets of questions (easy medium hard)
@@ -70,26 +72,17 @@ consider having an AWS db to keep track of zone and question and answer
 //   name : "hard quiz"
 // }]
 
-// const questionsData = [{
-//   id: "1",
-//   question : "Which bin does this go in?",
-//   image : "https://s3-ap-southeast-2.amazonaws.com/ap-southeast-2-assets.knack.com/assets/5cf7091b790be9000a691701/5e717096e712ae0015d7e9be/thumb_18/bottlesglass02_v1.png",
-//   answer_1 : "Mixed Recycling",
-//   answer_2 : "Glass",
-//   answer_3 : "Food and Garden",
-//   answer_4 : "Rubbish",
-//   correct_answer : "2",
-//   category : "Glass"
-// },{
-//   id: "2",
-//   question : "A longer example of a text based question here to see what it looks like on screen.\n\nPick a bin from below",
-//   answer_1 : "Food and Garden",
-//   answer_2 : "Rubbish",
-//   answer_3 : "Mixed Recycling",
-//   answer_4 : "Glass",
-//   correct_answer : "3",
-//   category : "Mixed Recycling"
-// }]
+const debugQuestion = [{
+        id: "5",
+        question : "What is wrong with this kitchen caddy?",
+        image : "",
+        answer_1 : "Should use double plastic bin liners to ensure no leakage",
+        answer_2 : "Nothing, everything looks ok",
+        answer_3 : "Items should be placed in the caddy loose, not plastic or compostable bin liners allowed",
+        answer_4 : "Should use a compostable plastic bin liner",
+        correct_answer : "3",
+        category : "Mixed Recycling"
+      }]
 
 export default (props) => {
   const { navigation, route } = props;
@@ -111,6 +104,8 @@ export default (props) => {
   const [answer, setAnswer] = React.useState(nullAnswer);
   const [score, setScore] = React.useState(0);
   const [resumeData, setResumeData] = React.useState(null);
+  const [tipsCount, setTipsCount] = React.useState(null);
+  const [tips, setTips] = React.useState(null);
 
 
   //Main Quiz state manager
@@ -132,7 +127,7 @@ export default (props) => {
       break;
       case 'start':
         setQuestionNumber(1)
-        setCurrentQuestion(questions[0])
+        setCurrentQuestion(questionDefaults(questions[0]))
         setIsLast(false);
         setQuizState('inprogress');
       break;
@@ -143,7 +138,7 @@ export default (props) => {
           setQuizState('endscreen');
         }else{
           setQuestionNumber(current+1)
-          setCurrentQuestion(questions[current])
+          setCurrentQuestion(questionDefaults(questions[current]))
           if (current+1 == questions.length){
             setIsLast(true);
           }else{
@@ -157,6 +152,7 @@ export default (props) => {
       break;
       case 'endscreen':
         finishQuiz(quizID,score);
+        loadTips(tipsCount);
       break;
       case 'reset':
         resetQuiz();
@@ -170,11 +166,34 @@ export default (props) => {
     }
   },[quizState])
 
+  const questionDefaults = (question) => {return {
+    id: false,
+    question: false,
+    image: false,
+    answer_1: false,
+    answer_2: false,
+    answer_3: false,
+    answer_4: false,
+    correct_answer: false,
+    category: false,
+    ...question
+  }};
+
 
   React.useEffect(()=>{
     if(answer.id){
+      if (!answer.correct){
+        let tips = {...tipsCount}
+        if(tips[answer.category]) {
+          ++tips[answer.category];
+        }else{
+          tips[answer.category] = 1;
+        }
+        setTipsCount(tips);
+        console.log("tips",tips)
+      }
       setAnswers([...answers,answer]);
-      registerAnswer(answer.id,answer.answer)
+      registerAnswer(answer.id,answer.answer);
     } 
   },[answer])
 
@@ -193,7 +212,7 @@ export default (props) => {
     let next = questionNumber+1;
     console.log('next',next, questions.length);
     setQuestionNumber(next)
-    setCurrentQuestion(questions[next-1])
+    setCurrentQuestion(questionDefaults(questions[next-1]));
     if (next == questions.length){
       setIsLast(true);
     }
@@ -225,6 +244,8 @@ export default (props) => {
     setAnswer(nullAnswer);
     setScore(0);
     setQuizState('init');
+    setTipsCount(null);
+    setTips(null);
   }
 
   const registerQuiz = async (id) => {
@@ -272,6 +293,21 @@ export default (props) => {
       return false;
     })
     
+  }
+
+  const loadTips = async (tips) => {
+    const sorted = sortTips(tips);
+    console.log(sorted);
+    getTips({categories:sorted}).then((res)=>{
+      console.log(res);
+      setTips(res);
+    }).catch((er)=>{
+      setTips(null)
+    })
+  }
+
+  const sortTips = (tips) => {
+    return Object.entries(tips).sort((a,b)=>b[1]-a[1]).map(cat=>cat[0]);
   }
 
   const loadFromAsync = async () => {
@@ -343,6 +379,10 @@ export default (props) => {
             <View>
               <Head>Quiz Finished</Head>
               <Head>{score}/{questions.length}</Head>
+              <Head>Tips</Head>
+              {tips && tips.map((t, index) => (
+                <LinkText key={index} onPress={()=>{ openUrl(t.url) }}>{t.text}</LinkText>
+              ))}
             </View>
           )}
           {quizState == 'error' && (
