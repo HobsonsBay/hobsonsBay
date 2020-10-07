@@ -4,11 +4,16 @@ import {
   View,
   Image,
   Text,
+  Linking,
   TouchableOpacity,
+  TouchableHighlight,
   ScrollView,
   SafeAreaView,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
+import images from './utils/images';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { style } from "./utils/styles";
 import { openUrl } from './utils';
 import { ListItem, Br, Head, Para, LinkButton, LinkText } from "./utils/Typography";
@@ -18,7 +23,6 @@ import { useData } from './utils/DataContext';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import getQuiz from './api/getQuiz';
-import getTips from './api/getTips';
 import getQuestions from './api/getQuestions';
 import postQuizData from './api/postQuizData';
 
@@ -59,30 +63,21 @@ possible database for tips to show at end (linked to category)
 
 consider having an AWS db to keep track of zone and question and answer
 
+QUIZ FUNCTIONALITY
+
+The main function is the quizState variable. the states are as follows:
+
+init: call initialiseation routine and either move to ready state or resume state
+ready: display quiz choices
+start: load question data and move to in progress
+resumefromdata: load progress data and move to in progress
+inprogress: render questions from questions template and run quiz
+endscreen: display user's score and ranking
+reset: clear all variables and return to the ready state
+resume: show resume screen
+error: display if there is a connection error
+
 */
-
-// const quizData = [{
-//   id : "1",
-//   name : "easy quiz"
-// },{
-//   id : "2",
-//   name : "medium quiz"
-// },{
-//   id : "3",
-//   name : "hard quiz"
-// }]
-
-const debugQuestion = [{
-        id: "5",
-        question : "What is wrong with this kitchen caddy?",
-        image : "",
-        answer_1 : "Should use double plastic bin liners to ensure no leakage",
-        answer_2 : "Nothing, everything looks ok",
-        answer_3 : "Items should be placed in the caddy loose, not plastic or compostable bin liners allowed",
-        answer_4 : "Should use a compostable plastic bin liner",
-        correct_answer : "3",
-        category : "Mixed Recycling"
-      }]
 
 export default (props) => {
   const { navigation, route } = props;
@@ -105,7 +100,13 @@ export default (props) => {
   const [score, setScore] = React.useState(0);
   const [resumeData, setResumeData] = React.useState(null);
   const [tipsCount, setTipsCount] = React.useState(null);
-  const [tips, setTips] = React.useState(null);
+  const [rank, setRank] = React.useState(0);
+  const [quizCompleted, setQuizCompleted] = React.useState([]);
+  const [preview, setPreview] = React.useState(false);
+  const [previewClickCount, setPreviewClickCount] = React.useState(0);
+  const [quizResumeQCount, setQuizResumeQCount] = React.useState(0)
+
+  const r20url = "https://www.hobsonsbay.vic.gov.au/Services/Recycling-2.0-Waste-and-recycling-services";
 
 
   //Main Quiz state manager
@@ -114,7 +115,7 @@ export default (props) => {
       case 'init':
         loadFromAsync().then((resume)=>{
           if(resume){
-            setQuizState('resume');
+            setQuizState('resume');     
           }else{
             getQuiz().then((data)=>{
               setQuiz(data);
@@ -152,13 +153,16 @@ export default (props) => {
       break;
       case 'endscreen':
         finishQuiz(quizID,score);
-        loadTips(tipsCount);
+        //loadTips(tipsCount);
       break;
       case 'reset':
         resetQuiz();
       break;
-      case 'resume':
-
+      case 'resume':  
+        // get questions length for resume button  
+        getQuestions(resumeData.q).then((d)=>{
+          setQuizResumeQCount(d.length)
+        })
       break;
       case 'error':
 
@@ -176,6 +180,7 @@ export default (props) => {
     answer_4: false,
     correct_answer: false,
     category: false,
+    tip: false,
     ...question
   }};
 
@@ -207,6 +212,15 @@ export default (props) => {
     answers.length > 0 && registerProgress(answers);
   },[answers])
 
+  // add in a preview function by tapping 5 times on a hidden button to the bottom right of the quiz start buttons
+  React.useEffect(()=>{
+    if (previewClickCount >= 5) setPreview(true);
+    if (previewClickCount >= 8){
+        setPreview(false);
+        setPreviewClickCount(0);
+      }
+  },[previewClickCount])
+
 
   const nextQuestion = () => {
     let next = questionNumber+1;
@@ -234,6 +248,7 @@ export default (props) => {
   }
 
   const resetQuiz = () => {
+    setQuizState('init');
     setInProgress(false);
     setIsLast(false);
     setQuiz(null);
@@ -243,9 +258,9 @@ export default (props) => {
     setAnswers([]);
     setAnswer(nullAnswer);
     setScore(0);
-    setQuizState('init');
     setTipsCount(null);
-    setTips(null);
+    setRank(0);
+    setQuizResumeQCount(0);
   }
 
   const registerQuiz = async (id) => {
@@ -276,6 +291,27 @@ export default (props) => {
       return quizAnswersApi(id,'quiz_end',score)
     }).then((val)=>{
       console.log("finished");
+    })
+    
+    /*
+    search through completed array
+    replace if index exists and score is higher than previous attempt
+    */
+    let found = false;
+    let complete = [...quizCompleted];
+    let obj = complete.find((o, i) => {
+        if (o.id === id) {
+            if (score > o.score) complete[i] = { id: id, score: score };
+            found = true;
+            return true; // stop searching
+        }
+    });
+
+    if(!found) complete.push({ id: id, score: score });
+
+    // push updated scores to asyncstorage
+    await AsyncStorage.setItem('quizCompleted', JSON.stringify(complete)).then(()=>{
+      return true
     })
   }
 
@@ -311,8 +347,11 @@ export default (props) => {
   }
 
   const loadFromAsync = async () => {
+    let completed = await AsyncStorage.getItem('quizCompleted').then((val)=>{
+          return (val) ? setQuizCompleted(JSON.parse(val)) : setQuizCompleted([]);
+        })
     let inProg = await AsyncStorage.getItem('quizInProgress').then((val)=>{
-          return (val) ? parseInt(val) : false;
+          return (val) ? val : false;
         })
     let quizData = await AsyncStorage.getItem('quizData').then((val)=>{
         let out = (val) ? JSON.parse(val) : false;
@@ -347,22 +386,125 @@ export default (props) => {
     })
   }
 
+  const getRank = (score, total) => {
+      let rank = 0;
+      let endscore = score / total;
+      if (endscore > 0) rank = 0;
+      if (endscore > 0.1) rank = 1;
+      if (endscore > 0.4) rank = 2;
+      if (endscore > 0.8) rank = 3;
+      return rank;
+  }
+
+  const isAttempted = (id) =>{
+    quizCompleted.find(o => o.id === id);
+  }
+
+  React.useEffect(()=>{
+    if(questions) {
+      setRank(getRank(score,questions.length));
+    }
+  },[score])
+
+  const scroll = React.useRef();
+
+  React.useEffect(()=>{
+    scroll.current.scrollTo({y:0});
+  },[currentQuestion])
+
+  const answerQ = (a) => {
+    //scroll.current.scrollTo({y:1000});
+    setAnswer(a);
+  }
+
+  React.useEffect(()=>{
+    console.log('completed',quizCompleted)
+  },[quizCompleted])
+
+  const quizBack = () =>{
+    if (quizState == 'init' || quizState == 'ready' || quizState == 'error' || quizState == 'resume'){
+      navigation.goBack();
+    }else if (quizState == 'inprogress' || quizState == 'endscreen'){
+      Alert.alert(
+        'Exit quiz',
+        'Would you like to exit and go back to the main quiz page?',
+        [
+          { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+          { text: 'Yes', onPress: () => clearResume()}
+        ]
+      );
+    }
+  }
+
+  // const quizResumeQCount = async (resumeData)=>{
+  //   // length = await getQuestions(resumeData.q).then((d)=>{
+  //   //   console.log(d);
+  //   // });
+  //   // console.log(length)
+  //   return 10
+  // }
+
+  const startButton = (q, index) => {
+      // search completed array for attempt and return object
+      let attempted = quizCompleted.find(o => o.id === q.id);
+      let score = (attempted) ? attempted.score : 0;
+      let rank = getRank(score,q.questions);
+      if (!q.live && !preview) return false;
+      return (
+        <View key={q.id}>
+          <Head style={styles.quiz_select_head}>{q.name}</Head>
+          <TouchableOpacity style={styles.quiz_button_wrap} onPress={()=>startQuiz(q.id)}>
+            {!attempted && (
+              <View style={styles.quiz_start_button}>
+                <View style={styles.quiz_start_button_top}>          
+                  <Text style={styles.quiz_start_button_main}>Start</Text>
+                  <Text style={styles.quiz_start_button_number}>0/{q.questions}</Text>
+                </View>
+                <Text style={styles.quiz_start_button_action}>Tap to start quiz.</Text>
+              </View>
+            )}
+            {attempted && (
+              <View style={[styles.quiz_start_button,styles.quiz_try_again_button]}>
+                <View style={styles.quiz_start_button_top}>
+                  <Text style={styles.quiz_start_button_main}>Completed</Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Icon name='star' size={18} color={(rank >= 1) ? '#D4AF37' : '#ffffff'} />
+                    <Icon name='star' size={18} color={(rank >= 2) ? '#D4AF37' : '#ffffff'} />
+                    <Icon name='star' size={18} color={(rank >= 3) ? '#D4AF37' : '#ffffff'} />
+                  </View>
+                </View>
+                <Text style={styles.quiz_start_button_action}>Tap to try again.</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+      )
+  }
+
   return (
     <SafeAreaView style={styles.view}>
-      <View style={styles.newsfeed}>
-        <NavBar navigation={navigation}/>
-        <ScrollView style={styles.newsfeed_scroll} contentContainerStyle={styles.newsfeed_scroll_content}>
+      <View style={styles.quiz_main}>
+        <NavBar quiz={true} backButtonAction={quizBack} navigation={navigation}/>
+        <ScrollView ref={scroll} style={styles.newsfeed_scroll} contentContainerStyle={styles.quiz_scroll_content}>
           {quizState == 'init' && (
-            <Text>Loading Quiz</Text>
+            <View>
+              <Para style={styles.intro_para}>Loading Quiz</Para>
+              <ActivityIndicator animating={true} size='large' color='#333333' /> 
+            </View>
           )}
-          {quizState == 'ready' && 
-            quiz.map((q, index) => (
-              <View key={q.id}>
-                <TouchableOpacity onPress={()=>startQuiz(q.id)}>
-                  <Head>{q.name}</Head>
-                </TouchableOpacity>
+          {quizState == 'ready' && (
+              <View style={styles.quiz_select_screen}>
+                <Head style={styles.blue_head}>Recycling 2.0 Quiz</Head>
+                <Para style={styles.intro_para}>Test your recycling knowledge with the quizzes below. Find out your score, learn new things.</Para>
+                { quiz.map(startButton) }
+                <TouchableHighlight style={styles.hidden_debug_button}
+                  activeOpacity={0.6}
+                  underlayColor="#DDDDDD"
+                  onPress={() => setPreviewClickCount(previewClickCount+1)}>
+                  <Text></Text>
+                </TouchableHighlight>
               </View>
-            ))
+            )
           }
           {quizState == 'inprogress' && (
             <Question 
@@ -371,43 +513,124 @@ export default (props) => {
               question={currentQuestion} 
               questionNumber={questionNumber} 
               isLast={isLast}
+              progress={questionNumber / questions.length * 100}
               endQuiz= {endQuiz}
-              postAnswer={setAnswer}
+              postAnswer={answerQ}
+              scrollRef={scroll.current}
+              qtotal={questions.length}
             />
           )}
           {quizState == 'endscreen' && (
             <View>
-              <Head>Quiz Finished</Head>
-              <Head>{score}/{questions.length}</Head>
-              <Head>Tips</Head>
-              {tips && tips.map((t, index) => (
-                <LinkText key={index} onPress={()=>{ openUrl(t.url) }}>{t.text}</LinkText>
-              ))}
+              <Head style={styles.blue_head}>Recycling 2.0 Quiz</Head>
+              { rank == 3 && (
+                <View>
+                  <Text style={styles.end_title}>Congratulations!</Text>
+                  <Para style={styles.end_para}>
+                    You scored <Text style={{fontWeight:'bold'}}>{score} out of {questions.length}</Text> questions right. Thanks for helping us create a sustainable Hobsons Bay 👏
+                  </Para>
+                  <Image style={[styles.end_image,{width:307,height:219}]} source={images.quiz_perfect}/>
+                </View>
+              )}
+              { rank == 2 && (
+                <View>
+                  <Text style={styles.end_title}>Not Bad!</Text>
+                  <Para style={styles.end_para}>
+                    That’s <Text style={{fontWeight:'bold'}}>{score} out of {questions.length}</Text> questions right. Good job, you’re on your way to becoming a recyling champ.
+                  </Para>
+                  <Image style={[styles.end_image,{width:280,height:194}]} source={images.quiz_ok}/>
+
+                </View>
+              )}
+              { rank <= 1 && (
+                <View>
+                  <Text style={styles.end_title}>Uh oh!</Text>
+                  <Para style={styles.end_para}>
+                    That’s <Text style={{fontWeight:'bold'}}>{score} out of {questions.length}</Text> questions right. 
+Your journey’s just beginning. Level up, and see you in the next quiz!  
+                  </Para>
+                  <Image style={[styles.end_image,{width:231,height:153}]} source={images.quiz_bad}/>
+
+                </View>
+              )}
+              <Text style={styles.end_score}>{score}/{questions.length}</Text>
+              { rank < 3 && (
+                <View>
+                  <Text style={styles.end_title}>Level up your recycling skills</Text>
+                  <TouchableOpacity onPress={()=>{Linking.openURL(r20url)}}>
+                    <Text style={styles.web_link}>Visit the Recycling 2.0 Website</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              <Br/>
+              <TouchableOpacity onPress={()=>setQuizState('reset')}>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Try another Quiz</Text>
+                </View>
+              </TouchableOpacity>
+              {/*
+              <TouchableOpacity onPress={()=>setRank(0)}>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Rank 0</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>setRank(1)}>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Rank 1</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>setRank(2)}>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Rank 2</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>setRank(3)}>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Rank 3</Text>
+                </View>
+              </TouchableOpacity>
+            */}
             </View>
           )}
           {quizState == 'error' && (
             <View>
-              <Head>A Connection Error Occurred</Head>
-              <Para>Please try again later</Para>
+              <Head style={styles.blue_head}>A Connection Error Occurred</Head>
+              <Br/>
+              <Br/>
+              <TouchableOpacity onPress={()=>setQuizState('reset')}>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Try again</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           )}
           {quizState == 'resume' && (
-            <View>
-              <Head>You have a quiz in progress</Head>
-              <Para>Would you like to resume from where you left off?</Para>
-
+            <View style={styles.quiz_select_screen}>
+              <Head style={styles.blue_head}>Recycling 2.0 Quiz</Head>
+              <Para style={styles.intro_para}>You have a quiz in progress. Would you like to continue or go to the main quiz page?</Para>
               <TouchableOpacity onPress={()=>resumeQuiz(resumeData)}>
-                <Head>Yes</Head>
+                <View style={[styles.quiz_start_button,styles.quiz_resume_button]}>
+                  <View style={styles.quiz_start_button_top}>          
+                    <Text style={styles.quiz_start_button_main}>In progress</Text>
+                    <Text style={styles.quiz_start_button_number}>{resumeData.d.length}/{quizResumeQCount}</Text>
+                  </View>
+                  <Text style={styles.quiz_start_button_action}>Tap to contimue</Text>
+                </View>
               </TouchableOpacity>
+              <Br/>
               <TouchableOpacity onPress={clearResume}>
-                <Head>No</Head>
+                <View style={[styles.quiz_button]}>
+                  <Text style={styles.quiz_button_text}>Try another Quiz</Text>
+                </View>
               </TouchableOpacity>
             </View>
           )}
+          {/*
           <Br/>
           <TouchableOpacity onPress={()=>setQuizState('reset')}>
             <Head>reset</Head>
           </TouchableOpacity>
+        */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -416,6 +639,14 @@ export default (props) => {
 
 const styles = StyleSheet.create({
   view: { flex: 1 },
+  quiz_main:{
+    flex: 1,
+  },
+  quiz_scroll_content:{
+    marginHorizontal: 20,
+    flexGrow: 1,
+    justifyContent: 'space-between'
+  },
   q_photo: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -426,5 +657,115 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
   },
+  blue_head:{
+    fontSize: 24,
+    color: style.colours.hobsons_blue,
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  intro_para : {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  quiz_select_screen:{
+    flex: 1
+  },
+  hidden_debug_button:{
+    width: 30,
+    height: 30,
+    //backgroundColor: "#333"
+  },
+  quiz_select_head: {
+    fontSize: 24,
+    textAlign: 'center',
+    marginBottom: 10
+  },
+  quiz_button_wrap:{
+    width: 240,
+    alignSelf: 'center',
+  },
+  quiz_start_button: {
+    width: 240,
+    backgroundColor: style.colours.hobsons_blue,
+    borderRadius: 10,
+    padding: 10,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  quiz_button:{
+    width: 240,
+    backgroundColor: style.colours.hobsons_blue,
+    borderRadius: 10,
+    padding: 10,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  quiz_button_text:{
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
+    color: "#fff"
+  },
+  quiz_try_again_button:{
+    backgroundColor: "#219653",
+  },
+  quiz_resume_button:{
+    backgroundColor: style.colours.purple_glass,
+  },
+  quiz_start_button_top:{
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: "space-between"
+  },
+  quiz_start_button_main: {
+    flexShrink: 1,
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: 'flex-start'
+  },
+  quiz_start_button_number: {
+    flexShrink: 1,
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: 'flex-end'
+  },
+  quiz_start_button_action: {
+    flex: 1,
+    flexGrow: 1,
+    color: "#fff"
+  },
+  end_image:{
+    alignSelf:'center'
+  },
+  end_score:{
+    textAlign: 'center',
+    fontSize: 72,
+    fontWeight: 'bold'
+  },
+  end_title: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20
+
+  },
+  end_para: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginBottom: 20
+  },
+  web_link:{
+    color: style.colours.hobsons_blue,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline'
+  }
 
 });

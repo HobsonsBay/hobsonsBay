@@ -38,6 +38,7 @@ const style = {
 		black : "#000",
 		white : "#fff",
 		blue : "#00f",
+		hobsons_blue: "#1352A5",
 		green_fogo: '#9ACA3C',
 		green_rubbish: '#536130',
 		yellow_recycle: '#FFDC00',

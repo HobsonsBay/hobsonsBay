@@ -104,6 +104,7 @@ export default (props) => {
   const handleSchedule = useCallback(() => navigation.navigate('Bin Schedule', { screen: address ? 'Schedule' : 'Address' }));
   const handleItems = useCallback(() => navigation.navigate('Which bin'));
   const handleQuiz = useCallback(() => navigation.navigate('Quiz'));
+  const handleTips = useCallback(() => navigation.navigate('Tips & Stats'));
 
   //console.log('homepage render')
   
@@ -131,16 +132,16 @@ export default (props) => {
             <View style={styles.home_2up_wrap}>
               <View style={styles.home_2up}>
                 <NavTile onPress={handleQuiz} label={
-                 <Text>Take the quiz</Text>  
+                  <Text>Quiz</Text>
                 }>
-                  <Text>QUIZ</Text>
+                  <Image source={images.quiz} style={[styles.img_center,{width:87,height:84}]}/>
                 </NavTile>
               </View>
               <View style={styles.home_2up}>
-                <NavTile onPress={()=>{return false;}} label={
+                <NavTile onPress={handleTips} label={
                  <Text>Tips and Stats</Text>  
                 }>
-                  <Text>TIPS AND STATS</Text>
+                  <Image source={images.tips_stats} style={[styles.img_center,{width:83,height:81}]}/>
                 </NavTile>
               </View>
             </View>
@@ -232,6 +233,10 @@ const styles = StyleSheet.create({
     marginTop: 3,
     fontSize: 14,
     color: "#ffffff"
+  },
+  img_center:{
+    alignSelf: 'center',
+    marginTop:25
   },
   footer_wrap: {
     flexDirection: "row",

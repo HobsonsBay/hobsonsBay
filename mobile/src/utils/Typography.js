@@ -32,7 +32,7 @@ const Head = (props) => {
 
 const Para = (props) => {
   const size = props.size || 'default';
-  return <Text style={{...props.style,...style.type.paras[size]}}>{props.children}</Text>;
+  return <Text style={{...style.type.paras[size],...props.style}}>{props.children}</Text>;
 }
 
 const LinkButton = (props) => {

@@ -21,6 +21,7 @@ import FeedbackScreen from './FeedbackScreen';
 import RemindersScreen from './RemindersScreen';
 import Newsfeed from './Newsfeed';
 import Quiz from './Quiz';
+import TipsStats from "./TipsStats";
 import FindStack from './FindStack';
 import Onboarding from './components/app/Onboarding';
 import Notifications from './utils/Notifications.js';
@@ -111,6 +112,7 @@ export default function App (props) {
           <Drawer.Screen name='Bin Schedule' component={ScheduleStack}/>
           <Drawer.Screen name='Newsfeed' component={Newsfeed}/>
           <Drawer.Screen name='Quiz' component={Quiz}/>
+          <Drawer.Screen name='Tips & Stats' component={TipsStats}/>
           <Drawer.Screen name='Which bin' component={FindStack} />
           <Drawer.Screen options={{unmountOnBlur: true}} name='Collection Reminder' component={RemindersScreen}/>
           <Drawer.Screen name='Feedback' component={FeedbackScreen} />
