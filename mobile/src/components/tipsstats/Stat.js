@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
   },
   stats_info:{
     flex: 1,
+    overflow: "hidden"
   },
   icon:{
     width: 50,

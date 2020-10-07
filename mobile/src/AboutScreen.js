@@ -18,6 +18,8 @@ import { RECYCLING_20_URL, POLICY_URL, CONTACT_URL, FEEDBACK_URL } from './utils
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 import NavBar from "./components/navigation/NavBar";
+import SurveyMonkey from 'react-native-survey-monkey';
+
 
 export default (props) => {
   const { navigation, route } = props;
@@ -26,6 +28,10 @@ export default (props) => {
   const handleFeedbackClick = openUrl(FEEDBACK_URL);
   const handlePolicyClick = openUrl(POLICY_URL);
   const handleBurger = useCallback(() => navigation.openDrawer(), []);
+
+
+  const surveyMonkeyRef = React.createRef();
+  const handleSurveyClick = () => surveyMonkeyRef.current.showSurveyMonkey('3QBD9ST');
 
   return (
     <SafeAreaView style={styles.view}>
@@ -54,7 +60,7 @@ export default (props) => {
             <LinkButton onPress={handleRecycling20Click}>
               Visit the Recycling 2.0 Website
             </LinkButton>
-            <LinkButton onPress={handleFeedbackClick}>
+            <LinkButton onPress={handleSurveyClick}>
               Provide App Feedback
             </LinkButton>
             <LinkButton onPress={handlePolicyClick}>
@@ -63,6 +69,7 @@ export default (props) => {
           </View>
         </ScrollView>
       </View>
+      <SurveyMonkey ref={ surveyMonkeyRef } />
     </SafeAreaView>
   );
 };

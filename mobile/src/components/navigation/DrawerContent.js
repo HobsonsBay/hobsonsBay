@@ -8,6 +8,24 @@ import images from '../../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useData } from '../../utils/DataContext';
 
+/* MENU CONTENT TEMPLATE 
+
+
+- Home
+- Bin Schedule
+- Which Bin?
+- Notifications
+- Quiz
+- Tips and Stats
+
+- News
+- About
+- Contact
+- Share
+
+
+*/
+
 export default function(props){
 	const { onShare, unread, address } = useData();
 	return(
@@ -36,22 +54,6 @@ export default function(props){
 						style={styles.item}
 						label={({ focused, color }) => {
 		    				return (
-		    					<View style={styles.newsfeed}>{unread && (
-						    		<View width={10} height={10} style={styles.unreadDot}></View>
-						    	)}
-						    	<Text 
-						    		style={styles.itemLabel}
-						    	>News</Text>
-						    	</View>
-						    )
-	  					}}
-						labelStyle={styles.itemLabel}
-						onPress={()=>{props.navigation.navigate('Newsfeed')}}
-					/>
-					<DrawerItem 
-						style={styles.item}
-						label={({ focused, color }) => {
-		    				return (
 						    	<Text 
 						    		numberOfLines={2} 
 						    		style={styles.itemLabel}
@@ -73,8 +75,30 @@ export default function(props){
 						labelStyle={styles.itemLabel}
 						onPress={()=>{props.navigation.navigate('Quiz')}}
 					/>
+					<DrawerItem 
+						style={styles.item}
+						label="Tips & Stats"
+						labelStyle={styles.itemLabel}
+						onPress={()=>{props.navigation.navigate('Tips & Stats')}}
+					/>
 				</View>
 				<View>
+					<DrawerItem 
+						style={styles.item}
+						label={({ focused, color }) => {
+		    				return (
+		    					<View style={styles.newsfeed}>{unread && (
+						    		<View width={10} height={10} style={styles.unreadDot}></View>
+						    	)}
+						    	<Text 
+						    		style={styles.itemLabel}
+						    	>News</Text>
+						    	</View>
+						    )
+	  					}}
+						labelStyle={styles.itemLabel}
+						onPress={()=>{props.navigation.navigate('Newsfeed')}}
+					/>
 					<DrawerItem
 						style={styles.item}
 						label="About"
@@ -86,12 +110,6 @@ export default function(props){
 						label="Contact"
 						labelStyle={styles.itemLabel}
 						onPress={()=>{props.navigation.navigate('Contact')}}
-					/>
-					<DrawerItem 
-						style={styles.item}
-						label="Feedback"
-						labelStyle={styles.itemLabel}
-						onPress={()=>{props.navigation.navigate('Feedback')}}
 					/>
 					<DrawerItem 
 						style={styles.item}

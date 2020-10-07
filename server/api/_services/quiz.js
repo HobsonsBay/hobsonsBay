@@ -138,7 +138,7 @@ const fieldMapperQuestions = ({ records }) => {
       id: get(rec, 'field_2894'),
       question: get(rec, 'field_2895'),
       quiz_id: get(rec, 'field_2896[0].id', null),
-      image: get(rec, 'field_2897.url', null),
+      image: get(rec, 'field_2897.thumb_url', null),
       answer_1: get(rec, 'field_2898'),
       answer_2: get(rec, 'field_2899'),
       answer_3: get(rec, 'field_2900'),

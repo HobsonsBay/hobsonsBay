@@ -24,7 +24,7 @@ import Carousel from "./components/tipsstats/Carousel";
 import Stat from "./components/tipsstats/Stat";
 import union from 'lodash/union';
 import getTips from './api/getTips';
-
+import SurveyMonkey from 'react-native-survey-monkey';
 
 export default (props) => {
   const { navigation, route } = props;
@@ -37,6 +37,9 @@ export default (props) => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const [filterCategories, setFilterCategories] = React.useState([]);
+
+  const surveyMonkeyRef = React.createRef();
+  const handleSurveyClick = () => surveyMonkeyRef.current.showSurveyMonkey('7GYZD8K');
 
   // load data on init
   React.useEffect(()=>{
@@ -142,13 +145,14 @@ export default (props) => {
             <Head style={{textAlign:'center'}}>Got a tip to share with the community?</Head>
             <Para style={{textAlign:'center'}}>Let us know how you become more waste responsible by using the form below!</Para>
             <View style={styles.submit_links}>
-              <TouchableOpacity style={styles.submit_link_button}>
+              <TouchableOpacity onPress={handleSurveyClick} style={styles.submit_link_button}>
                 <Text style={styles.submit_link_label}>Submit a Tip</Text>
               </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
       </View>
+      <SurveyMonkey ref={ surveyMonkeyRef } />
     </SafeAreaView>
   );
 };

@@ -184,24 +184,6 @@ function AppDataProvider(props) {
 
   }, []);
 
-  /*
-{
-  "notification":{
-    "android":{},
-    "body":"This is an example push notification",
-    "title":"Notification test for area 1&2 thurs"
-  },
-  "sentTime":1599620631784,
-  "ttl":2419200,
-  "data":{
-    "type":"service"
-  },
-  "messageId":"0:1599620631830939%441f80b6441f80b6",
-  "from":"915718145351",
-  "collapseKey":
-  "au.gov.vic.hobsonsbay"
-}
-  */
 
   React.useEffect(() => {
     console.log('rawMessageData',typeof(rawMessageData))
@@ -276,27 +258,6 @@ function AppDataProvider(props) {
     console.log('nl updated',newsLast)
   },[newsLast])
 
-  // // //hook for changing newsfeed
-  // React.useMemo(()=>{
-  //   console.log("newsLast updated to",newsLast)
-  //   if (newsfeed.length > 0){
-  //     console.log('latest from api',newsfeed[0].id)
-  //     if(newsLast == newsfeed[0].id){
-  //       setUnread(false);
-  //     }
-  //   }else{
-  //     getNewsfeed(1)
-  //     .then(response => {
-  //       setNewsfeed(response);
-  //       if(newsLast < response[0].id){
-  //         setUnread(true);
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  //   }
-  // },[
-  //   newsLast
-  // ])
 
   React.useEffect(() => {
     console.log('unread =',unread)

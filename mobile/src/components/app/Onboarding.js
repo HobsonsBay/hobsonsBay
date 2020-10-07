@@ -22,7 +22,7 @@ export default (props) => {
   const {
     address, onboard, setOnboard 
   } = useData();
-  const version = "112a";
+  const version = "117";
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleButton = useCallback(() => {
