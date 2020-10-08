@@ -43,6 +43,7 @@ export default (props) => {
 
   useEffect(()=>{
       address && navigation.replace('Schedule', { address });
+      address && navigation.goBack();
   },[address])
 
   useEffect(() => {

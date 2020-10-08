@@ -6,7 +6,7 @@ export default (id) => {
 
   //const CONFIG_URL = `${API_URL}/quiz?action=getQuestions&quizid=${id}`;
   //const CONFIG_URL = `${API_URL_DEV}/quiz?action=getQuestions&quizid=${id}`;
-  const CONFIG_URL = `${API_URL_DEV}/quiz?action=getQuestions&quizid=${id}`;
+  const CONFIG_URL = `${API_URL}/quiz?action=getQuestions&quizid=${id}`;
   //const CONFIG_URL = "http://192.168.1.100:8080/api/quiz?action=getQuestions&quizid="+id;
 
   return fetch(CONFIG_URL,

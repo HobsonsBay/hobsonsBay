@@ -4,7 +4,7 @@ const { API_URL, API_URL_DEV, API_URL_LOCAL } = require('../config/api');
 
 export default (body) => {
 
-  const CONFIG_URL = `${API_URL_DEV}/tipsstats`;
+  const CONFIG_URL = `${API_URL}/tipsstats`;
 
   console.log(JSON.stringify(body))
 

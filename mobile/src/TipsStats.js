@@ -217,7 +217,8 @@ const styles = StyleSheet.create({
   heading:{
     color: "#1352A5",
     fontSize: 22,
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: 20
   },
   submit_links: {
     flexDirection: 'row',

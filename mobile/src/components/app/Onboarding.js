@@ -22,7 +22,7 @@ export default (props) => {
   const {
     address, onboard, setOnboard 
   } = useData();
-  const version = "117";
+  const version = "116b";
 
   const [modalVisible, setModalVisible] = useState(false);
   const handleButton = useCallback(() => {
@@ -56,6 +56,13 @@ export default (props) => {
             <Br/>
             <Head style={styles.onboarding_welcome}>What’s New</Head>
             <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Tips & Stats </Text> See how the Recycling 2.0 service is performing and find useful tips to make recycling easier
+            </ListItem>
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Quiz: </Text> Test your recycling knowledge with our quizzes
+            </ListItem>
+            {/*}
+            <ListItem style={styles.onboarding_description}>
                 <Text style={{fontWeight: "bold"}}>Home Screen: </Text> A quick view of your next bin day and all the  
      app features
             </ListItem>
@@ -63,6 +70,7 @@ export default (props) => {
                 <Text style={{fontWeight: "bold"}}>Newsfeed and notifications </Text> Turn on notifications to receive service 
       updates, changes and news.
             </ListItem>
+          */}
             <Br/>
             <Para style={styles.onboarding_description}>
             This app supports your usage of the Recycling 2.0 service, redirecting household waste from landfill into local recycling streams.
@@ -77,14 +85,15 @@ export default (props) => {
             </ListItem>
             <ListItem style={styles.onboarding_description}>
               <Text style={{fontWeight: "bold"}}>Collection Reminder: </Text> Schedule a reminder notification for the day 
-               before your bin collection day{'\n'}
+               before your bin collection day
             </ListItem>
-            
+            <ListItem style={styles.onboarding_description}>
+                <Text style={{fontWeight: "bold"}}>Newsfeed and notifications </Text> Turn on notifications to receive service 
+      updates, changes and news.
+            </ListItem>
+            <Br/>
             <Para style={styles.onboarding_description}>
-            This app is an early release and more features will be added in the
-            coming months to support your usage of the Recycling 2.0 service.
-              <Br/><Br/>
-            We are continually improving the app and welcome your feedback.
+            We are continually improving the service and welcome your feedback.
             </Para>
           </View>
         </ScrollView>

@@ -166,12 +166,7 @@ export default (props) => {
                 </ActionButton>
               </View>
               <Br/>
-             { /* <LinkText onPress={()=>navigation.navigate("Quiz")}>Quiz</LinkText> */ }
-            </View>
-            <View style={{justifyContent:'center', alignItems: 'center', flex: 1.3}}>
-              { /* <Image style={{height: 470 * 0.13,width: 1663 * 0.13
-                  // 1663 × 470
-                }} source={images.recyclingLogoStretch} /> */ }
+              <Br/>
             </View>
         </ScrollView>
         <View style={styles.footer_wrap}>

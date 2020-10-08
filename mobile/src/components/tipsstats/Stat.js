@@ -58,7 +58,7 @@ export default (props) => {
 
   return (
     <TouchableOpacity onPress={()=> setShow(!show)}>
-      <View style={[styles.stats_block,show && {height: 'auto'}]}>
+      <View style={[styles.stats_block]}>
         {stat.type != "Rubbish" && (
           <View style={[styles.stats_indicator,bgColor]}>
             <Image style={styles.icon} source={indicator}/> 
@@ -71,7 +71,7 @@ export default (props) => {
         )}
         <View style={styles.stats_info}>
           <Head style={styles.head}>{stat.type}</Head>
-          <Para>{stat.stat}</Para>
+          <Text numberOfLines={(show)?100:2} style={styles.para}>{stat.stat}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomColor: "#aaa",
     borderBottomWidth: 1,
-    height: 95,
+    //height: 100,
     overflow: "hidden"
   },
   head:{
@@ -117,6 +117,10 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
 
-  }
+  },
+  para: {
+          fontSize: 16,
+          lineHeight: 24
+      },
 
 });

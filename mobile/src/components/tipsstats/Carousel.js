@@ -90,9 +90,9 @@ export default (props) => {
   },[index, isStart])
 
   const tip = ({ item, index }) => {
-  	//console.log(index, item.tip)
+  	//console.log('idkey', item, index)
     return (
-    	<View key={item.key}>
+    	<View key={item.id}>
     		<Tip 
         	width={windowWidth-40} 
         	index={index} 
@@ -105,14 +105,6 @@ export default (props) => {
   	)
   }
 
-  // const layoutTest = (data, index) => {
-  //   const length = heightArr[index];
-  //   const offset = heightArr.slice(0,index).reduce((a, c) => a + c, 0)
-  //   return {length, offset, index}
-  // }
-  // style={{flex:1,alignItems:'center',justifyContent:'center'}} 
-  // <View style={[{flex:1},height && {height: height}]}>
-  // <View style={{flex:1}}>
 
   return (
   	<View style={[{flex:1},height && {height: height}]}>
@@ -120,8 +112,10 @@ export default (props) => {
       	ref={carousel}
 	      data={slideList}
 	      style={{flex:1}}
-  			keyExtractor={(item, index) => item.key}
-	      renderItem={tip}
+  			keyExtractor={(item, index) => {
+          return item.id;
+        }}
+	      renderItem={(d)=>tip(d)}
 	      pagingEnabled
 	      horizontal
 	      showsHorizontalScrollIndicator={true}

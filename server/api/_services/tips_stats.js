@@ -153,7 +153,7 @@ const fieldMapperTips = ({ records }) => {
   const rows = map(records, (rec) => {
 
     return {
-      id: get(rec, 'field_2894'),
+      id: get(rec, 'id'),
       category: get(rec, 'field_2886[0].identifier', null),
       title: get(rec, 'field_2887'),
       tip: get(rec, 'field_2888'),
