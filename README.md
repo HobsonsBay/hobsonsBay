@@ -114,6 +114,14 @@ External Services:
 
 `now --prod`
 
+**notes on platform**
+
+.env variables will be available in the development version, however they will have
+to be added to the prod and staging versions with 'now secrets' as described above
+furthermore, now.json will have to be updated with these values like the following:
+"KNACK_ITEM_OBJECT_ID": "@knack_item_object_id" to reflect the changes in .env and
+now secrets
+
 
 ## Android Development (mobile directory)
 
@@ -154,9 +162,9 @@ react native development.
 
 2. Update the two lines in build.gradle to bump the version up
 
-`versionCode 106`
+`versionCode 116`
 
-`versionName "1.0.6"`
+`versionName "1.1.6"`
 
 3. Change into the android folder
 
@@ -173,6 +181,16 @@ react native development.
 6. Upload this artifact in Android PlayStore Releases
 
 `Follow the creation prompts in the dashboard Release Management / App releases`
+
+**permission issues**
+
+If there are issues with registering a key, add the necessary values to /mobile/android/gradle.properties
+
+```MYAPP_UPLOAD_STORE_FILE=recycle-upload-key.keystore
+MYAPP_UPLOAD_KEY_ALIAS=recycle-key-alias
+MYAPP_UPLOAD_STORE_PASSWORD=********
+MYAPP_UPLOAD_KEY_PASSWORD=********
+```
 
 
 ## IOS Development (mobile directory)
