@@ -24,6 +24,7 @@ function useData() {
 
 /***************
 * provides context (data) to the entire app
+* acts as a pseudo state manager
 *
 * covers:
 * - notifications
@@ -33,7 +34,9 @@ function useData() {
 **/
 
 function AppDataProvider(props) {
+  // handles the actual address "123 something st"
 	const [address, setAddress] = React.useState(false);
+  // 
 	const [addressObj, setAddressObj] = React.useState(null);
   const [fullAddress] = useFullAddress();
 	const [binDays, setBinDays] = React.useState({area:false,zone:false,day:false,days:false});

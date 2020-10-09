@@ -170,6 +170,8 @@ export default (props) => {
     }
   },[quizState])
 
+
+  // default value mapper for questions (to avoid null issues)
   const questionDefaults = (question) => {return {
     id: false,
     question: false,
@@ -185,23 +187,32 @@ export default (props) => {
   }};
 
 
+  /* Event that fires when the question in answered
+  it used to update the tip categories, but thta feature was deprecated
+  setanswers updates an array of answers that are used for processing the results and storing the asyncstorage values for resume functionality
+  registeranswer logs the answer with AWS for analytics
+  */
   React.useEffect(()=>{
     if(answer.id){
-      if (!answer.correct){
-        let tips = {...tipsCount}
-        if(tips[answer.category]) {
-          ++tips[answer.category];
-        }else{
-          tips[answer.category] = 1;
-        }
-        setTipsCount(tips);
-        console.log("tips",tips)
-      }
+    //   if (!answer.correct){
+    //     let tips = {...tipsCount}
+    //     if(tips[answer.category]) {
+    //       ++tips[answer.category];
+    //     }else{
+    //       tips[answer.category] = 1;
+    //     }
+    //     setTipsCount(tips);
+    //     console.log("tips",tips)
+    //   }
       setAnswers([...answers,answer]);
       registerAnswer(answer.id,answer.answer);
     } 
   },[answer])
 
+
+  /*
+  calculates the score every time the answers are updated
+  */
   React.useEffect(()=>{
     let scoreAdd = 0;
     let catAdd = {};
@@ -213,6 +224,7 @@ export default (props) => {
   },[answers])
 
   // add in a preview function by tapping 5 times on a hidden button to the bottom right of the quiz start buttons
+  // this is for debugging quizzes that are not live yet
   React.useEffect(()=>{
     if (previewClickCount >= 5) setPreview(true);
     if (previewClickCount >= 8){
@@ -222,6 +234,7 @@ export default (props) => {
   },[previewClickCount])
 
 
+  // function to advance to the next question
   const nextQuestion = () => {
     let next = questionNumber+1;
     console.log('next',next, questions.length);
@@ -232,6 +245,8 @@ export default (props) => {
     }
   }
 
+  // fetches the questions from the API and then prepares the quiz for starting
+  // also logs a quiz start to AWS
   const startQuiz = (id) => {
     getQuestions(id).then((qData)=>{
       setQuizID(id);
@@ -247,6 +262,8 @@ export default (props) => {
       setQuizState('endscreen');
   }
 
+
+  // resets all variables to default values and returns to the quiz select screen
   const resetQuiz = () => {
     setQuizState('init');
     setInProgress(false);
@@ -263,27 +280,37 @@ export default (props) => {
     setQuizResumeQCount(0);
   }
 
+  // Registers the quiz to asyncstorage and AWS analytics DB
+  // sets the quiz id to the current quiz
   const registerQuiz = async (id) => {
     AsyncStorage.setItem('quizInProgress', ""+id).then(()=>{
       return quizAnswersApi(id,'quiz_start',1)
     }).then((val)=>{
-      console.log("started");
+      //console.log("started");
     })
   }
 
+  // Registers an answer to the AWS AWS analytics DB
+  // logs the answer that was selected, so that analysis can determine how many people got the question right
   const registerAnswer = async (id,answer) => {
     quizAnswersApi(id,'question_answer',answer)
     .then((val)=>{
-      console.log("question answerd");
+      //console.log("question answerd");
     })
   }
 
+  // Registers the answers to asyncstorage. used for the resume functionality
   const registerProgress = async (answers) => {
     AsyncStorage.setItem('quizData', JSON.stringify(answers)).then(()=>{
       return true
     })
   }
 
+  /* function to handle all of the quiz finishing 
+  removes asyncstorage vals for resumption
+  logs quiz end with AWS (posts final score)
+  updates asyncstorage with quiz and score
+  */
   const finishQuiz = async (id,score) => {
     await AsyncStorage.removeItem('quizInProgress').then(()=>{
       return AsyncStorage.removeItem('quizData');
@@ -315,8 +342,9 @@ export default (props) => {
     })
   }
 
+  // function to call the AWS api for quiz analytics
   const quizAnswersApi = async (id,event,data) => {
-    console.log("api call",id,event,data);
+    //console.log("api call",id,event,data);
     data = {
       qid: id,
       value: data,
@@ -331,20 +359,22 @@ export default (props) => {
     
   }
 
-  const loadTips = async (tips) => {
-    const sorted = sortTips(tips);
-    console.log(sorted);
-    getTips({categories:sorted}).then((res)=>{
-      console.log(res);
-      setTips(res);
-    }).catch((er)=>{
-      setTips(null)
-    })
-  }
+  // redundant functions fo tips handling
 
-  const sortTips = (tips) => {
-    return Object.entries(tips).sort((a,b)=>b[1]-a[1]).map(cat=>cat[0]);
-  }
+  // const loadTips = async (tips) => {
+  //   const sorted = sortTips(tips);
+  //   console.log(sorted);
+  //   getTips({categories:sorted}).then((res)=>{
+  //     console.log(res);
+  //     setTips(res);
+  //   }).catch((er)=>{
+  //     setTips(null)
+  //   })
+  // }
+
+  // const sortTips = (tips) => {
+  //   return Object.entries(tips).sort((a,b)=>b[1]-a[1]).map(cat=>cat[0]);
+  // }
 
   const loadFromAsync = async () => {
     let completed = await AsyncStorage.getItem('quizCompleted').then((val)=>{
@@ -417,10 +447,9 @@ export default (props) => {
     setAnswer(a);
   }
 
-  React.useEffect(()=>{
-    console.log('completed',quizCompleted)
-  },[quizCompleted])
 
+
+  // handler to override default header bar back button functionality
   const quizBack = () =>{
     if (quizState == 'init' || quizState == 'ready' || quizState == 'error' || quizState == 'resume'){
       navigation.goBack();
@@ -568,7 +597,7 @@ Your journey’s just beginning. Level up, and see you in the next quiz!
                   <Text style={styles.quiz_button_text}>Try another Quiz</Text>
                 </View>
               </TouchableOpacity>
-              {/*
+              {/* debug buttons for testing quiz ranking
               <TouchableOpacity onPress={()=>setRank(0)}>
                 <View style={[styles.quiz_button]}>
                   <Text style={styles.quiz_button_text}>Rank 0</Text>
@@ -625,7 +654,7 @@ Your journey’s just beginning. Level up, and see you in the next quiz!
               </TouchableOpacity>
             </View>
           )}
-          {/*
+          {/* debug button to reset all variables to default
           <Br/>
           <TouchableOpacity onPress={()=>setQuizState('reset')}>
             <Head>reset</Head>
