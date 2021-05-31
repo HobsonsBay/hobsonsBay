@@ -74,6 +74,7 @@ export default (props) => {
       setTips(shuffle(tsData.tips))
       setLoading(false);
     }).catch((er)=>{
+      console.error(er)
       setError(true)
     })
   }

@@ -10,13 +10,16 @@ export default (body) => {
 
   return fetch(CONFIG_URL,
     {
-      method: 'post',
+      method: 'get',
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify(body)
+      //body: JSON.stringify(body)
     })
-    .then((res) => res.json())
+    .then((res) => {
+      console.log("res",res)
+      return res.json()
+    })
     .catch((error) => {
       return Promise.reject(error)
     });
