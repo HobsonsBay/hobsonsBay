@@ -765,6 +765,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8EAD03056F2E34F05E1D98B8 /* Pods-HobsonsBay-HobsonsBayTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 64UM5QFYXJ;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -789,6 +790,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7CC4C44847B3584DC7FD5661 /* Pods-HobsonsBay-HobsonsBayTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 64UM5QFYXJ;
