@@ -6,15 +6,18 @@ export default (body) => {
 
   const CONFIG_URL = `${API_URL}/tipsstats`;
 
-  console.log(JSON.stringify(body))
+  //console.log(JSON.stringify(body))
+  console.log(CONFIG_URL);
 
   return fetch(CONFIG_URL,
     {
-      method: 'get',
+      method: 'post',
       headers: {
-        'Content-type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
-      //body: JSON.stringify(body)
+      body: JSON.stringify({}),
+      redirect: 'follow'
     })
     .then((res) => {
       console.log("res",res)
