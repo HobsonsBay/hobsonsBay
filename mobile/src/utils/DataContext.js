@@ -8,7 +8,7 @@ import postConfig from '../api/postConfig';
 import deleteConfig from '../api/deleteConfig';
 import putConfig from '../api/putConfig';
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import getNewsfeed from '../api/getNewsfeed';
 
 const DataContext = React.createContext()

@@ -1,5 +1,5 @@
 import messaging  from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useCallback,
   Component, 

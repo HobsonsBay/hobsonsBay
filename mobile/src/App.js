@@ -27,7 +27,7 @@ import Onboarding from './components/app/Onboarding';
 import Notifications from './utils/Notifications.js';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import images from './utils/images';
 import {AppDataProvider, useData} from './utils/DataContext'
 import SplashScreen from 'react-native-splash-screen'

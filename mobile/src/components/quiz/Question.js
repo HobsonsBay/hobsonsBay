@@ -12,7 +12,7 @@ import {
 import { style } from "../../utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "../../utils/Typography";
 import images from '../../utils/images';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /* QUESTION COMPONENT
   Handles the functionality for the question item

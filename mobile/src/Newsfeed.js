@@ -15,7 +15,7 @@ import NavBar from "./components/navigation/NavBar";
 import NewsPost from "./components/news/NewsPost";
 import { useData } from './utils/DataContext';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default (props) => {
   const [page,setPage] = React.useState(1);
