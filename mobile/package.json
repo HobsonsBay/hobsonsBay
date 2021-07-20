@@ -31,7 +31,7 @@
     "react-devtools": "^4.8.2",
     "react-instantsearch": "^6.3.0",
     "react-instantsearch-native": "^6.3.0",
-    "react-native": "0.62.2",
+    "react-native": "0.62.3",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-open-maps": "^0.3.5",
