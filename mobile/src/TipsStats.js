@@ -1,5 +1,4 @@
-import Icon from 'react-native-vector-icons/FontAwesome';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
+
 import React, {
   useCallback
 } from 'react';
@@ -24,7 +23,7 @@ import Carousel from "./components/tipsstats/Carousel";
 import Stat from "./components/tipsstats/Stat";
 import union from 'lodash/union';
 import getTips from './api/getTips';
-import SurveyMonkey from 'react-native-survey-monkey';
+// import SurveyMonkey from 'react-native-survey-monkey';
 
 export default (props) => {
   const { navigation, route } = props;
@@ -74,6 +73,7 @@ export default (props) => {
       setTips(shuffle(tsData.tips))
       setLoading(false);
     }).catch((er)=>{
+      console.error(er)
       setError(true)
     })
   }
@@ -152,7 +152,7 @@ export default (props) => {
           </View>
         </ScrollView>
       </View>
-      <SurveyMonkey ref={ surveyMonkeyRef } />
+      {/* <SurveyMonkey ref={ surveyMonkeyRef } /> */}
     </SafeAreaView>
   );
 };

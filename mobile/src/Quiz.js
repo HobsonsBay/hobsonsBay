@@ -21,7 +21,7 @@ import Question from "./components/quiz/Question";
 import NavBar from "./components/navigation/NavBar";
 import { useData } from './utils/DataContext';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import getQuiz from './api/getQuiz';
 import getQuestions from './api/getQuestions';
 import postQuizData from './api/postQuizData';

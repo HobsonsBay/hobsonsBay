@@ -51,7 +51,7 @@ export default (props) => {
         {props.isOpen &&
         <View style={styles.news_body}>
           <Para>{post.body}</Para>
-          {post.link_url &&(
+          {post.link_url.length > 0 &&(
             <LinkText style={styles.link} onPress={()=>{Linking.openURL(post.link_url)}}>{post.link_text}</LinkText>
           )}
         </View>

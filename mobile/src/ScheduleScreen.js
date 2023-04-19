@@ -1,6 +1,6 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
