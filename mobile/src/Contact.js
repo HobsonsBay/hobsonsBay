@@ -1,8 +1,5 @@
-import Icon from 'react-native-vector-icons/FontAwesome';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-import React, {
-  useCallback
-} from 'react';
+
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,

@@ -1,5 +1,5 @@
 import messaging  from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useCallback,
   Component, 
@@ -60,10 +60,10 @@ export default (props) => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
     messaging().onNotificationOpenedApp(remoteMessage => {
-      // console.log(
-      //   'Notification caused app to open from background state:',
-      //   remoteMessage.notification,
-      // );
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
       setRawMessageData(remoteMessage);
       //setExpandedFullNotif(true);
 
@@ -75,10 +75,10 @@ export default (props) => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          // console.log(
-          //   'Notification caused app to open from quit state:',
-          //   remoteMessage.notification,
-          // );
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
           setRawMessageData(remoteMessage);
           //setExpandedFullNotif(true);
         }
@@ -135,7 +135,7 @@ export default (props) => {
       //console.log("run get not")
       if(response != null){
         //console.log('not null')
-        //console.log(response);
+        console.log(response);
         setRawMessageData(response);
       }else{
         //console.log('null')

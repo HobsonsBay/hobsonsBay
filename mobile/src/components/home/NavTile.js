@@ -6,16 +6,15 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 export default (props) => {
   const { label, onPress } = props;
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <LinearGradient colors={['#ebebeb', '#ffffff', '#ffffff']} style={styles.tile}>
+      <View style={styles.tile}>
           {props.children}
-      </LinearGradient>
+      </View>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );

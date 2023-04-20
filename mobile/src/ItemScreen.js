@@ -1,4 +1,4 @@
-import Icon from 'react-native-vector-icons/Ionicons';
+
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';

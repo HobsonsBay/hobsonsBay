@@ -8,7 +8,7 @@ import {
   Linking,
   ImageBackground
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+
 import format from 'date-fns/format';
 import images from '../../utils/images';
 import { style } from "../../utils/styles";

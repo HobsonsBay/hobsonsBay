@@ -1,4 +1,4 @@
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import React, {
   useCallback,
   createRef
@@ -15,7 +15,7 @@ import {
 import images from './utils/images';
 import { openUrl } from './utils';
 import { FEEDBACK_URL } from './utils/constants';
-import SurveyMonkey from 'react-native-survey-monkey';
+// import SurveyMonkey from 'react-native-survey-monkey';
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
 import NavBar from "./components/navigation/NavBar";
@@ -53,7 +53,7 @@ export default (props) => {
               <Text style={styles.feedback_link_label}>Provide your feedback</Text>
             </TouchableOpacity>
           </View>
-          <SurveyMonkey ref={ surveyMonkeyRef } />
+          {/* <SurveyMonkey ref={ surveyMonkeyRef } /> */}
         </ScrollView>
       </View>
     </SafeAreaView>

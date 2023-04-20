@@ -27,7 +27,7 @@ import Onboarding from './components/app/Onboarding';
 import Notifications from './utils/Notifications.js';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import images from './utils/images';
 import {AppDataProvider, useData} from './utils/DataContext'
 import SplashScreen from 'react-native-splash-screen'
@@ -99,12 +99,19 @@ export default function App (props) {
       <Notifications/>
       <NavigationContainer 
         ref={navigationRef}
-        onReady={() => routeNameRef.current = navigationRef.current.getCurrentRoute().name}
-        onStateChange={state => {
+        onReady={() => {
+          //console.log("route name?",navigationRef.current.getCurrentRoute().name)
+          routeNameRef.current = navigationRef.current.getCurrentRoute().name
+        }}
+        onStateChange={async (state) => {
           const previousRouteName = routeNameRef.current;
           const currentRouteName = navigationRef.current.getCurrentRoute().name;
+          //const currentRouteName = getActiveRouteName(state);
           if (previousRouteName !== currentRouteName) {
-            analytics().setCurrentScreen(currentRouteName, currentRouteName);
+            await analytics().logScreenView({
+              screen_name: currentRouteName,
+              screen_class: currentRouteName,
+            });
           }
         }} >
         <Drawer.Navigator initialRouteName='Home' drawerStyle={{backgroundColor: '#1352A5'}} drawerPosition="right" drawerContent={props => <DrawerContent {...props} />}>

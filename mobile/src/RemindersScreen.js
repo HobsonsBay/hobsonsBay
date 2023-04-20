@@ -1,8 +1,6 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-community/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-community/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import messaging from '@react-native-firebase/messaging';
 import format from 'date-fns/format';
@@ -35,6 +33,7 @@ import putConfig from './api/putConfig';
 import { useData } from './utils/DataContext'
 import NavBar from "./components/navigation/NavBar";
 import NotificationsOn from "./utils/handleNotification";
+import TimePicker from './components/reminders/TimePicker';
 
 
 export default (props) => {
@@ -42,6 +41,7 @@ export default (props) => {
   const [disabled, setDisabled] = useState(true);
   const [status, setStatus] = useState(false);
   const [date, setDate] = useState(startOfHour(new Date(2001, 1, 1, 18, 0, 0)));
+  const [hour, setHour] = useState('1800');
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(true);
   const handlePolicyClick = openUrl(POLICY_URL);
@@ -337,20 +337,24 @@ export default (props) => {
           <Picker.Item label="11:00pm" value="2300" />
         </Picker>*/}
 
-        {Platform.OS === 'android' && show && status &&
-          <DateTimePicker
+        {false &&
+          <>
+          {/* <DateTimePicker
             minuteInterval={30}
             value={date}
             mode='time'
             is24Hour={false}
             display='spinner'
             onChange={handleChangeTime}
-          />}
-        {Platform.OS === 'ios' && show && status &&
+          /> */}
+          <TimePicker time={format(date, 'HHmm', { timeZone: 'Australia/Melbourne' })} setTime={handleChangeTime}/>
+        </>
+          }
+        {show && status &&
           <Modal animationType='fade' transparent visible={modal}>
             <View style={styles.reminders_modal}>
               <View style={styles.reminders_modal_body}>
-                <DateTimePicker
+                {/* <DateTimePicker
                   style={{width:'100%'}}
                   textColor="black" 
                   minuteInterval={30}
@@ -359,7 +363,16 @@ export default (props) => {
                   is24Hour={false}
                   display='spinner'
                   onChange={handleChangeTime}
-                />
+                /> */}
+                {/* <DateTimePicker
+                  style={{width:'100%'}}
+                  mode='time'
+                  is24Hour={false}
+                  display='spinner'
+                  value={date}
+                  onChange={handleChangeTime}
+                /> */}
+                <TimePicker time={format(date, 'HHmm', { timeZone: 'Australia/Melbourne' })} setTime={handleChangeTime}/>
               </View>
               <TouchableOpacity style={styles.reminders_modal_button} onPress={handleButtonClose}>
                 <Text style={styles.reminders_modal_button_label}>Close</Text>
