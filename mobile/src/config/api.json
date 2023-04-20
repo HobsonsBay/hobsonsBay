@@ -1,0 +1,6 @@
+{
+  "API_URL": "https://hbcc.vercel.app/api",
+  "API_URL_DEV": "https://hbcc-alex-reid.hbcc.vercel.app/api",
+  "API_URL_LOCAL": "http://192.168.1.100:8080/api",
+  "API_SECRET": "secret key"
+}
