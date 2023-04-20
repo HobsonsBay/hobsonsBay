@@ -71,7 +71,7 @@ buck-out/
 */src/config/
 
 */android/app/google-services.json
-*/ios/GoogleService-Info.plist
+# */ios/GoogleService-Info.plist
 
 .idea
 */ios/HobsonsBay 2020-09-09 16-44-14/DistributionSummary.plist
