@@ -28,7 +28,7 @@ const style = {
       fontWeight: 'bold',
     },
     italic: {
-      fontStyle: 'italic',
+      fontStyle: 'italic' as 'italic',
     },
     list: {},
   },
