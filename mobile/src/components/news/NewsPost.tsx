@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,31 +6,32 @@ import {
   Text,
   TouchableOpacity,
   Linking,
+  ImageSourcePropType,
 } from 'react-native';
 import format from 'date-fns/format';
 import images from '../../utils/images';
-import {style} from '../../utils/styles';
-import {
-  ListItem,
-  Br,
-  Head,
-  Para,
-  LinkButton,
-  LinkText,
-} from '../../utils/Typography';
+import {Para, LinkText} from '../../utils/Typography';
 
-export default (props) => {
-  const {post} = props;
-  const [viewed, setViewed] = React.useState(false);
+interface INewsPost {
+  post: any;
+  isOpen: boolean;
+  isNew: boolean;
+  open: (postId: number | false) => void;
+}
+
+const NewsPost: React.FC<INewsPost> = ({post, isOpen, isNew, open}) => {
+  const [viewed, setViewed] = useState(false);
   const time = format(new Date(post.time), 'd MMMM');
+
   const showHide = () => {
     setViewed(true);
-    if (!props.isOpen) {
-      props.open(post.id);
+    if (!isOpen) {
+      open(post.id);
     } else {
-      props.open(false);
+      open(false);
     }
   };
+
   let type = 'news_update';
   switch (post.type) {
     case 'R2.0 News':
@@ -44,35 +45,32 @@ export default (props) => {
       break;
   }
 
-  console.log('jm: images[type] ', images[type]);
-
   return (
     <View style={styles.newspost}>
       <TouchableOpacity onPress={showHide}>
         <View style={styles.news_head}>
           <View style={styles.news_head_icon}>
-            <Image style={styles.icon} source={images[type]} />
+            <Image
+              style={styles.icon}
+              source={images[type] as ImageSourcePropType}
+            />
           </View>
           <View style={styles.news_head_title}>
             <Text
-              style={
-                viewed || !props.isNew ? styles.heading_viewed : styles.heading
-              }>
+              style={viewed || !isNew ? styles.heading_viewed : styles.heading}>
               {post.title}
             </Text>
             <Text style={styles.date}>{time}</Text>
           </View>
         </View>
       </TouchableOpacity>
-      {props.isOpen && (
+      {isOpen && (
         <View style={styles.news_body}>
           <Para>{post.body}</Para>
           {post.link_url.length > 0 && (
             <LinkText
               style={styles.link}
-              onPress={() => {
-                Linking.openURL(post.link_url);
-              }}>
+              onPress={() => Linking.openURL(post.link_url)}>
               {post.link_text}
             </LinkText>
           )}
@@ -81,6 +79,8 @@ export default (props) => {
     </View>
   );
 };
+
+export default NewsPost;
 
 const styles = StyleSheet.create({
   view: {flex: 1},
