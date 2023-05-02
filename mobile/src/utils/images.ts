@@ -1,4 +1,4 @@
-export default {
+let images: {[key: string]: string} = {
   nobinNT: require('../assets/nobin-nt.png'),
   fogoNT: require('../assets/fogo-nt.png'),
   glassNT: require('../assets/glass-nt.png'),
@@ -16,11 +16,11 @@ export default {
   recyclingLogoStretch: require('../assets/recycling-20-logo-stretch.png'),
   recyclingLogoWite: require('../assets/recycling-logo-white.png'),
   aerielAltona: require('../assets/aeriel-altona.png'),
-  custService:  require('../assets/Call-Customer-service.png'),
+  custService: require('../assets/Call-Customer-service.png'),
   langLine: require('../assets/Language-Line.png'),
   liveChat: require('../assets/Live-chat.png'),
   relayService: require('../assets/National-Relay-Service.png'),
-  visit:  require('../assets/Visit.png'),
+  visit: require('../assets/Visit.png'),
   news_alert: require('../assets/news_alert.png'),
   news_announce: require('../assets/news_announce.png'),
   news_update: require('../assets/news_update.png'),
@@ -37,3 +37,5 @@ export default {
   quiz: require('../assets/quiz.png'),
   tips_stats: require('../assets/tips_stats.png'),
 };
+
+export default images;
