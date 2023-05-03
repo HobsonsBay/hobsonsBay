@@ -95,7 +95,7 @@ android {
 
     namespace "au.gov.vic.hobsonsbay"
     defaultConfig {
-        applicationId "au.gov.vic.hobsonsbay"
+        applicationId "au.gov.vic.hobsonsbay.dev"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
