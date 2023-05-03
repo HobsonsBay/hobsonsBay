@@ -59,19 +59,24 @@ const Question: React.FC<IQuestion> = ({
     [question],
   );
 
-  useEffect(() => {
-    if (answer.a && answer.a === correct_answer) {
+  React.useEffect(() => {
+    //console.log(answer.a, correct_answer)
+    if (answer.a && answer.a == correct_answer) {
       postAnswer(answerData(true, answer));
+      //console.log('correct')
       setCorrect(true);
       setWrong(false);
       setNext(true);
-    } else if (answer.a && answer.a !== correct_answer) {
+    } else if (answer.a && answer.a != correct_answer) {
       postAnswer(answerData(false, answer));
+      //console.log('wrong')
       setCorrect(false);
       setWrong(true);
       setNext(true);
+    } else {
+      //console.log('void')
     }
-  }, [answer, correct_answer, answerData, postAnswer]);
+  }, [answer]);
 
   const scrollToBottom = () => {
     scrollRef.current?.scrollTo({y: 1000});
