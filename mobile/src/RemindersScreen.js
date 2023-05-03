@@ -196,15 +196,15 @@ export default (props) => {
   useEffect(() => {
     if (config) {
       // convert vals to bool
-      config.type_service = !!+config.type_service;
-      config.type_reminder = !!+config.type_reminder;
+      // config.type_service = !!+config.type_service;
+      // config.type_reminder = !!+config.type_reminder;
 
-      //console.log("rem conf",config);
+      console.log("rem conf",config);
       const currentDate = getReminderDate(config.time);
       setStatus(true);
       setDate(currentDate);
-      setServiceActive(config.type_service);
-      setReminderActive(config.type_reminder);
+      setServiceActive(config.type_service === "True" ? true : false);
+      setReminderActive(config.type_reminder === "True" ? true: false);
       setServiceDisabled(false)
       setReminderDisabled(false)
     }

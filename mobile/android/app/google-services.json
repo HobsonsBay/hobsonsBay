@@ -1,42 +1,40 @@
 {
   "project_info": {
-    "project_number": "915718145351",
-    "firebase_url": "https://hbcc-3018.firebaseio.com",
-    "project_id": "hbcc-3018",
-    "storage_bucket": "hbcc-3018.appspot.com"
+    "project_number": "857959671176",
+    "project_id": "hb-recycling-2",
+    "storage_bucket": "hb-recycling-2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:915718145351:android:66194c807e4823bb133862",
+        "mobilesdk_app_id": "1:857959671176:android:b5210b77384974e4cb863d",
         "android_client_info": {
-          "package_name": "au.gov.vic.hobsonsbay"
+          "package_name": "au.gov.vic.hobsonsbay.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "915718145351-ug0j4s7dednr6ra5f5c5ee04b2i8ik6k.apps.googleusercontent.com",
+          "client_id": "857959671176-a21f3rot68irgkhi8m8c0ihuc3n3bv18.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA1QUiJFElbShPEDqVyox3py01EhotiiMk"
+          "current_key": "AIzaSyCYSGRG-BCuYGe_cLGFRI6JIhTQLSLhtk0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "915718145351-ug0j4s7dednr6ra5f5c5ee04b2i8ik6k.apps.googleusercontent.com",
+              "client_id": "857959671176-a21f3rot68irgkhi8m8c0ihuc3n3bv18.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "915718145351-lecabckktdkjg8gsh05t9iqk8cci4pli.apps.googleusercontent.com",
+              "client_id": "857959671176-cssvf3bi1mgp7fkofubdc79so2jq1k37.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "au.gov.vic.hobsonsbay",
-                "app_store_id": "1497473995"
+                "bundle_id": "au.gov.vic.hobsonsbay.dev"
               }
             }
           ]

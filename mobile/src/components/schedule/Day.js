@@ -12,7 +12,17 @@ export default (props) => {
   const { day, row } = props;
   const { date, bins } = row;
   const actualDay = formatDay(date);
-
+  const sortByBinType = (arr) => {
+    return arr.sort((a, b) => {
+      if (a.bin_type === 'Rubbish' && b.bin_type !== 'Rubbish') {
+        return -1; // "Rubbish" comes first
+      } else if (a.bin_type !== 'Rubbish' && b.bin_type === 'Rubbish') {
+        return 1; // "Rubbish" comes later
+      } else {
+        return 0; // Keep the original order
+      }
+    });
+  };
   return (
     <View style={styles.day}>
       <View style={styles.day_dates}>
@@ -20,7 +30,9 @@ export default (props) => {
         <Text style={styles.day_dates_note}>{day !== actualDay ? actualDay : ''}</Text>
       </View>
       <View style={styles.day_bins}>
-        {map(bins, (col, index) => <Bin col={col} key={index} />)}
+        {map(sortByBinType(bins), (col, index) => (
+          <Bin col={col} key={index} />
+        ))}
       </View>
     </View>
   );

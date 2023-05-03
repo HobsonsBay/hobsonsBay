@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>915718145351-lecabckktdkjg8gsh05t9iqk8cci4pli.apps.googleusercontent.com</string>
+	<string>857959671176-cssvf3bi1mgp7fkofubdc79so2jq1k37.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.915718145351-lecabckktdkjg8gsh05t9iqk8cci4pli</string>
+	<string>com.googleusercontent.apps.857959671176-cssvf3bi1mgp7fkofubdc79so2jq1k37</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBeaH5h7IM78OJ7bUc8frePjJ3eaDUZ3yE</string>
+	<string>AIzaSyDiL-2Zn-n2uTleOL_0OB0uiOPa5GoAWhU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>915718145351</string>
+	<string>857959671176</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>au.gov.vic.hobsonsbay</string>
+	<string>au.gov.vic.hobsonsbay.dev</string>
 	<key>PROJECT_ID</key>
-	<string>hbcc-3018</string>
+	<string>hb-recycling-2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>hbcc-3018.appspot.com</string>
+	<string>hb-recycling-2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:915718145351:ios:3d911ddc4af45e98133862</string>
-	<key>DATABASE_URL</key>
-	<string>https://hbcc-3018.firebaseio.com</string>
+	<string>1:857959671176:ios:bdc4417e0fccdb95cb863d</string>
 </dict>
 </plist>

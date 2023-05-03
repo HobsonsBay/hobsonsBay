@@ -49,6 +49,7 @@ export default (props) => {
     setOpenPost(false);
     await getNewsfeed(1).then((response)=>{
       setNewsfeed(response);
+      console.log("Response", response)
       let nfLast = response[0].id;
       setNewsLast(nfLast);
       setIsEnd(response.length < 10)
@@ -99,11 +100,13 @@ export default (props) => {
         <NavBar navigation={navigation} route={route}/>
         <ScrollView style={styles.newsfeed_scroll} contentContainerStyle={styles.newsfeed_scroll_content}>
           <Text style={styles.news_title}>News</Text>
-          {newsfeed.map((c, index) => (
+          {newsfeed.length > 0 && newsfeed.map((c, index) => {
+            console.log("C",c)
+            return(
             c.inZone &&
               <NewsPost isNew={c.id > lastRead} isOpen={openPost == c.id} open={openNews} key={c.id} post={c}/>
             
-          ))}
+          )})}
 
           { isLoading && <ActivityIndicator animating={true} size='large' color='#333333' /> }
 

@@ -10,6 +10,8 @@ import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
+import au.gov.vic.hobsonsbay.BuildConfig;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
