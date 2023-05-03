@@ -1,4 +1,3 @@
-import React, {useCallback, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,11 +5,14 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  ImageSourcePropType,
   ViewStyle,
+  StyleProp,
 } from 'react-native';
 import {style} from '../../utils/styles';
 import {Br, Head, Para} from '../../utils/Typography';
 import images from '../../utils/images';
+import React, {useState, useEffect} from 'react';
 
 /* QUESTION COMPONENT
   Handles the functionality for the question item
@@ -38,28 +40,27 @@ const Question: React.FC<IQuestion> = ({
   qtotal,
   scrollRef,
 }) => {
-  const [answer, setAnswer] = useState<any>({a: false, c: false});
+  const [answer, setAnswer] = useState({a: false, c: false});
   const {correct_answer, category} = question;
-  const [correct, setCorrect] = useState<boolean>(false);
-  const [wrong, setWrong] = useState<boolean>(false);
-  const [next, setNext] = useState<boolean>(false);
+  const [correct, setCorrect] = useState(false);
+  const [wrong, setWrong] = useState(false);
+  const [next, setNext] = useState(false);
+  // const [imgSize, setImgSize] = React.useState({width: 0, height: 0});
 
-  const answerData = useCallback(
-    (correct: boolean, answer: any) => {
-      const data = {
-        id: question.id,
-        correct: correct,
-        answer: answer.a,
-        category: answer.c,
-      };
+  // React.useEffect(()=>{
+  //   question.image = (question.image && question.image.length > 1) ? question.image : false;
+  //   if(question.image){
+  //     Image.getSize(question.image, (w,h)=>{
+  //       const aspect = w/h;
+  //       console.log('image success',w,h,aspect)
+  //       setImgSize({width:0,height:0});
+  //     });
+  //   }
+  // },[question])
 
-      console.log(data);
-      return data;
-    },
-    [question],
-  );
+  //console.log(question)
 
-  React.useEffect(() => {
+  useEffect(() => {
     //console.log(answer.a, correct_answer)
     if (answer.a && answer.a == correct_answer) {
       postAnswer(answerData(true, answer));
@@ -76,18 +77,45 @@ const Question: React.FC<IQuestion> = ({
     } else {
       //console.log('void')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answer]);
 
   const scrollToBottom = () => {
-    scrollRef.current?.scrollTo({y: 1000});
+    scrollRef.scrollTo({y: 1000});
   };
 
-  const answerColor = (id: number) => {
-    if (answer.a && id === correct_answer) {
+  const answerData = React.useCallback(
+    (correct: any, answer: any) => {
+      /* feed back answer data to quiz template
+      Fields:
+      ID
+      Correct
+      Answer
+      Category
+    */
+      let data = {
+        id: question.id,
+        correct: correct,
+        answer: answer.a,
+        category: answer.c,
+      };
+
+      console.log(data);
+      return data;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [answer],
+  );
+
+  const answerColor = (id: any) => {
+    if (answer.a && id == correct_answer) {
+      // turn green if correct answer selected or shown if answer is wrong
       return {backgroundColor: '#9ACA3C'};
-    } else if (answer.a === id && id !== correct_answer) {
+    } else if (answer.a == id && id != correct_answer) {
+      // turn red if wrong answer selected
       return {backgroundColor: '#E63C38'};
     } else {
+      // default colour
       return {backgroundColor: 'transparent'};
     }
   };
@@ -103,7 +131,10 @@ const Question: React.FC<IQuestion> = ({
                 {questionNumber} of {qtotal}
               </Text>
             )}
-            <Image style={styles.truck_icon} source={images.truck} />
+            <Image
+              style={styles.truck_icon}
+              source={images.truck as ImageSourcePropType}
+            />
           </View>
           {progress <= 50 && (
             <Text style={styles.progress_qs_black}>
@@ -125,22 +156,28 @@ const Question: React.FC<IQuestion> = ({
         </View>
       )}
 
-      <View style={styles.answerText}>
+      <View style={styles.answerText as StyleProp<ViewStyle>}>
         {correct && (
           <View style={styles.result}>
-            <Image style={styles.result_image} source={images.answer_right} />
+            <Image
+              style={styles.result_image}
+              source={images.answer_right as ImageSourcePropType}
+            />
             <Head>Correct!</Head>
           </View>
         )}
         {wrong && (
           <View style={styles.result}>
-            <Image style={styles.result_image} source={images.answer_wrong} />
+            <Image
+              style={styles.result_image}
+              source={images.answer_wrong as ImageSourcePropType}
+            />
             <Head>Incorrect</Head>
           </View>
         )}
         {next && <Para style={styles.tip}>{question.tip}</Para>}
       </View>
-      <View>
+      <View style={styles.question_block}>
         {question.answer_1.length > 0 && (
           <TouchableOpacity
             disabled={answer.a}
@@ -211,6 +248,7 @@ const Question: React.FC<IQuestion> = ({
 export default Question;
 
 const styles = StyleSheet.create({
+  question_block: {},
   view: {flex: 1},
   question_container: {
     flex: 1,
@@ -308,7 +346,7 @@ const styles = StyleSheet.create({
   },
   answerText: {
     textAlign: 'center',
-  } as ViewStyle,
+  },
   quiz_button: {
     width: 240,
     backgroundColor: style.colours.hobsons_blue,
