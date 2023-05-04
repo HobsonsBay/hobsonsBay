@@ -55,7 +55,7 @@ export default (props) => {
   //console.log(question)
 
   React.useEffect(()=>{
-    //console.log(answer.a, correct_answer)
+    console.log("console.log",answer && answer.a, correct_answer)
     if(answer.a && answer.a == correct_answer){
       postAnswer(answerData(true,answer));
       //console.log('correct')
@@ -118,7 +118,7 @@ export default (props) => {
   }
 
   return (
-    <View style={styles.question_container} id={question.id}>
+    <View style={styles.question_container} id={question.id.toString()}>
       <View>
         {isLast && <Head style={styles.finalq}>Final Question!</Head>}
         <View style={styles.progress_container}>
@@ -152,7 +152,7 @@ export default (props) => {
       <View style={styles.question_block}>
       {question.answer_1.length > 0 && (
         <TouchableOpacity 
-          disabled={answer.a}
+          disabled={answer.a ? true : false}
           style={[styles.answerButton,answerColor(1)]} 
           onPress={()=>setAnswer({a:1,c:category})}
         >
@@ -163,7 +163,7 @@ export default (props) => {
 
       {question.answer_2.length > 0 && (
         <TouchableOpacity 
-          disabled={answer.a}
+          disabled={answer.a ? true : false}
           style={[styles.answerButton,answerColor(2)]} 
           onPress={()=>setAnswer({a:2,c:category})}
         >
@@ -174,7 +174,7 @@ export default (props) => {
 
       {question.answer_3.length > 0 && (
         <TouchableOpacity 
-          disabled={answer.a}
+          disabled={answer.a ? true : false}
           style={[styles.answerButton,answerColor(3)]} 
           onPress={()=>setAnswer({a:3,c:category})}
         >
@@ -185,7 +185,7 @@ export default (props) => {
       
       {question.answer_4.length > 0 && (
         <TouchableOpacity 
-          disabled={answer.a}
+          disabled={answer.a ? true : false}
           style={[styles.answerButton,answerColor(4)]} 
           onPress={()=>setAnswer({a:4,c:category})}
         >
