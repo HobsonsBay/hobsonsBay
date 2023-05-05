@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   StyleSheet,
   View,
@@ -6,39 +5,47 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
-  ActivityIndicator,
+  ImageSourcePropType,
+  ViewStyle,
+  StyleProp,
 } from 'react-native';
 import {style} from '../../utils/styles';
-import {ListItem, Br, Head, Para, LinkButton} from '../../utils/Typography';
+import {Br, Head, Para} from '../../utils/Typography';
 import images from '../../utils/images';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useState, useEffect} from 'react';
 
 /* QUESTION COMPONENT
   Handles the functionality for the question item
-
 */
+interface IQuestion {
+  question: any;
+  questionNumber: number;
+  nextQuestion: () => void;
+  isLast: boolean;
+  endQuiz: () => void;
+  postAnswer: (data: any) => void;
+  progress: number;
+  qtotal: number;
+  scrollRef: React.RefObject<ScrollView>;
+}
 
-export default (props) => {
-  const {
-    navigation,
-    route,
-    question,
-    questionNumber,
-    nextQuestion,
-    isLast,
-    endQuiz,
-    postAnswer,
-    progress,
-    qtotal,
-    scrollRef,
-  } = props;
-  const [answer, setAnswer] = React.useState({a: false, c: false});
+const Question: React.FC<IQuestion> = ({
+  question,
+  questionNumber,
+  nextQuestion,
+  isLast,
+  endQuiz,
+  postAnswer,
+  progress,
+  qtotal,
+  scrollRef,
+}) => {
+  const [answer, setAnswer] = useState({a: false, c: false});
   const {correct_answer, category} = question;
-  const [correct, setCorrect] = React.useState(false);
-  const [wrong, setWrong] = React.useState(false);
-  const [next, setNext] = React.useState(false);
-  const [imgSize, setImgSize] = React.useState({width: 0, height: 0});
+  const [correct, setCorrect] = useState(false);
+  const [wrong, setWrong] = useState(false);
+  const [next, setNext] = useState(false);
+  // const [imgSize, setImgSize] = React.useState({width: 0, height: 0});
 
   // React.useEffect(()=>{
   //   question.image = (question.image && question.image.length > 1) ? question.image : false;
@@ -53,8 +60,8 @@ export default (props) => {
 
   //console.log(question)
 
-  React.useEffect(() => {
-    console.log('console.log', answer && answer.a, correct_answer);
+  useEffect(() => {
+    //console.log(answer.a, correct_answer)
     if (answer.a && answer.a == correct_answer) {
       postAnswer(answerData(true, answer));
       //console.log('correct')
@@ -70,14 +77,15 @@ export default (props) => {
     } else {
       //console.log('void')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answer]);
 
-  const scrollToBottom = (e) => {
+  const scrollToBottom = () => {
     scrollRef.scrollTo({y: 1000});
   };
 
   const answerData = React.useCallback(
-    (correct, answer) => {
+    (correct: any, answer: any) => {
       /* feed back answer data to quiz template
       Fields:
       ID
@@ -95,10 +103,11 @@ export default (props) => {
       console.log(data);
       return data;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [answer],
   );
 
-  const answerColor = (id) => {
+  const answerColor = (id: any) => {
     if (answer.a && id == correct_answer) {
       // turn green if correct answer selected or shown if answer is wrong
       return {backgroundColor: '#9ACA3C'};
@@ -109,10 +118,6 @@ export default (props) => {
       // default colour
       return {backgroundColor: 'transparent'};
     }
-  };
-
-  const progressWidth = () => {
-    return 50;
   };
 
   return (
@@ -126,7 +131,10 @@ export default (props) => {
                 {questionNumber} of {qtotal}
               </Text>
             )}
-            <Image style={styles.truck_icon} source={images.truck} />
+            <Image
+              style={styles.truck_icon}
+              source={images.truck as ImageSourcePropType}
+            />
           </View>
           {progress <= 50 && (
             <Text style={styles.progress_qs_black}>
@@ -148,16 +156,22 @@ export default (props) => {
         </View>
       )}
 
-      <View style={styles.answerText}>
+      <View style={styles.answerText as StyleProp<ViewStyle>}>
         {correct && (
           <View style={styles.result}>
-            <Image style={styles.result_image} source={images.answer_right} />
+            <Image
+              style={styles.result_image}
+              source={images.answer_right as ImageSourcePropType}
+            />
             <Head>Correct!</Head>
           </View>
         )}
         {wrong && (
           <View style={styles.result}>
-            <Image style={styles.result_image} source={images.answer_wrong} />
+            <Image
+              style={styles.result_image}
+              source={images.answer_wrong as ImageSourcePropType}
+            />
             <Head>Incorrect</Head>
           </View>
         )}
@@ -166,7 +180,7 @@ export default (props) => {
       <View style={styles.question_block}>
         {question.answer_1.length > 0 && (
           <TouchableOpacity
-            disabled={answer.a ? true : false}
+            disabled={answer.a}
             style={[styles.answerButton, answerColor(1)]}
             onPress={() => setAnswer({a: 1, c: category})}>
             <Text style={styles.answer_circle}>a</Text>
@@ -176,7 +190,7 @@ export default (props) => {
 
         {question.answer_2.length > 0 && (
           <TouchableOpacity
-            disabled={answer.a ? true : false}
+            disabled={answer.a}
             style={[styles.answerButton, answerColor(2)]}
             onPress={() => setAnswer({a: 2, c: category})}>
             <Text style={styles.answer_circle}>b</Text>
@@ -186,7 +200,7 @@ export default (props) => {
 
         {question.answer_3.length > 0 && (
           <TouchableOpacity
-            disabled={answer.a ? true : false}
+            disabled={answer.a}
             style={[styles.answerButton, answerColor(3)]}
             onPress={() => setAnswer({a: 3, c: category})}>
             <Text style={styles.answer_circle}>c</Text>
@@ -196,7 +210,7 @@ export default (props) => {
 
         {question.answer_4.length > 0 && (
           <TouchableOpacity
-            disabled={answer.a ? true : false}
+            disabled={answer.a}
             style={[styles.answerButton, answerColor(4)]}
             onPress={() => setAnswer({a: 4, c: category})}>
             <Text style={styles.answer_circle}>d</Text>
@@ -209,7 +223,7 @@ export default (props) => {
       {!isLast && answer.a && (
         <TouchableOpacity onPress={nextQuestion}>
           <View onLayout={scrollToBottom} style={[styles.quiz_button]}>
-            <Text style={styles.quiz_button_text}>Next ></Text>
+            <Text style={styles.quiz_button_text}>Next &gt;</Text>
           </View>
         </TouchableOpacity>
       )}
@@ -231,7 +245,10 @@ export default (props) => {
   );
 };
 
+export default Question;
+
 const styles = StyleSheet.create({
+  question_block: {},
   view: {flex: 1},
   question_container: {
     flex: 1,

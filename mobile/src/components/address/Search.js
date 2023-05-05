@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Configure, Index } from 'react-instantsearch/native';
+import {InstantSearch, Configure, Index} from 'react-instantsearch/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { omit } from 'lodash';
+import {omit} from 'lodash';
 import {
   StyleSheet,
   Text,
@@ -12,40 +12,38 @@ import {
   FlatList,
   Keyboard,
   TouchableHighlight,
-  Linking
+  Linking,
 } from 'react-native';
-import {
-  connectSearchBox,
-  connectHits
-} from 'react-instantsearch/connectors';
+import {connectSearchBox, connectHits} from 'react-instantsearch/connectors';
 
 const config = require('../../config/algolia');
 
-const searchClient = algoliasearch(
-  config.appId,
-  config.apiKey
-);
+const searchClient = algoliasearch(config.appId, config.apiKey);
 
 class SearchBox extends Component {
-  render () {
+  render() {
     return (
       <View style={styles.searchBox}>
-        <Text><Icon name='search' size={20} color='#424242' /></Text>
+        <Text>
+          <Icon name="search" size={20} color="#424242" />
+        </Text>
         <TextInput
           style={styles.searchBox_input}
           value={this.props.currentRefinement}
-          placeholder='Type in your address e.g. 15/29 Schutt St'
-          placeholderTextColor='#424242'
-          clearButtonMode='always'
+          placeholder="Type in your address e.g. 15/29 Schutt St"
+          placeholderTextColor="#424242"
+          clearButtonMode="always"
           spellCheck={false}
           autoCorrect={false}
-          autoCapitalize='none'
+          autoCapitalize="none"
           onFocus={(arg) => this.props.displaySuggestions(arg)}
           onChangeText={(text) => {
             if (text === '') {
               this.props.displaySuggestions(false);
               this.props.clearFilter();
-            } else { this.props.displaySuggestions(true); }
+            } else {
+              this.props.displaySuggestions(true);
+            }
 
             this.props.refine(text);
           }}
@@ -67,21 +65,31 @@ SearchBox.propTypes = {
   firstKeystroke: PropTypes.func,
   refine: PropTypes.func,
   isFirstKeystroke: PropTypes.bool,
-  clearFilter: PropTypes.func
+  clearFilter: PropTypes.func,
 };
 
 const ConnectedSearchBox = connectSearchBox(SearchBox);
 
-const SuggestionsHits = connectHits(({ hits, handlePressItem }) => {
+const SuggestionsHits = connectHits(({hits, handlePressItem}) => {
   if (hits.length === 0) {
     return (
       <View style={styles.suggestions_notFound}>
-        <Text style={styles.suggestions_notFound_title}>We're not able to find that address</Text>
+        <Text style={styles.suggestions_notFound_title}>
+          We're not able to find that address
+        </Text>
         <Text>
-            Check that the address is within the <Text style={styles.suggestions_notFound_bold}>Hobsons Bay Area</Text> or <Text style={{textDecorationLine: 'underline'}}
-                  onPress={() => Linking.openURL('https://www.hobsonsbay.vic.gov.au/Council/Contact-us')}>
-              Contact Us
-            </Text>
+          Check that the address is within the{' '}
+          <Text style={styles.suggestions_notFound_bold}>Hobsons Bay Area</Text>{' '}
+          or{' '}
+          <Text
+            style={{textDecorationLine: 'underline'}}
+            onPress={() =>
+              Linking.openURL(
+                'https://www.hobsonsbay.vic.gov.au/Council/Contact-us',
+              )
+            }>
+            Contact Us
+          </Text>
         </Text>
       </View>
     );
@@ -93,22 +101,18 @@ const SuggestionsHits = connectHits(({ hits, handlePressItem }) => {
         acc.push(hit);
         return acc;
       }, [])}
-      renderItem={({ item, index }) => {
+      renderItem={({item, index}) => {
         return (
-          <Item
-            index={index}
-            item={item}
-            handlePressItem={handlePressItem}
-          />
+          <Item index={index} item={item} handlePressItem={handlePressItem} />
         );
       }}
       keyExtractor={(item, index) => item.objectID + index}
-      keyboardShouldPersistTaps='always'
+      keyboardShouldPersistTaps="always"
     />
   );
 });
 
-const Item = ({ item, handlePressItem }) => {
+const Item = ({item, handlePressItem}) => {
   const attribute = 'Property Address';
 
   return (
@@ -117,8 +121,7 @@ const Item = ({ item, handlePressItem }) => {
         Keyboard.dismiss();
         handlePressItem(item[attribute], item);
       }}
-      underlayColor='#fff'
-    >
+      underlayColor="#fff">
       <View style={styles.suggestions_row}>
         <Text>{item[attribute]}</Text>
       </View>
@@ -129,17 +132,17 @@ const Item = ({ item, handlePressItem }) => {
 Item.propTypes = {
   item: PropTypes.object,
   index: PropTypes.number,
-  handlePressItem: PropTypes.func
+  handlePressItem: PropTypes.func,
 };
 
 export default class Search extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       displaySuggestions: false,
       isFirstKeystroke: true,
       searchState: {},
-      query: ''
+      query: '',
     };
     this.displaySuggestions = this.displaySuggestions.bind(this);
     this.removeSuggestions = this.removeSuggestions.bind(this);
@@ -149,19 +152,19 @@ export default class Search extends React.Component {
     this.clearFilter = this.clearFilter.bind(this);
   }
 
-  firstKeystroke () {
-    this.setState({ isFirstKeystroke: false });
+  firstKeystroke() {
+    this.setState({isFirstKeystroke: false});
   }
 
-  displaySuggestions (value = true) {
-    this.setState({ displaySuggestions: value });
+  displaySuggestions(value = true) {
+    this.setState({displaySuggestions: value});
   }
 
-  removeSuggestions () {
-    this.setState({ displaySuggestions: false, isFirstKeystroke: true });
+  removeSuggestions() {
+    this.setState({displaySuggestions: false, isFirstKeystroke: true});
   }
 
-  setQuery (query, item) {
+  setQuery(query, item) {
     const searchState = omit(this.state.searchState, ['query', 'page']);
 
     if (searchState.indices && searchState.indices.addresses) {
@@ -169,28 +172,27 @@ export default class Search extends React.Component {
     }
 
     this.props.handleSelection && this.props.handleSelection(item);
-    this.setState({ query: '', searchState, displaySuggestions: false });
+    this.setState({query: '', searchState, displaySuggestions: false});
   }
 
-  clearFilter () {
-    this.setState({ query: '' });
+  clearFilter() {
+    this.setState({query: ''});
   }
 
-  handleSearchStateChange (searchState) {
-    this.setState({ searchState });
+  handleSearchStateChange(searchState) {
+    this.setState({searchState});
   }
 
-  render () {
-    const { displaySuggestions } = this.state;
+  render() {
+    const {displaySuggestions} = this.state;
 
     return (
       <View style={styles.search}>
         <InstantSearch
           searchClient={searchClient}
-          indexName='addresses'
+          indexName="addresses"
           onSearchStateChange={this.handleSearchStateChange}
-          searchState={this.state.searchState}
-        >
+          searchState={this.state.searchState}>
           <ConnectedSearchBox
             displaySuggestions={this.displaySuggestions}
             firstKeystroke={this.firstKeystroke}
@@ -198,10 +200,11 @@ export default class Search extends React.Component {
             defaultRefinement={this.state.query}
             clearFilter={this.clearFilter}
           />
-          <Index indexName='addresses'>
+          <Index indexName="addresses">
             <Configure hitsPerPage={4} />
-            {displaySuggestions &&
-              <SuggestionsHits handlePressItem={this.setQuery} />}
+            {displaySuggestions && (
+              <SuggestionsHits handlePressItem={this.setQuery} />
+            )}
           </Index>
         </InstantSearch>
       </View>
@@ -212,7 +215,7 @@ export default class Search extends React.Component {
 const styles = StyleSheet.create({
   search: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   searchBox: {
     flexDirection: 'row',
@@ -220,19 +223,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     backgroundColor: '#f5f5f5',
-    borderRadius: 5
+    borderRadius: 5,
   },
   searchBox_input: {
     height: 50,
     width: 300,
     marginLeft: 10,
-    color: 'black'
+    color: 'black',
   },
   suggestions_row: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    paddingLeft: 40
+    paddingLeft: 40,
   },
   suggestions_notFound: {
     marginTop: 10,
@@ -240,12 +243,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFEBEE',
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#FFCDD2'
+    borderColor: '#FFCDD2',
   },
   suggestions_notFound_title: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   suggestions_notFound_bold: {
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });
