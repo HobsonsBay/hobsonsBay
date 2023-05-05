@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {DrawerItem} from '@react-navigation/drawer';
-import images from '../../utils/images';
+import images from '../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useData} from '../../utils/DataContext';
+import {useData} from '../utils/DataContext';
 
 /* MENU CONTENT TEMPLATE 
 

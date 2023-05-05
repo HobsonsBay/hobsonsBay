@@ -22,7 +22,7 @@ import {CALENDAR_URL} from './utils/constants';
 import {useFocusEffect} from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import {useData} from './utils/DataContext';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 interface IScheduleScreen {

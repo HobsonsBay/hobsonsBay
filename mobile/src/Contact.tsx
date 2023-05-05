@@ -9,7 +9,7 @@ import {
 import {openUrl} from './utils';
 import {CONTACT_URL} from './utils/constants';
 import {Br, Head, Para, LinkButton, LinkTile} from './utils/Typography';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 import openMap from 'react-native-open-maps';
 
 interface IContact {

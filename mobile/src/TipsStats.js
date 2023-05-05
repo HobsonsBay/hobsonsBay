@@ -22,7 +22,7 @@ import {
   LinkButton,
   LinkTile,
 } from './utils/Typography';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 import Carousel from './components/tipsstats/Carousel';
 import Stat from './components/tipsstats/Stat';
 import union from 'lodash/union';

@@ -20,7 +20,7 @@ import { openUrl } from './utils';
 import { POLICY_URL } from './utils/constants';
 import Search from './components/address/Search';
 import { useData } from './utils/DataContext'
-import NavBar from "./components/navigation/NavBar";
+import NavBar from "./navigation/NavBar";
 import { useFocusEffect } from '@react-navigation/native';
 import { CommonActions } from '@react-navigation/native';
 

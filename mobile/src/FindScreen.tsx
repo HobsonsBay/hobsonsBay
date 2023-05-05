@@ -21,7 +21,7 @@ import {
   GLASS_BIN_URL,
 } from './utils/constants';
 import Search from './components/find/Search';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 

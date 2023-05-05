@@ -12,7 +12,7 @@ import {openUrl} from './utils';
 import {RECYCLING_20_URL, POLICY_URL, CONTACT_URL} from './utils/constants';
 
 import {Br, Head, Para, LinkButton} from './utils/Typography';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 // import SurveyMonkey from 'react-native-survey-monkey';
 
 interface IAboutScreen {

@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Br} from './utils/Typography';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 import NewsPost from './components/news/NewsPost';
 import {useData} from './utils/DataContext';
 import {useFocusEffect} from '@react-navigation/native';

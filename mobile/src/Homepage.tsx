@@ -19,7 +19,7 @@ import images from './utils/images';
 import {clearAddress} from './utils/handleAddress';
 import {Br} from './utils/Typography';
 import {useData} from './utils/DataContext';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 
 interface IHomepage {
   navigation: any;

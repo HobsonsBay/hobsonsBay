@@ -26,7 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import images from './utils/images';
 import {AppDataProvider, useData} from './utils/DataContext';
 import SplashScreen from 'react-native-splash-screen';
-import DrawerContent from './components/navigation/DrawerContent';
+import DrawerContent from './navigation/DrawerContent';
 
 Text.defaultProps = {
   ...Text.defaultProps,
