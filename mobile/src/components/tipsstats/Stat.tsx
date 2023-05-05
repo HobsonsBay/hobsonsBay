@@ -61,12 +61,12 @@ const Stat: React.FC<IStat> = ({stat}) => {
   return (
     <TouchableOpacity onPress={() => setShow(!show)}>
       <View style={[styles.stats_block]}>
-        {stat.type != 'Rubbish' && (
+        {stat.type !== 'Rubbish' && (
           <View style={[styles.stats_indicator, bgColor]}>
             <Image style={styles.icon} source={indicator} />
           </View>
         )}
-        {stat.type == 'Rubbish' && (
+        {stat.type === 'Rubbish' && (
           <ImageBackground
             source={images.rubbish_home}
             style={styles.stats_indicator}>
@@ -76,7 +76,7 @@ const Stat: React.FC<IStat> = ({stat}) => {
         <View style={styles.stats_info}>
           <Head style={styles.head}>{stat.type}</Head>
           <Text numberOfLines={show ? 100 : 2} style={styles.para}>
-            {stat.stat}
+            {stat.stat.replace(/<br\s*\/?>/g, '\n')}
           </Text>
         </View>
       </View>
