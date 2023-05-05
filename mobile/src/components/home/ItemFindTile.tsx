@@ -3,8 +3,8 @@ import {StyleSheet, View, ImageBackground} from 'react-native';
 import images from '../../utils/images';
 
 interface IItemFindTile {
-  label: string;
-  binDays: string[];
+  label?: string;
+  binDays?: string[];
 }
 
 const ItemFindTile: React.FC<IItemFindTile> = () => {

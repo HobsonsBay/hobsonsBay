@@ -12,6 +12,7 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  ImageSourcePropType,
 } from 'react-native';
 import images from './utils/images';
 import {
@@ -21,16 +22,20 @@ import {
   getItemTextColor,
   RUBBISH,
 } from './utils';
-import useItem from './hooks/useItem';
+import useItem, {ItemData} from './hooks/useItem';
 import Paragraph from './components/item/Paragraph';
 
-export default (props) => {
-  const {navigation, route} = props;
+interface IITemScreen {
+  navigation: any;
+  route: any;
+}
+
+const ItemScreen: React.FC<IITemScreen> = ({navigation, route}) => {
   const param = get(route, 'params.item', {});
   const itemNumber = param['Item Number'] || 155;
-  const [item = {}] = useItem(itemNumber);
+  const [item = {} as ItemData] = useItem(itemNumber);
   const loading = !item.name;
-  const handleButton = useCallback(() => navigation.goBack(), []);
+  const handleButton = useCallback(() => navigation.goBack(), [navigation]);
 
   const itemCardStyle = [
     styles.item_card,
@@ -56,7 +61,10 @@ export default (props) => {
               Which bin does this go in?
             </Text>
           </TouchableOpacity>
-          <Image style={styles.item_logo} source={images.hbccLogo} />
+          <Image
+            style={styles.item_logo}
+            source={images.hbccLogo as ImageSourcePropType}
+          />
         </View>
         <View style={itemCardStyle}>
           <Text style={itemCardLabelStyle}>{item.name}</Text>
@@ -75,7 +83,9 @@ export default (props) => {
               <View style={styles.item_bin}>
                 <Image
                   style={styles.item_bin_img}
-                  source={images[getBinImgNT(item.bin_type)]}
+                  source={
+                    images[getBinImgNT(item.bin_type)] as ImageSourcePropType
+                  }
                 />
                 <Text style={styles.item_bin_label}>
                   {getItemBinLabel(item.bin_type)}
@@ -133,6 +143,8 @@ export default (props) => {
     </SafeAreaView>
   );
 };
+
+export default ItemScreen;
 
 const styles = StyleSheet.create({
   view: {flex: 1},

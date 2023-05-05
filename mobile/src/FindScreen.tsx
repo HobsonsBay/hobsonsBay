@@ -38,13 +38,10 @@ const FindScreen: React.FC<IFindScreen> = ({navigation, route}) => {
   const [showAll, setShowAll] = useState(true);
   const [cleared, setCleared] = useState(true);
 
-  const handleRecyclingClick = useCallback(
-    () => openUrl(RECYCLING_BIN_URL),
-    [],
-  );
-  const handleFogoClick = useCallback(() => openUrl(FOGO_BIN_URL), []);
-  const handleRubbishClick = useCallback(() => openUrl(RUBBISH_BIN_URL), []);
-  const handleGlassClick = useCallback(() => openUrl(GLASS_BIN_URL), []);
+  const handleRecyclingClick = openUrl(RECYCLING_BIN_URL);
+  const handleFogoClick = openUrl(FOGO_BIN_URL);
+  const handleRubbishClick = openUrl(RUBBISH_BIN_URL);
+  const handleGlassClick = openUrl(GLASS_BIN_URL);
 
   const keyboardDidShow = useCallback(() => setShowAll(false), []);
   const keyboardDidHide = useCallback(() => setShowAll(true), []);
