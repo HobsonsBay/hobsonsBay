@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {Text, View, TextInput, StyleSheet} from 'react-native';
@@ -68,46 +67,45 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 //   clearFilter: PropTypes.func,
 // };
 
-
 const styles = StyleSheet.create({
-    search: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    searchBox: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      paddingHorizontal: 10,
-      backgroundColor: '#f5f5f5',
-      borderRadius: 5,
-    },
-    searchBox_input: {
-      height: 50,
-      width: 300,
-      marginLeft: 10,
-      color: 'black',
-    },
-    suggestions_row: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 10,
-      paddingLeft: 40,
-    },
-    suggestions_notFound: {
-      marginTop: 10,
-      padding: 10,
-      backgroundColor: '#FFEBEE',
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: '#FFCDD2',
-    },
-    suggestions_notFound_title: {
-      marginBottom: 10,
-    },
-    suggestions_notFound_bold: {
-      fontWeight: 'bold',
-    },
-  });
-  
+  search: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  searchBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+  },
+  searchBox_input: {
+    height: 50,
+    width: 300,
+    marginLeft: 10,
+    color: 'black',
+  },
+  suggestions_row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    paddingLeft: 40,
+  },
+  suggestions_notFound: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#FFEBEE',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#FFCDD2',
+  },
+  suggestions_notFound_title: {
+    marginBottom: 10,
+  },
+  suggestions_notFound_bold: {
+    fontWeight: 'bold',
+  },
+});
+
 export const ConnectedSearchBox = connectSearchBox(SearchBox);

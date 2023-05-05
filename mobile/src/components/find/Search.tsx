@@ -4,15 +4,10 @@ import algoliasearch from 'algoliasearch/lite';
 import {InstantSearch, Configure, Index} from 'react-instantsearch/native';
 
 import {omit} from 'lodash';
-import {
-  StyleSheet,
-
-  View,
-
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {ConnectedSearchBox} from './SearchBox';
-import {SuggestionsHits} from './SuggestionHits'
+import {SuggestionsHits} from './SuggestionHits';
 const config = require('../../config/algolia');
 
 const searchClient = algoliasearch(config.appId, config.apiKey);
@@ -63,7 +58,6 @@ const Search: React.FC<SearchProps> = (props) => {
   };
 
   const clearFilter = () => {
-    
     setQuery('');
   };
 
@@ -92,7 +86,6 @@ const Search: React.FC<SearchProps> = (props) => {
     </View>
   );
 };
-
 
 export default Search;
 

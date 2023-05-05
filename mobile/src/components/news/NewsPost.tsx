@@ -16,7 +16,7 @@ interface INewsPost {
   post: any;
   isOpen: boolean;
   isNew: boolean;
-  open: (postId: string | false) => void;
+  open: (postId: number | boolean) => void;
 }
 
 const NewsPost: React.FC<INewsPost> = ({post, isOpen, isNew, open}) => {

@@ -1,15 +1,8 @@
 import React from 'react';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  
-} from 'react-native';
+import {StyleSheet, Text, View, TextInput} from 'react-native';
 import {connectSearchBox} from 'react-instantsearch/connectors';
-
 
 interface SearchBoxProps {
   clearFilter: () => void;

@@ -27,7 +27,7 @@ import postConfig from './api/postConfig';
 import deleteConfig from './api/deleteConfig';
 import putConfig from './api/putConfig';
 import {useData} from './utils/DataContext';
-import NavBar from './components/navigation/NavBar';
+import NavBar from './navigation/NavBar';
 import NotificationsOn from './utils/handleNotification';
 import TimePicker from './components/reminders/TimePicker';
 

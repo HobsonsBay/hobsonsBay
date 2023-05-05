@@ -18,7 +18,7 @@ import { FEEDBACK_URL } from './utils/constants';
 // import SurveyMonkey from 'react-native-survey-monkey';
 import { style } from "./utils/styles";
 import { ListItem, Br, Head, Para, LinkButton } from "./utils/Typography";
-import NavBar from "./components/navigation/NavBar";
+import NavBar from "./navigation/NavBar";
 //import {AppDataProvider, useData} from './utils/DataContext'
 
 export default (props) => {

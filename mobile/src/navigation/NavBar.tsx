@@ -3,13 +3,20 @@ import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import images from '../utils/images';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
+import {
+  ParamListBase,
+  RouteProp,
+  useNavigation,
+} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 interface INavBar {
-  isHome: boolean;
-  quiz: boolean;
+  isHome?: boolean;
+  quiz?: boolean;
   backButtonAction?: () => void;
+  navigation?: StackNavigationProp<any>;
+  route?: RouteProp<any, any>;
 }
 
 const NavBar: React.FC<INavBar> = ({isHome, quiz, backButtonAction}) => {
