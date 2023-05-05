@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import images from '../../utils/images';
+import images from '../utils/images';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 
