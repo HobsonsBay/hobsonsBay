@@ -1,35 +1,33 @@
-import React, { useCallback } from "react";
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   View,
   Image,
   ScrollView,
-} from "react-native";
-import images from "./utils/images";
-import { openUrl } from "./utils";
-import {
-  RECYCLING_20_URL,
-  POLICY_URL,
-  CONTACT_URL,
-  FEEDBACK_URL,
-} from "./utils/constants";
+  ImageSourcePropType,
+} from 'react-native';
+import images from './utils/images';
+import {openUrl} from './utils';
+import {RECYCLING_20_URL, POLICY_URL, CONTACT_URL} from './utils/constants';
 
-import { Br, Head, Para, LinkButton } from "./utils/Typography";
-import NavBar from "./components/navigation/NavBar";
+import {Br, Head, Para, LinkButton} from './utils/Typography';
+import NavBar from './components/navigation/NavBar';
 // import SurveyMonkey from 'react-native-survey-monkey';
 
-export default (props) => {
-  const { navigation, route } = props;
+interface IAboutScreen {
+  navigation: any;
+  route: any;
+}
+
+const AboutScreen: React.FC<IAboutScreen> = ({navigation, route}) => {
   const handleContactClick = openUrl(CONTACT_URL);
   const handleRecycling20Click = openUrl(RECYCLING_20_URL);
-  const handleFeedbackClick = openUrl(FEEDBACK_URL);
   const handlePolicyClick = openUrl(POLICY_URL);
-  const handleBurger = useCallback(() => navigation.openDrawer(), []);
 
-  const surveyMonkeyRef = React.createRef();
-  const handleSurveyClick = () =>
-    surveyMonkeyRef.current.showSurveyMonkey("3QBD9ST");
+  // const surveyMonkeyRef = React.createRef();
+  // const handleSurveyClick = () =>
+  //   surveyMonkeyRef.current.showSurveyMonkey('3QBD9ST');
 
   return (
     <SafeAreaView style={styles.view}>
@@ -37,11 +35,13 @@ export default (props) => {
         <NavBar navigation={navigation} route={route} />
         <ScrollView
           style={styles.about_scroll}
-          contentContainerStyle={styles.about_scroll_content}
-        >
+          contentContainerStyle={styles.about_scroll_content}>
           <Head style={styles.about_welcome}>About Recycling 2.0</Head>
           <View style={styles.about_photo}>
-            <Image style={styles.about_image} source={images.aerielAltona} />
+            <Image
+              style={styles.about_image}
+              source={images.aerielAltona as ImageSourcePropType}
+            />
           </View>
           <View style={styles.about_body}>
             <Para style={styles.about_description}>
@@ -65,9 +65,9 @@ export default (props) => {
             <LinkButton onPress={handleRecycling20Click}>
               Visit the Recycling 2.0 Website
             </LinkButton>
-            <LinkButton onPress={handleSurveyClick}>
+            {/* <LinkButton onPress={handleSurveyClick}>
               Provide App Feedback
-            </LinkButton>
+            </LinkButton> */}
             <LinkButton onPress={handlePolicyClick}>
               Read Privacy Policy
             </LinkButton>
@@ -79,26 +79,28 @@ export default (props) => {
   );
 };
 
+export default AboutScreen;
+
 const styles = StyleSheet.create({
-  view: { flex: 1 },
+  view: {flex: 1},
   about: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "#fff",
+    flexDirection: 'column',
+    backgroundColor: '#fff',
   },
   about_scroll: {
     flex: 1,
   },
   about_scroll_content: {
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   about_photo: {
     height: 200,
     marginTop: 10,
   },
   about_image: {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
   },
   about_body: {
     flex: 2,
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   about_links: {
-    flexDirection: "column",
+    flexDirection: 'column',
     padding: 20,
   },
 });

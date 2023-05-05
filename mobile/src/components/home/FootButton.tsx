@@ -7,7 +7,7 @@ interface IFootButton {
   onTouch?: () => void;
   text: string;
   goTo?: string;
-  navigation: any;
+  navigation?: any;
   onPress?: () => void;
   unread?: boolean;
 }

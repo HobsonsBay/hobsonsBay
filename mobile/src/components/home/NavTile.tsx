@@ -2,7 +2,7 @@ import React, {ReactNode, useCallback} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 
 interface INavTile {
-  label: string;
+  label: string | JSX.Element;
   onPress: () => void;
   children?: ReactNode;
 }
