@@ -1,8 +1,7 @@
-import {
-  Linking
-} from 'react-native';
+import {Linking} from 'react-native';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
+import * as formatTz from 'date-fns-tz';
 import isTomorrow from 'date-fns/isTomorrow';
 import startWith from 'lodash/startsWith';
 import min from 'lodash/min';
@@ -16,45 +15,46 @@ export const RECYCLING_A = 'Commingled Recycling';
 export const RECYCLING_B = 'Mixed Recycling';
 export const GLASS = 'Glass';
 
-export const openUrl = (url) => {
+export const openUrl = (url: string) => {
   return () => {
     Linking.canOpenURL(url)
-      .then(supported => (supported && Linking.openURL(url)))
+      .then((supported) => supported && Linking.openURL(url))
       .catch(console.error);
   };
 };
 
-export const formatDate = (date) => {
+export const formatDate = (date: string) => {
   const d = parse(date, 'dd/MM/yyyy', new Date());
   return format(d, 'dd MMMM');
 };
 
-export const formatDayNumber = (date) => {
+export const formatDayNumber = (date: string) => {
   const d = parse(date, 'dd/MM/yyyy', new Date());
   return format(d, 'dd');
 };
 
-export const formatDayTomorrow = (date) => {
+export const formatDayTomorrow = (date: string) => {
   const d = parse(date, 'dd/MM/yyyy', new Date());
   const t = isTomorrow(d);
   const day = format(d, 'EEEE');
-  return t ? "Tomorrow" : day ;
+  return t ? 'Tomorrow' : day;
 };
 
-export const formatDay = (date) => {
+export const formatDay = (date: string) => {
   const d = parse(date, 'dd/MM/yyyy', new Date());
   return format(d, 'EEEE');
 };
 
 export const formatTime = (date = new Date()) => {
-  return format(date, 'hh:mm b', { timeZone: 'Australia/Melbourne' });
+  // return format(date, 'hh:mm b', {timeZone: 'Australia/Melbourne'});
+  return formatTz.format(date, 'hh:mm b', {timeZone: 'Australia/Melbourne'});
 };
 
-export const getReminderDate = (time) => {
+export const getReminderDate = (time: string) => {
   return parse(`${time}`, 'HHmm', new Date());
 };
 
-export const formatBinName = (type) => {
+export const formatBinName = (type: string) => {
   switch (type) {
     case FOGO:
       return 'Food and Garden';
@@ -70,7 +70,7 @@ export const formatBinName = (type) => {
   return type;
 };
 
-export const getBinImg = (type) => {
+export const getBinImg = (type: string) => {
   switch (type) {
     case FOGO:
       return 'fogo';
@@ -86,7 +86,7 @@ export const getBinImg = (type) => {
   return 'fogo';
 };
 
-export const getBinImgNT = (type) => {
+export const getBinImgNT = (type: string) => {
   switch (type) {
     case FOGO:
       return 'fogoNT';
@@ -102,7 +102,7 @@ export const getBinImgNT = (type) => {
   return 'nobinNT';
 };
 
-export const getItemBinColor = (type) => {
+export const getItemBinColor = (type: string) => {
   switch (type) {
     case FOGO:
       return '#9ACA3C';
@@ -118,7 +118,7 @@ export const getItemBinColor = (type) => {
   return '#D8D8D8';
 };
 
-export const getItemTextColor = (type) => {
+export const getItemTextColor = (type: string) => {
   switch (type) {
     case FOGO:
     case RECYCLING_A:
@@ -132,7 +132,7 @@ export const getItemTextColor = (type) => {
   return '#212121';
 };
 
-export const getItemBinLabel = (type) => {
+export const getItemBinLabel = (type: string) => {
   switch (type) {
     case FOGO:
     case RECYCLING_A:
@@ -145,7 +145,7 @@ export const getItemBinLabel = (type) => {
   return type;
 };
 
-export const getAreaBackgroundColor = (area) => {
+export const getAreaBackgroundColor = (area: string) => {
   switch (area) {
     case '1':
       return '#eae84e';
@@ -160,7 +160,7 @@ export const getAreaBackgroundColor = (area) => {
   return '#eae84e';
 };
 
-export const getAreaColor = (area) => {
+export const getAreaColor = (area: string) => {
   switch (area) {
     case '1':
     case '3':
@@ -173,7 +173,7 @@ export const getAreaColor = (area) => {
   return '#212121';
 };
 
-export const getTokens = (text) => {
+export const getTokens = (text: string) => {
   if (!text) return [];
   const tokens = [];
   let j = 0;
@@ -182,10 +182,10 @@ export const getTokens = (text) => {
   for (; i < text.length; i++) {
     const peak = `${text[i]}${text[i + 1]}${text[i + 2]}${text[i + 3]}`;
     if (peak === LINK) {
-      tokens.push(text.substr(j, (i - j)));
+      tokens.push(text.substr(j, i - j));
       j = i;
-    } else if (i === (text.length - 1)) {
-      tokens.push(text.substr(j, (text.length - j)));
+    } else if (i === text.length - 1) {
+      tokens.push(text.substr(j, text.length - j));
     }
   }
 
@@ -196,22 +196,26 @@ export const getTokens = (text) => {
     const token = tokens[a];
     if (startWith(token, LINK)) {
       const indices = [];
-      (token.indexOf(' ') !== -1) && indices.push(token.indexOf(' '));
-      (token.indexOf('\n') !== -1) && indices.push(token.indexOf('\n'));
-      (token.indexOf('\t') !== -1) && indices.push(token.indexOf('\t'));
+      token.indexOf(' ') !== -1 && indices.push(token.indexOf(' '));
+      token.indexOf('\n') !== -1 && indices.push(token.indexOf('\n'));
+      token.indexOf('\t') !== -1 && indices.push(token.indexOf('\t'));
       const index = min(indices);
 
-      if (index > 0) {
+      if (index && index > 0) {
         strings.push(token.substr(0, index));
         strings.push(trimEnd(token.substr(index).replace('\n', '')));
-      } else { strings.push(trimEnd(token.replace('\n', ''))); }
-    } else { strings.push(trimEnd(token)); }
+      } else {
+        strings.push(trimEnd(token.replace('\n', '')));
+      }
+    } else {
+      strings.push(trimEnd(token));
+    }
   }
 
   return strings;
 };
 
-export const binSortOrder = (type) => {
+export const binSortOrder = (type: string) => {
   switch (type) {
     case FOGO:
       return '1';
@@ -227,6 +231,7 @@ export const binSortOrder = (type) => {
   return type;
 };
 
-export const sortBins = (bins) => {
+export const sortBins = (bins: any) => {
+  console.log('jm: typeof bins ', typeof bins);
   return sortBy(bins, (bin) => binSortOrder(bin.bin_type));
 };
