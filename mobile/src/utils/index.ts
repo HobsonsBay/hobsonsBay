@@ -232,6 +232,5 @@ export const binSortOrder = (type: string) => {
 };
 
 export const sortBins = (bins: any) => {
-  console.log('jm: typeof bins ', typeof bins);
   return sortBy(bins, (bin) => binSortOrder(bin.bin_type));
 };

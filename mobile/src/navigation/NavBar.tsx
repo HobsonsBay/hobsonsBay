@@ -1,5 +1,12 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  ImageSourcePropType,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import images from '../utils/images';
@@ -52,12 +59,18 @@ const NavBar: React.FC<INavBar> = ({isHome, quiz, backButtonAction}) => {
       )}
       {!quiz && (
         <TouchableOpacity onPress={goHome}>
-          <Image style={styles.home_logo} source={images.hbccLogo} />
+          <Image
+            style={styles.home_logo}
+            source={images.hbccLogo as ImageSourcePropType}
+          />
         </TouchableOpacity>
       )}
       {quiz && (
         <TouchableOpacity onPress={backButtonAction}>
-          <Image style={styles.home_logo} source={images.hbccLogo} />
+          <Image
+            style={styles.home_logo}
+            source={images.hbccLogo as ImageSourcePropType}
+          />
         </TouchableOpacity>
       )}
       {isHome && (

@@ -1,5 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, ImageBackground} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  ImageSourcePropType,
+} from 'react-native';
 import images from '../../utils/images';
 
 interface IItemFindTile {
@@ -11,8 +16,9 @@ const ItemFindTile: React.FC<IItemFindTile> = () => {
   return (
     <View style={styles.tile}>
       <ImageBackground
-        source={images.r2BinSearch}
-        style={{width: 384 * 0.25, height: 268 * 0.25}}></ImageBackground>
+        source={images.r2BinSearch as ImageSourcePropType}
+        style={{width: 384 * 0.25, height: 268 * 0.25}}
+      />
     </View>
   );
 };

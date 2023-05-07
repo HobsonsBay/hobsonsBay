@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, ImageSourcePropType} from 'react-native';
 import images from '../../utils/images';
 import {getBinImg} from '../../utils';
 
@@ -12,7 +12,10 @@ const Bin: React.FC<IBin> = ({col}) => {
 
   return (
     <View accessible accessibilityLabel={binType} style={styles.bin}>
-      <Image style={styles.bin_img} source={images[getBinImg(binType)]} />
+      <Image
+        style={styles.bin_img}
+        source={images[getBinImg(binType)] as ImageSourcePropType}
+      />
     </View>
   );
 };
