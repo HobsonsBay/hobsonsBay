@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ImageSourcePropType} from 'react-native';
 import {DrawerItem} from '@react-navigation/drawer';
 import images from '../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -32,7 +32,10 @@ const DrawerContent: React.FC<IDrawerContent> = ({navigation}) => {
   return (
     <React.Fragment>
       <View style={styles.logo}>
-        <Image style={styles.logoImg} source={images.recyclingLogoWite} />
+        <Image
+          style={styles.logoImg}
+          source={images.recyclingLogoWite as ImageSourcePropType}
+        />
       </View>
       <View style={styles.menuWrap}>
         <View>

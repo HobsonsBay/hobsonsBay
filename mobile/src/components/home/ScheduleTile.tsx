@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, ImageBackground} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ImageBackground,
+  ImageSourcePropType,
+} from 'react-native';
 import images from '../../utils/images';
 import {formatDate, formatDayTomorrow} from '../../utils';
 
@@ -73,8 +79,10 @@ const ScheduleTile: React.FC<IScheduleTile> = ({binDays}) => {
             <View
               key={key}
               style={[styles.bintype, {backgroundColor: binCol(bin.bin_type)}]}>
-              {bin.bin_type == 'Rubbish' && (
-                <ImageBackground source={images.rubbish_home} style={styles.bg}>
+              {bin.bin_type === 'Rubbish' && (
+                <ImageBackground
+                  source={images.rubbish_home as ImageSourcePropType}
+                  style={styles.bg}>
                   <Text> </Text>
                 </ImageBackground>
               )}

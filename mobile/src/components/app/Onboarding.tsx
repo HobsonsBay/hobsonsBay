@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   ScrollView,
+  ImageSourcePropType,
 } from 'react-native';
 import images from '../../utils/images';
 import {style} from '../../utils/styles';
@@ -54,7 +55,7 @@ const OnboardingModal = () => {
                 height: styles.onboarding_image.height,
                 width: styles.onboarding_image.width,
               }}
-              source={images.recyclingLogoStretch}
+              source={images.recyclingLogoStretch as ImageSourcePropType}
             />
           </View>
           <View style={styles.onboarding_body}>

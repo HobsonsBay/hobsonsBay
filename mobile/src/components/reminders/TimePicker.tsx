@@ -176,11 +176,22 @@ const TimePicker: React.FC<ITimePicker> = ({time, setTime}) => {
 
   const handleSetTime = useCallback(
     (time: string, selected: string) => {
-      console.log("Selected", time,selected,`Jan 01 2001 ${time}`.replace(/(\d+:\d+)(\s+\w+)$/, "$1"),new Date(`Jan 01 2001 ${time}`.replace(/(\d+:\d+)(\s+\w+)$/, "$1")))
+      console.log(
+        'Selected',
+        time,
+        selected,
+        `Jan 01 2001 ${time}`.replace(/(\d+:\d+)(\s+\w+)$/, '$1'),
+        new Date(`Jan 01 2001 ${time}`.replace(/(\d+:\d+)(\s+\w+)$/, '$1')),
+      );
       const date = new Date();
-      date.setHours(Number(selected.substr(0, 2)), Number(selected.substr(3, 2)));
-      const formattedTime = date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }).replace(":", "");
-      console.log("Formated Date",formattedTime)
+      date.setHours(
+        Number(selected.substr(0, 2)),
+        Number(selected.substr(3, 2)),
+      );
+      const formattedTime = date
+        .toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})
+        .replace(':', '');
+      console.log('Formated Date', formattedTime);
       setTime(null, date);
       setSelected(selected);
     },

@@ -7,7 +7,7 @@ import {connectSearchBox} from 'react-instantsearch/connectors';
 
 interface SearchBoxProps {
   clearFilter: () => void;
-  currentRefinement: String;
+  currentRefinement: string;
   displaySuggestions: () => void;
   firstKeystroke: () => void;
   refine: () => void;

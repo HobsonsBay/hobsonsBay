@@ -8,6 +8,7 @@ import {
   ImageBackground,
   ViewStyle,
   StyleProp,
+  ImageSourcePropType,
 } from 'react-native';
 
 import images from '../../utils/images';
@@ -68,7 +69,7 @@ const Stat: React.FC<IStat> = ({stat}) => {
         )}
         {stat.type === 'Rubbish' && (
           <ImageBackground
-            source={images.rubbish_home}
+            source={images.rubbish_home as ImageSourcePropType}
             style={styles.stats_indicator}>
             <Image style={styles.icon} source={indicator} />
           </ImageBackground>
