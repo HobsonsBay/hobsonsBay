@@ -102,7 +102,7 @@ const ItemScreen: React.FC<IITemScreen> = ({navigation, route}) => {
               )}
               {!isEmpty(item.description) && (
                 <Text style={styles.item_description}>
-                  {trim(item.description)}
+                  {trim(item.description.replace(/<br\s*\/?>/g, '\n'))}
                 </Text>
               )}
               {!isEmpty(item.disposal_guidance) && (
