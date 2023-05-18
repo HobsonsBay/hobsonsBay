@@ -11,6 +11,8 @@ import images from './images';
 import {style} from './styles';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
+/* Typography components that are used within the app */
+
 const styles = StyleSheet.create({
   onboarding_list: {
     flexDirection: 'row',

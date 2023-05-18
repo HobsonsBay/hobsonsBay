@@ -15,6 +15,8 @@ export const RECYCLING_A = 'Commingled Recycling';
 export const RECYCLING_B = 'Mixed Recycling';
 export const GLASS = 'Glass';
 
+/* Helper functions used throughout the app */
+
 export const openUrl = (url: string) => {
   return () => {
     Linking.canOpenURL(url)
