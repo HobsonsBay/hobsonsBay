@@ -1,0 +1,15 @@
+{
+  "crons": [
+    {
+      "path": "/api/newsAlert",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/binAlert",
+      "schedule": "0 * * * *"
+    },{
+      "path": "/api/syncItems",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
