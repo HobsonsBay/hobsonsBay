@@ -1,8 +1,7 @@
 /* global fetch */
-const {API_URL} = require('../config/api');
-
+import Config from 'react-native-config';
 export default (id: string, body: string) => {
-  const CONFIG_URL = `${API_URL}/configs?id=${id}`;
+  const CONFIG_URL = `${Config.API_URL}/configs?id=${id}`;
   console.log(body);
   //const CONFIG_URL = `${API_URL_DEV}/configs?id=${id}&service=aws`;
   return fetch(CONFIG_URL, {

@@ -2,9 +2,9 @@
 // import hashFunc from './hashFunc';
 // API_URL_DEV
 const {API_URL} = require('../config/api');
-
+import Config from 'react-native-config'
 export default (body: string) => {
-  const CONFIG_URL = `${API_URL}/configs`;
+  const CONFIG_URL = `${Config.API_URL}/configs`;
   //const CONFIG_URL = `${API_URL_DEV}/configs?service=aws`;
   // const CONFIG_URL = `http://localhost:8080/api/health`;
   // console.log("raw = "+JSON.stringify(body))

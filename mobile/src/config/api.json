@@ -1,6 +1,6 @@
 {
   "API_URL1": "https://hbcc.vercel.app/api",
-  "API_URL_DEV": "https://hbcc-alex-reid.hbcc.vercel.app/api",
+  "API_URL_dev": "http://localhost:3000/api",
   "API_URL": "https://test-kuldeep-suhag-hbcc-hbcc.vercel.app/api",
   "API_SECRET": "secret key"
 }

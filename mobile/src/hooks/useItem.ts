@@ -1,7 +1,6 @@
 /* global fetch */
 import {useState, useEffect} from 'react';
-const {API_URL} = require('../config/api');
-
+import Config from 'react-native-config'
 export interface ItemData {
   additional_info: string;
   alternative_disposal: string;
@@ -16,7 +15,7 @@ export interface ItemData {
 }
 
 const getItem = async (number: string): Promise<ItemData> => {
-  const ITEM_URL = `${API_URL}/items?number=${number}`;
+  const ITEM_URL = `${Config.API_URL}/items?number=${number}`;
   const res = await fetch(ITEM_URL);
   const {rows} = await res.json();
   return rows[0];

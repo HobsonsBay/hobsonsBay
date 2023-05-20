@@ -229,7 +229,7 @@ function AppDataProvider(props) {
 
   const newsCompare = async (last) => {
     feed = await getNewsfeed(1).then((response)=>{
-      //setNewsfeed(newsfeed);
+      // setNewsfeed(newsfeed);
       return response;
     }).catch((e)=>{
       return Promise.reject(e)

@@ -237,7 +237,6 @@ export default (props) => {
   // function to advance to the next question
   const nextQuestion = () => {
     let next = questionNumber+1;
-    console.log('next',next, questions.length);
     setQuestionNumber(next)
     setCurrentQuestion(questionDefaults(questions[next-1]));
     if (next == questions.length){
@@ -317,7 +316,7 @@ export default (props) => {
     }).then(()=>{
       return quizAnswersApi(id,'quiz_end',score)
     }).then((val)=>{
-      console.log("finished");
+      
     })
     
     /*
@@ -353,7 +352,7 @@ export default (props) => {
     await postQuizData(data).then(()=>{
       return true;
     }).catch((error) => {
-      console.log(error);
+      
       return false;
     })
     
@@ -385,10 +384,10 @@ export default (props) => {
         })
     let quizData = await AsyncStorage.getItem('quizData').then((val)=>{
         let out = (val) ? JSON.parse(val) : false;
-        console.log(out);
+        
         return (out && out.length > 0) && out;
         })
-    console.log('load from async',inProg,quizData);
+    
     if (inProg && quizData){
       setResumeData({q:inProg,d:quizData})
       return true

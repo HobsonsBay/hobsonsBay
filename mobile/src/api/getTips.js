@@ -1,10 +1,10 @@
 /* global fetch */
 import hashFunc from './hashFunc';
 const { API_URL, API_URL_DEV, API_URL_LOCAL } = require('../config/api');
-
+import Config from 'react-native-config'
 export default (body) => {
 
-  const CONFIG_URL = `${API_URL}/tipsstats`;
+  const CONFIG_URL = `${Config.API_URL}/tipsstats`;
 
   //console.log(JSON.stringify(body))
   console.log(CONFIG_URL);

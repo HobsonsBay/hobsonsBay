@@ -1,8 +1,8 @@
 /* global fetch */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState, useEffect} from 'react';
-const {API_URL} = require('../config/api');
 
+import Config from 'react-native-config';
 interface FullAddress {
   [key: string]: any;
 }
@@ -15,7 +15,7 @@ const useFullAddress = (): [FullAddress | null] => {
       .then((value) => {
         const address = JSON.parse(value!);
         const asn = address['Assessment Number'];
-        return fetch(`${API_URL}/addresses?asn=${asn}`);
+        return fetch(`${Config.API_URL}/addresses?asn=${asn}`);
       })
       .then((res) => res.json())
       .then(({rows}) => rows[0]);

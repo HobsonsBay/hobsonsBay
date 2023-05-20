@@ -1,9 +1,8 @@
 /* global fetch */
-const {API_URL} = require('../config/api');
-
+import Config from 'react-native-config'
 export default (page: string) => {
   //const CONFIG_URL = `${API_URL_DEV}/configs`;
-  const CONFIG_URL = `${API_URL}/newsfeed?page=${page}`;
+  const CONFIG_URL = `${Config.API_URL}/newsfeed?page=${page}`;
   // const CONFIG_URL = `http://localhost:8080/api/health`;
   // console.log("raw = "+JSON.stringify(body))
   // console.log("b64 = "+hashFunc(JSON.stringify(body)));

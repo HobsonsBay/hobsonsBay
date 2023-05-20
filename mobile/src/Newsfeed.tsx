@@ -67,7 +67,6 @@ const Newsfeed: React.FC<INewsfeed> = ({navigation, route}) => {
 
     if (focus) {
       setLastRead(newsLast);
-      console.log('run refresh', lastRead, newsLast);
       refreshNews();
     }
   }, [
@@ -107,10 +106,6 @@ const Newsfeed: React.FC<INewsfeed> = ({navigation, route}) => {
     }
   }, [page, getNewsfeed, setNewsfeed]);
 
-  useEffect(() => {
-    console.log('lr ', lastRead);
-  }, [lastRead]);
-
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.newsfeed}>
@@ -119,18 +114,22 @@ const Newsfeed: React.FC<INewsfeed> = ({navigation, route}) => {
           style={styles.newsfeed_scroll}
           contentContainerStyle={styles.newsfeed_scroll_content}>
           <Text style={styles.news_title}>News</Text>
-          {newsfeed.map(
-            (c: any) =>
-              c.inZone && (
-                <NewsPost
-                  isNew={c.id > lastRead}
-                  isOpen={openPost == c.id}
-                  open={openNews}
-                  key={c.id}
-                  post={c}
-                />
-              ),
-          )}
+          {newsfeed && newsfeed
+            .sort((a, b) => {
+              return new Date(b.time).getTime() - new Date(a.time).getTime();
+            })
+            .map(
+              (c: any) =>
+                c.inZone && (
+                  <NewsPost
+                    isNew={c.id > lastRead}
+                    isOpen={openPost == c.id}
+                    open={openNews}
+                    key={c.id}
+                    post={c}
+                  />
+                ),
+            )}
 
           {isLoading && (
             <ActivityIndicator animating={true} size="large" color="#333333" />

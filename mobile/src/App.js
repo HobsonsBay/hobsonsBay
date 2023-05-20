@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -7,7 +7,16 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {StatusBar, Text, Image, View, TextInput, Linking} from 'react-native';
+import {
+  StatusBar,
+  Text,
+  Image,
+  View,
+  TextInput,
+  Linking,
+  Alert,
+  Platform,
+} from 'react-native';
 import ScheduleStack from './ScheduleStack';
 import Homepage from './Homepage';
 import AboutScreen from './AboutScreen';
@@ -24,9 +33,11 @@ import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import images from './utils/images';
+import Config from 'react-native-config';
 import {AppDataProvider, useData} from './utils/DataContext';
 import SplashScreen from 'react-native-splash-screen';
 import DrawerContent from './navigation/DrawerContent';
+import checkVersion from 'react-native-store-version';
 
 Text.defaultProps = {
   ...Text.defaultProps,
@@ -45,13 +56,11 @@ const setNotification = async (value) => {
   } catch (e) {
     // save error
   }
-  console.log('Done.');
 };
 
 if (Platform.OS === 'android') {
   // Register background handler
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    console.log('Message handled in the background!', remoteMessage);
     setNotification(remoteMessage);
   });
 }
@@ -74,6 +83,57 @@ export default function App(props) {
   //   const route = e.url.replace(/.*?:\/\//g, '');
   //   // do something with the url, in our case navigate(route)
   // }
+
+  const iosStoreURL =
+    'https://apps.apple.com/au/app/recycling-2-0/id1497473995';
+
+  const androidStoreURL =
+    'https://play.google.com/store/apps/details?id=au.gov.vic.hobsonsbay';
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const check = await checkVersion({
+          version:
+            Platform.OS === 'ios'
+              ? DeviceInfo.getVersion()
+              : DeviceInfo.getVersionCode(), // app local version
+          iosStoreURL,
+          androidStoreURL,
+          country: 'au', // default value is 'jp'
+        });
+        if (check.result === 'new') {
+          // if app store version is new
+          Alert.alert(
+            "There's a new version of our app.",
+            "Make sure you're on the newest version so you do not miss out on new features.",
+            [
+              {
+                text: 'Update Now',
+                onPress: () => {
+                  let storeUrl = '';
+                  if (Platform.OS === 'ios') {
+                    storeUrl = iosStoreURL;
+                  } else if (Platform.OS === 'android') {
+                    storeUrl = androidStoreURL;
+                  }
+                  Linking.canOpenURL(storeUrl).then((supported) => {
+                    if (supported) {
+                      Linking.openURL(storeUrl);
+                    }
+                  });
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      } catch (e) {
+        
+      }
+    };
+
+    if (Config.MODE === 'PROD') init();
+  }, []);
 
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();

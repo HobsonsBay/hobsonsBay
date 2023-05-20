@@ -1,10 +1,9 @@
 /* global fetch */
-const {API_URL} = require('../config/api');
-
+import Config from 'react-native-config'
 export default () => {
   //const CONFIG_URL = `${API_URL}/quiz?action=getQuiz`;
   //const CONFIG_URL = `${API_URL_DEV}/quiz?action=getQuiz`;
-  const CONFIG_URL = `${API_URL}/quiz?action=getQuiz`;
+  const CONFIG_URL = `${Config.API_URL}/quiz?action=getQuiz`;
   //const CONFIG_URL = "http://192.168.1.100:8080/api/quiz?action=getQuiz";
 
   return fetch(CONFIG_URL, {
