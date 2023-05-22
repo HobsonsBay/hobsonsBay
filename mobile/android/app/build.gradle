@@ -104,12 +104,12 @@ productFlavors {
   staging {
     dimension "appType"
     applicationIdSuffix ".dev"
-    resValue "string", "app_name", "HoubsonBay Staging"
+    resValue "string", "app_name", "HobsonsBay Staging"
   }
   production {
     dimension "appType"
     applicationIdSuffix ""
-    resValue "string", "app_name", "HoubsonBay"
+    resValue "string", "app_name", "HobsonsBay"
   }
 }
     defaultConfig {

@@ -31,7 +31,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* HoubsonBayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HoubsonBayTests.m; sourceTree = "<group>"; };
 		0671A8F512CFB75D6222EF75 /* Pods-HoubsonBay.test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HoubsonBay.test.release.xcconfig"; path = "Target Support Files/Pods-HoubsonBay/Pods-HoubsonBay.test.release.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* HoubsonBay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HoubsonBay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* HobsonsBay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HobsonsBay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = HoubsonBay/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = HoubsonBay/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = HoubsonBay/Images.xcassets; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* HoubsonBay.app */,
+				13B07F961A680F5B00A75B9A /* HobsonsBay.app */,
 				00E356EE1AD99517003FC87E /* HoubsonBayTests.xctest */,
 			);
 			name = Products;
@@ -191,7 +191,7 @@
 			);
 			name = HoubsonBay;
 			productName = HoubsonBay;
-			productReference = 13B07F961A680F5B00A75B9A /* HoubsonBay.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* HobsonsBay.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -475,7 +475,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = au.gov.vic.hobsonsbay;
-				PRODUCT_NAME = HoubsonBay;
+				PRODUCT_NAME = HobsonsBay;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -504,7 +504,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = au.gov.vic.hobsonsbay;
-				PRODUCT_NAME = HoubsonBay;
+				PRODUCT_NAME = HobsonsBay;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -742,7 +742,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = au.gov.vic.hobsonsbay.dev;
-				PRODUCT_NAME = "HoubsonBay Test";
+				PRODUCT_NAME = "HobsonsBay Test";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -862,7 +862,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = au.gov.vic.hobsonsbay.dev;
-				PRODUCT_NAME = "HoubsonBay Test";
+				PRODUCT_NAME = "HobsonsBay Test";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

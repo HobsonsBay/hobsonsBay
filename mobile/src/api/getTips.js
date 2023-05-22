@@ -1,6 +1,4 @@
 /* global fetch */
-import hashFunc from './hashFunc';
-const { API_URL, API_URL_DEV, API_URL_LOCAL } = require('../config/api');
 import Config from 'react-native-config'
 export default (body) => {
 
