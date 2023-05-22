@@ -17,7 +17,7 @@ import {
   Platform,
   ScrollView,
   Modal,
-  Alert,
+  Alert,PermissionsAndroid
 } from 'react-native';
 import images from './utils/images';
 import {openUrl, formatTime, getReminderDate} from './utils';

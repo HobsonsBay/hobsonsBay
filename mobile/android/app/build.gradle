@@ -116,7 +116,7 @@ productFlavors {
         applicationId "au.gov.vic.hobsonsbay"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3145848
+        versionCode 3145849
         versionName "1.2.0"
         resValue "string", "build_config_package", "au.gov.vic.hobsonsbay" 
     }

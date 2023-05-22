@@ -1,9 +1,10 @@
 import React from 'react'
+
 import { hasAddress, clearAddress } from './handleAddress';
 import { hasNotification } from './handleNotification';
 import fetchDays from '../hooks/fetchDays';
 import useFullAddress from '../hooks/useFullAddress';
-import { Share } from 'react-native';
+import { Share,PermissionsAndroid } from 'react-native';
 import postConfig from '../api/postConfig';
 import deleteConfig from '../api/deleteConfig';
 import putConfig from '../api/putConfig';
@@ -67,7 +68,10 @@ function AppDataProvider(props) {
     console.log(config)
     console.log(notifications)
     console.log(hasNotification())
-    console.log('start')
+    Platform.OS === 'android' && await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION
+    )
+    
     const status = await messaging().requestPermission()
           .then((res) => {
             //console.log('promise chain fbperm')
