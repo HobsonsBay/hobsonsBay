@@ -139,20 +139,24 @@ react native development.
 
 `/android/app/recycle-upload-key.keystore` *Created during react native setup*
 
-3. Change into the src folder
+3. Add the following env files
 
-`cd /src`
+`.env.dev` * file with attributes (ALGOLIA_APPID,ALGOLIA_API_KEY and API_URL)*
 
-4. Add the following config files
-
-`/src/config/algolia.json` *json file with attributes (appId and apiKey)*
-
-`/src/config/api.json` *json file with attributes (API_URL)*
-
+`.env.prod` * file with attributes (ALGOLIA_APPID,ALGOLIA_API_KEY and API_URL)*
 5. Run android dev
 
-`yarn react-native run-android`
+`To debug on emulator or physical device`: 
+react-native run-android --variant=stagingDebug --appIdSuffix=staging
+``To Release apk file`
+react-native run-android --variant=stagingRelease --appIdSuffix=release
 
+6. Run android Prod
+
+`To debug on emulator or physical device`: 
+react-native run-android --variant=productionDebug --appIdSuffix=staging
+``To Release apk file`
+react-native run-android --variant=productionRelease --appIdSuffix=release
 
 ## Android Production
 
@@ -205,19 +209,14 @@ react native development.
 
 2. Add the following config files
 
-`/ios/GoogleService-Info.plist` *Created in firebase settings console*
-
-3. Add mobile provision profile to xcode (drag and drop into xcode)
-
-`hbcc.mobileprovision`
-
-4. Install the distribution certificate (double click cert file)
-
-`ios_distribution.cer`
+`/ios/HoubsonBay/Firebase/GoogleService-Info.au.gov.vic.hobsonsbay.prod.plist` *Created in firebase settings console*
+`/ios/HoubsonBay/Firebase/GoogleService-Info.au.gov.vic.hobsonsbay.dev.plist` *Created in firebase settings console*
 
 5. Run ios dev
 
 `yarn react-native run-ios`
+react-native run-ios --scheme 'HoubsonBayDev'
+react-native run-ios --scheme 'HoubsonBay'
 
 
 ## IOS Production
@@ -229,6 +228,7 @@ react native development.
 2. Select HobsonsBay release scheme in top bar
 
 3. Change version 1.0.x to 1.0.n in General tab
+4. Select Houbsonbay Scheme from dropdown
 
 4. Click Product then Archive
 
