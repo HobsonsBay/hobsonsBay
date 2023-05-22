@@ -26,6 +26,8 @@ interface IHomepage {
   route: any;
 }
 
+/* Main Screen */
+
 const Homepage: React.FC<IHomepage> = ({navigation, route}) => {
   const {
     address,
