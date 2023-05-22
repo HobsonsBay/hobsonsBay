@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-
+import Config from 'react-native-config'
 import algoliasearch from 'algoliasearch/lite';
 import {InstantSearch, Configure, Index} from 'react-instantsearch/native';
 
@@ -9,7 +9,7 @@ import {SuggestionsHits} from './SuggestionHits';
 
 const config = require('../../config/algolia');
 
-const searchClient = algoliasearch(config.appId, config.apiKey);
+const searchClient = algoliasearch(Config.ALGOLIA_APPID, Config.ALGOLIA_API_KEY);
 
 interface SearchProps {
   handleSelection?: (item: any) => void;

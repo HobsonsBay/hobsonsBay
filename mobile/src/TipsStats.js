@@ -27,7 +27,7 @@ import Carousel from './components/tipsstats/Carousel';
 import Stat from './components/tipsstats/Stat';
 import union from 'lodash/union';
 import getTips from './api/getTips';
-// import SurveyMonkey from 'react-native-survey-monkey';
+import SurveyMonkey from 'react-native-survey-monkey';
 
 export default (props) => {
   const {navigation, route} = props;
@@ -206,7 +206,7 @@ export default (props) => {
           </View>
         </ScrollView>
       </View>
-      {/* <SurveyMonkey ref={ surveyMonkeyRef } /> */}
+      <SurveyMonkey ref={ surveyMonkeyRef } />
     </SafeAreaView>
   );
 };

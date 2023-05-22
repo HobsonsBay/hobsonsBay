@@ -4,8 +4,7 @@ import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
 import {useState, useEffect, useCallback} from 'react';
 import {sortBins} from '../utils';
-const {API_URL} = require('../config/api');
-
+import Config from 'react-native-config'
 interface ScheduleData {
   area: string;
   day: string;
@@ -35,12 +34,12 @@ const useScheduleData = (asn: string) => {
 
   const getAddress = useCallback(
     async (asn: string) => {
-      const ADDRESS_URL = `${API_URL}/addresses?asn=${asn}`;
+      const ADDRESS_URL = `${Config.API_URL}/addresses?asn=${asn}`;
       try {
         const res = await fetch(ADDRESS_URL);
         const {rows} = await res.json();
         const {day, area} = rows[0];
-        const SCHEDULES_URL = `${API_URL}/schedules?area=${area}&day=${day}`;
+        const SCHEDULES_URL = `${Config.API_URL}/schedules?area=${area}&day=${day}`;
         const schedulesRes = await fetch(SCHEDULES_URL);
         const {rows: scheduleRows} = await schedulesRes.json();
         const days = processSchedule(scheduleRows);

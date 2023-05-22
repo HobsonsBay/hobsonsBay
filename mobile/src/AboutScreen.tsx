@@ -13,7 +13,7 @@ import {RECYCLING_20_URL, POLICY_URL, CONTACT_URL} from './utils/constants';
 
 import {Br, Head, Para, LinkButton} from './utils/Typography';
 import NavBar from './navigation/NavBar';
-// import SurveyMonkey from 'react-native-survey-monkey';
+import SurveyMonkey from 'react-native-survey-monkey';
 
 interface IAboutScreen {
   navigation: any;
@@ -25,9 +25,9 @@ const AboutScreen: React.FC<IAboutScreen> = ({navigation, route}) => {
   const handleRecycling20Click = openUrl(RECYCLING_20_URL);
   const handlePolicyClick = openUrl(POLICY_URL);
 
-  // const surveyMonkeyRef = React.createRef();
-  // const handleSurveyClick = () =>
-  //   surveyMonkeyRef.current.showSurveyMonkey('3QBD9ST');
+  const surveyMonkeyRef = React.createRef();
+  const handleSurveyClick = () =>
+    surveyMonkeyRef?.current.showSurveyMonkey('3QBD9ST');
 
   return (
     <SafeAreaView style={styles.view}>
@@ -65,16 +65,16 @@ const AboutScreen: React.FC<IAboutScreen> = ({navigation, route}) => {
             <LinkButton onPress={handleRecycling20Click}>
               Visit the Recycling 2.0 Website
             </LinkButton>
-            {/* <LinkButton onPress={handleSurveyClick}>
+            <LinkButton onPress={handleSurveyClick}>
               Provide App Feedback
-            </LinkButton> */}
+            </LinkButton>
             <LinkButton onPress={handlePolicyClick}>
               Read Privacy Policy
             </LinkButton>
           </View>
         </ScrollView>
       </View>
-      {/* <SurveyMonkey ref={ surveyMonkeyRef } /> */}
+      <SurveyMonkey ref={ surveyMonkeyRef } />
     </SafeAreaView>
   );
 };

@@ -1,5 +1,4 @@
 import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
 import {
   StyleSheet,
   Text,
@@ -10,9 +9,6 @@ import {
   Linking,
 } from 'react-native';
 import {connectHits} from 'react-instantsearch/connectors';
-const config = require('../../config/algolia');
-
-const searchClient = algoliasearch(config.appId, config.apiKey);
 
 export const SuggestionsHits = connectHits(({hits, handlePressItem}) => {
   if (hits.length === 0) {

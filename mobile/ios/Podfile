@@ -21,6 +21,12 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+project 'HoubsonBay',
+  'Debug' => :debug,
+  'Release' => :release,
+  'Test.Debug' => :debug,
+  'Test.Release' => :release
+
 target 'HoubsonBay' do
   config = use_native_modules!
 
@@ -29,6 +35,7 @@ target 'HoubsonBay' do
   use_frameworks! :linkage => :static
   $FirebaseSDKVersion = '10.7.0'
   $RNFirebaseAsStaticFramework = true
+  pod 'react-native-survey-monkey', path: '../node_modules/react-native-survey-monkey'
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.

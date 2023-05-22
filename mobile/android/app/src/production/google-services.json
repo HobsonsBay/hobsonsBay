@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "915718145351",
+    "firebase_url": "https://hbcc-3018.firebaseio.com",
+    "project_id": "hbcc-3018",
+    "storage_bucket": "hbcc-3018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915718145351:android:66194c807e4823bb133862",
+        "android_client_info": {
+          "package_name": "au.gov.vic.hobsonsbay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915718145351-ug0j4s7dednr6ra5f5c5ee04b2i8ik6k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1QUiJFElbShPEDqVyox3py01EhotiiMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915718145351-ug0j4s7dednr6ra5f5c5ee04b2i8ik6k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "915718145351-9i4teci2bvl5l6o82mmv4rguuqnuduc2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.gov.vic.hobsonsbay.Test"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

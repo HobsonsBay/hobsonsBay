@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "strict": false,
+        "target": "ES5",
+        "lib": [
+            "ES2021"
+        ],
+        "downlevelIteration": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./*"
+            ]
+        },
+        // "outDir": "../dist/server"
+    }
+}

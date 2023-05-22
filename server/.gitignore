@@ -1,3 +1,2 @@
-.now
-.env
-node_modules/
+.vercel
+node_modules

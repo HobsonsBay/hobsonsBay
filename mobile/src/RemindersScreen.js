@@ -59,7 +59,7 @@ export default (props) => {
   const [serviceActive, setServiceActive] = useState(false);
   const [reminderActive, setReminderActive] = useState(false);
 
-  console.log('reminders render');
+  
 
   //console.log(config);
 
@@ -101,7 +101,6 @@ export default (props) => {
 
       notificationsOn(type, format(date, 'HHmm'))
         .then((response) => {
-          console.log('trigger on', response);
           setStatus(true);
           setDisabled(false);
           setServiceDisabled(false);
@@ -116,7 +115,6 @@ export default (props) => {
     } else {
       notificationsOff()
         .then((response) => {
-          console.log('trigger off', response);
           setStatus(false);
           setDisabled(false);
           setServiceActive(false);
@@ -133,6 +131,7 @@ export default (props) => {
     }
   };
 
+  console.log("Status", status)
   const handleChangeTime = (event, selectedDate) => {
     const currentDate = startOfHour(selectedDate || date);
     setShow(Platform.OS === 'ios');
@@ -204,8 +203,9 @@ export default (props) => {
       const currentDate = getReminderDate(config.time);
       setStatus(true);
       setDate(currentDate);
-      setServiceActive(config.type_service === 'True' ? true : false);
-      setReminderActive(config.type_reminder === 'True' ? true : false);
+      setServiceActive(!!config.type_service);	
+      console.log("Config remoinder set", config.type_reminder,config.type_service)
+      setReminderActive(!!config.type_reminder);
       setServiceDisabled(false);
       setReminderDisabled(false);
     }

@@ -2,14 +2,8 @@
 import slice from 'lodash/slice';
 import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
-import {
-  useState,
-  useEffect,
-  useCallback
-} from 'react';
 import { sortBins } from '../utils';
-const { API_URL } = require('../config/api');
-
+import Config from 'react-native-config'
 export default async (asn) => {
   let data ={ area: '', day: '', days: [] };
 
@@ -22,14 +16,14 @@ export default async (asn) => {
   };
   
   const getAddress = async (asn) => {
-    const ADDRESS_URL = `${API_URL}/addresses?asn=${asn}`;
+    const ADDRESS_URL = `${Config.API_URL}/addresses?asn=${asn}`;
     return fetch(ADDRESS_URL)
       .then((res) => res.json())
       .then(({ rows }) => {
         const { day, area } = rows[0];
         data.area = area;
         data.day = day;
-        const SCHEDULES_URL = `${API_URL}/schedules?area=${area}&day=${day}`;
+        const SCHEDULES_URL = `${Config.API_URL}/schedules?area=${area}&day=${day}`;
         return fetch(SCHEDULES_URL);
       })
       .then((res) => res.json())
