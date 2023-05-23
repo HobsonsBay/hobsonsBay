@@ -70,3 +70,4 @@ buck-out/
 *.lock
 /android/gradle.properties
 /ios/Podfile.lock
+.vercel

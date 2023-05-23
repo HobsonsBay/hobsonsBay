@@ -82,7 +82,6 @@ const fetchNews = async () => {
 
   // filter output based on hour extracted from post matched against current time.
   const dateLocal = utcToZonedTime(new Date(), timeZone);
-  const ausTimeZone = "Australia/Sydney";
   let filtered = output.records.filter((post) => {
     const convertedTime = new Date(
       post.field_2699.unix_timestamp
@@ -113,6 +112,8 @@ const newsAlertReminder = async () => {
         },
         tokens: rows,
       });
+        update_status(news.id)
+
     }
     const send_status = await sendPushNotifications(notificationData);
     return [{ status: send_status }];
@@ -125,17 +126,6 @@ const sendPushNotifications = async (messages) => {
   let output = {};
   for (const message of messages) {
     if (message.tokens.length > 0) {
-      /*
-        // TODO implement batching of notification sends
-  
-  
-        if(tokens.length > 0){
-          //console.log(tokens)
-  
-          for ( let i = 0; i < tokens.length; i += 100){
-            //console.log(`processing ${i} of ${tokens.length}`);
-            let subTokens = tokens.slice(i, i + 100);
-            */
 
       await admin
         .messaging()
@@ -148,10 +138,7 @@ const sendPushNotifications = async (messages) => {
           }
         )
         .then(function (response) {
-        
-          //   output.success = "Successfully sent messages";
-          //   fcmSuccess += response.successCount;
-          //   fcmError += response.failureCount;
+          update_status
         })
         .catch(function (error) {
           //   output.error = "firebase send error";

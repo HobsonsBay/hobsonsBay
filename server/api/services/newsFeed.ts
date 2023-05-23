@@ -90,7 +90,7 @@ const configMapper = ({ records }) => {
   const rows = map(records, (rec) => {
     const zones = zone(rec.field_2707);
     return {
-      time: rec.field_2699.iso_timestamp,
+      time: new Date(rec.field_2699.unix_timestamp-1000*60*60*10),
       dateTimestamp: rec.field_2699.timestamp,
       title: rec.field_2698,
       body: rec.field_2710,
@@ -101,9 +101,7 @@ const configMapper = ({ records }) => {
       createdDate: rec.field_2703.iso_timestamp,
       zones: rec.field_2708 == true ? '["all"]' : JSON.stringify(zones),
     };
-  }).filter((value) => {
-    return new Date(value.dateTimestamp).valueOf() < new Date().valueOf();
-  });
+  })
 
   return rows;
 };
